@@ -1,0 +1,1 @@
+<connections><connection name="name1"><username>username1</username><password>password</password><token>token</token><authEndPoint>authEndPoint</authEndPoint></connection><connection name="name2"><username>username</username><password>password</password><token>token</token><authEndPoint>authEndPoint</authEndPoint></connection></connections>

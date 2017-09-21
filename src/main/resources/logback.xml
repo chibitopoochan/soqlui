@@ -1,0 +1,18 @@
+<configuration>
+  <appender name="STDOUT"
+    class="ch.qos.logback.core.ConsoleAppender">
+   <Target>System.out</Target>
+    <encoder>
+      <Pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+    </encoder>
+  </appender>
+
+  <logger name="jp.or.nurs.sug">
+    <level value="DEBUG" />
+  </logger>
+
+  <root>
+    <level value="DEBUG" />
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

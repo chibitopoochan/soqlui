@@ -1,0 +1,14 @@
+<connections>
+	<connection name="name">
+		<username>username</username>
+		<password>password</password>
+		<token>token</token>
+		<authEndPoint>authEndPoint</authEndPoint>
+	</connection>
+	<connection name="name">
+		<username>username</username>
+		<password>password</password>
+		<token>token</token>
+		<authEndPoint>authEndPoint</authEndPoint>
+	</connection>
+</connections>

@@ -9,38 +9,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
-import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
+import com.gmail.chibitopoochan.soqlui.controller.task.ConnectService;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 
 public class MainController implements Initializable, Controller {
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 
-	@FXML
-	private ComboBox<String> connectOption;
+	// 画面上のコンポーネント
+	@FXML private ComboBox<String> connectOption;
+	@FXML private Button connect;
+	@FXML private Button disconnect;
+	@FXML private ProgressIndicator progressIndicator;
+	@FXML private MenuItem menuFileConnection;
 
-	@FXML
-	private Button connect;
-
-	@FXML
-	private Button disconnect;
-
+	// 業務ロジック
 	private SceneManager manager;
-
 	private ConnectionSettingLogic setting;
 
-	private ConnectionLogic connection;
+	// 状態管理
+	private ConnectService connectService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -48,7 +49,9 @@ public class MainController implements Initializable, Controller {
 
 		// 接続情報の初期化
 		initializeConnectOption();
+		initializeConnection();
 		initializeButtons();
+
 	}
 
 	/**
@@ -71,30 +74,57 @@ public class MainController implements Initializable, Controller {
 	}
 
 	/**
+	 * 接続サービスの初期化
+	 */
+	private void initializeConnection() {
+		// 結果ごとのイベントを設定
+		connectService = new ConnectService();
+		connectService.setOnSucceeded(e -> {
+			Platform.runLater(() -> {
+				if(connectService.isClosing()) {
+					// ボタン等を制御
+					connect.setText("Connect");
+					disconnect.setDisable(true);
+					connectOption.setDisable(false);
+					logger.debug("Connection Button Enabled");
+				} else {
+					// ボタン等を制御
+					connect.setText("Reconnect");
+					disconnect.setDisable(false);
+					connectOption.setDisable(true);
+					logger.debug("Connection Button Disabled");
+				}
+				connectService.reset();
+			});
+		});
+		connectService.setOnFailed(e -> {
+			Platform.runLater(() -> {
+				// 例外を通知
+				Throwable exception = connectService.exceptionProperty().get();
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.getLocalizedMessage()));
+				alert.showAndWait();
+				connectService.reset();
+			});
+		});
+
+	}
+
+	/**
 	 * 接続イベント
 	 */
 	public void doConnect() {
-		// 選択値を取得
+		// 変数をバインド
+		progressIndicator.progressProperty().unbind();
+		progressIndicator.visibleProperty().unbind();
+		progressIndicator.progressProperty().bind(connectService.progressProperty());
+		progressIndicator.visibleProperty().bind(connectService.runningProperty());
+
+		// 接続を開始
 		String selected = connectOption.getValue();
-
-		try {
-			// Salesforceへ接続
-			connection.connect(setting.getConnectionSetting(selected));
-			logger.info(String.format("Connected to Salesforce [%s]", selected));
-
-			// ボタン等を制御
-			connect.setDisable(true);
-			disconnect.setDisable(false);
-			connectOption.setDisable(true);
-			logger.debug("Connection Button Disabled");
-
-		} catch (Exception e) {
-			// 例外を通知
-			logger.error("Connection Error", e);
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, e.getLocalizedMessage()));
-			alert.showAndWait();
-		}
+		connectService.setConnectionSetting(setting.getConnectionSetting(selected));
+		connectService.setClosing(false);
+		connectService.start();
 
 	}
 
@@ -102,15 +132,15 @@ public class MainController implements Initializable, Controller {
 	 * 切断イベント
 	 */
 	public void doDisconnect() {
-		// Salesforceへの接続を切断
-		connection.disconnect();
-		logger.info("Connection Disconnect");
+		// 変数をバインド
+		progressIndicator.progressProperty().unbind();
+		progressIndicator.visibleProperty().unbind();
+		progressIndicator.progressProperty().bind(connectService.progressProperty());
+		progressIndicator.visibleProperty().bind(connectService.runningProperty());
 
-		// ボタン等を制御
-		connect.setDisable(false);
-		disconnect.setDisable(true);
-		connectOption.setDisable(false);
-		logger.debug("Connection Button Enabled");
+		// 切断を開始
+		connectService.setClosing(true);
+		connectService.start();
 
 	}
 
@@ -133,7 +163,6 @@ public class MainController implements Initializable, Controller {
 		try{
 			// 接続情報を取得
 			setting = new ConnectionSettingLogic();
-			connection = new ConnectionLogic();
 		} catch(Exception e) {
 			// 例外を通知
 			logger.error("Initialize error",e);

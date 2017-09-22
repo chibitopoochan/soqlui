@@ -22,8 +22,12 @@ public class MessageHelper {
 		String template = message
 				.getString(resource)
 				.replaceAll(MessageHelper.LOGGER_REPLACE_MARK, MessageHelper.FORMATTER_REPLACE_MARK);
-		return String.format(template, (Object[]) param);
 
+		if(param.length == 0) {
+			return template;
+		} else {
+			return String.format(template, (Object[]) param);
+		}
 	}
 
 }

@@ -7,6 +7,8 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -23,7 +25,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
+                  <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
@@ -41,25 +43,41 @@
       </MenuBar>
    </top>
    <bottom>
-      <HBox prefHeight="18.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="18.0" prefWidth="600.0">
          <children>
-            <Label maxHeight="20.0" minWidth="20.0" text="Label" />
+            <ProgressBar prefWidth="200.0" progress="0.0" />
          </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
       </HBox>
    </bottom>
    <left>
-      <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" BorderPane.alignment="CENTER">
+      <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="547.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Connection" />
-            <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+            <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin></ComboBox>
             <HBox prefHeight="27.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="connect" mnemonicParsing="false" onAction="#doConnect" text="Connect" />
-                  <Button fx:id="disconnect" disable="true" mnemonicParsing="false" onAction="#doDisconnect" text="Disconnect" />
+                  <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" onAction="#doConnect" text="Connect" />
+                  <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" onAction="#doDisconnect" text="Disconnect">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin></Button>
+                  <ProgressIndicator fx:id="progressIndicator" visible="false" />
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
             </HBox>
             <Separator prefWidth="200.0" />
-            <Label text="Objects" />
+            <Label text="Objects">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin></Label>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <TableView minWidth="-Infinity" prefWidth="185.0" VBox.vgrow="ALWAYS">
@@ -74,6 +92,9 @@
                </children>
             </VBox>
          </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </VBox>
    </left>
    <center>

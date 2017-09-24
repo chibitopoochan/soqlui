@@ -57,9 +57,9 @@ public class ConnectService extends Service<Void> {
 
 	@Override
 	protected Task<Void> createTask() {
-		final ConnectionSetting useSetting = connectionSetting.get();
-		final ConnectionLogic useLogic = connectionLogic.get();
-		final boolean closeOnly = closing.get();
+		final ConnectionSetting useSetting = getConnectionSetting();
+		final ConnectionLogic useLogic = getConnectionLogic();
+		final boolean closeOnly = isClosing();
 
 		return new Task<Void>() {
 

@@ -1,4 +1,4 @@
-package com.gmail.chibitopoochan.soqlui.controller.task;
+package com.gmail.chibitopoochan.soqlui.controller.service;
 
 import java.util.List;
 import java.util.Map;

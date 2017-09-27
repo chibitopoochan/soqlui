@@ -1,24 +1,51 @@
-package com.gmail.chibitopoochan.soqlui.controller.task;
+package com.gmail.chibitopoochan.soqlui.controller.service;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
+import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ConnectService extends Service<Void> {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectService.class);
-	private ObjectProperty<ConnectionLogic> connectionLogic = new SimpleObjectProperty<ConnectionLogic>(this, "connectionLogic", new ConnectionLogic());
-	private ObjectProperty<ConnectionSetting> connectionSetting = new SimpleObjectProperty<ConnectionSetting>(this, "connectionSetting");
-	private BooleanProperty closing = new SimpleBooleanProperty(false);
 
+	/**
+	 * メタ情報のプロパティ
+	 */
+	private ListProperty<DescribeSObject> describeSObjectList = new SimpleListProperty<DescribeSObject>(this, "describeSObjectList");
+	public void setDescribeSObjectList(List<DescribeSObject> elements) {
+		describeSObjectList.setValue(FXCollections.observableArrayList(elements));
+	}
+
+	public List<DescribeSObject> getDescribeSObjectList() {
+		return describeSObjectList.getValue();
+	}
+
+	public ListProperty<DescribeSObject> describeSObjectListProperty() {
+		return describeSObjectList;
+	}
+
+	/**
+	 * 接続切断状態のプロパティ
+	 */
+	private BooleanProperty closing = new SimpleBooleanProperty(false);
 	public void setClosing(boolean close) {
 		closing.set(close);
 	}
@@ -31,6 +58,10 @@ public class ConnectService extends Service<Void> {
 		return closing;
 	}
 
+	/**
+	 * 接続のプロパティ
+	 */
+	private ObjectProperty<ConnectionLogic> connectionLogic = new SimpleObjectProperty<ConnectionLogic>(this, "connectionLogic", new ConnectionLogic());
 	public void setConnectionLogic(ConnectionLogic logic) {
 		connectionLogic.set(logic);
 	}
@@ -43,6 +74,10 @@ public class ConnectService extends Service<Void> {
 		return connectionLogic;
 	}
 
+	/**
+	 * 接続情報のプロパティ
+	 */
+	private ObjectProperty<ConnectionSetting> connectionSetting = new SimpleObjectProperty<ConnectionSetting>(this, "connectionSetting");
 	public void setConnectionSetting(ConnectionSetting setting) {
 		connectionSetting.set(setting);
 	}
@@ -78,6 +113,9 @@ public class ConnectService extends Service<Void> {
 					// Salesforceへ接続
 					useLogic.connect(useSetting);
 					logger.info(String.format("Connected to Salesforce [%s]", useSetting.getName()));
+
+					// Object一覧を取得
+					setDescribeSObjectList(useLogic.getSObjectList());
 
 				}
 

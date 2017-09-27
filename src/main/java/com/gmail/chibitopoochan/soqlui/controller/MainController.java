@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
-import com.gmail.chibitopoochan.soqlui.controller.task.ConnectService;
-import com.gmail.chibitopoochan.soqlui.controller.task.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
+import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
@@ -20,6 +21,8 @@ import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -39,17 +42,22 @@ public class MainController implements Initializable, Controller {
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	// 画面上のコンポーネント
+	// 左側
 	@FXML private ComboBox<String> connectOption;
 	@FXML private Button connect;
 	@FXML private Button disconnect;
 	@FXML private ProgressIndicator progressIndicator;
 	@FXML private MenuItem menuFileConnection;
+	@FXML private TableView<DescribeSObject> sObjectList;
+	@FXML private TableColumn<DescribeSObject, String> prefixColumn;
+	@FXML private TableColumn<DescribeSObject, String> sObjectColumn;
+	@FXML private TextField objectSearch;
 
+	// 中央
 	@FXML private Button execute;
 	@FXML private TextArea soqlArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
-
 	@FXML private TableView<SObjectRecord> resultTable;
 
 	// 業務ロジック
@@ -59,6 +67,7 @@ public class MainController implements Initializable, Controller {
 	// 状態管理
 	private ConnectService connectService;
 	private SOQLExecuteService executionService;
+	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -69,6 +78,14 @@ public class MainController implements Initializable, Controller {
 		initializeConnection();
 		initializeExecution();
 		initializeButtons();
+		initializeSObjectList();
+
+	}
+
+	private void initializeSObjectList() {
+		// 既存の設定をクリア
+		prefixColumn.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getKeyPrefix()));
+		sObjectColumn.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getName()));
 
 	}
 
@@ -159,12 +176,25 @@ public class MainController implements Initializable, Controller {
 					disconnect.setDisable(true);
 					connectOption.setDisable(false);
 					logger.debug("Connection Button Enabled");
+
+					// オブジェクト一覧のクリア
+					objectSearch.setText("");
+					objectMasterList.clear();
+					sObjectList.getItems().clear();
+
 				} else {
 					// ボタン等を制御
 					connect.setText("Reconnect");
 					disconnect.setDisable(false);
 					connectOption.setDisable(true);
 					logger.debug("Connection Button Disabled");
+
+					// オブジェクト一覧の表示
+					objectSearch.setText("");
+					objectMasterList = FXCollections.observableArrayList(connectService.getDescribeSObjectList());
+					sObjectList.setItems(objectMasterList);
+					logger.debug("sObject List show");
+
 				}
 				connectService.reset();
 			});
@@ -174,7 +204,7 @@ public class MainController implements Initializable, Controller {
 				// 例外を通知
 				Throwable exception = e.getSource().getException();
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.getLocalizedMessage()));
+				alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.getMessage()));
 				alert.showAndWait();
 				connectService.reset();
 			});
@@ -186,7 +216,7 @@ public class MainController implements Initializable, Controller {
 	 * ボタンの初期化
 	 */
 	private void initializeButtons() {
-		// 接続情報があるか確認
+		// 接続情報関連の設定
 		if(setting.hasSetting()) {
 			logger.debug("Connection Button Enabled");
 			connect.setDisable(false);
@@ -198,6 +228,13 @@ public class MainController implements Initializable, Controller {
 			disconnect.setDisable(true);
 			connectOption.setDisable(true);
 		}
+
+		// オブジェクト一覧の絞り込み
+		objectSearch.textProperty().addListener(
+			(v, o, n) -> sObjectList.setItems(
+				objectMasterList.filtered(
+					t -> t.getName().toLowerCase().startsWith(n)))
+		);
 
 	}
 

@@ -4,9 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlexec.api.Connector;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
+import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.sforce.ws.ConnectionException;
 
 public class ConnectionLogic {
@@ -60,6 +62,21 @@ public class ConnectionLogic {
 	public void disconnect() {
 		connector.ifPresent(c -> c.logout());
 		connector = Optional.empty();
+	}
+
+	public List<DescribeSObject> getSObjectList() throws ConnectionException {
+		List<DescribeSObject> list = new LinkedList<>();
+
+		if(connector.isPresent()) {
+			list = connector.get()
+			.getDescribeSObjects()
+			.stream()
+			.map(m -> new DescribeSObject(m.getName(), m.getLabel(), m.getKeyPrefix()))
+			.collect(Collectors.toList());
+		}
+
+		return list;
+
 	}
 
 }

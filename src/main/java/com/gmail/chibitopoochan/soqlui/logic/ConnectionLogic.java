@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlexec.api.Connector;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
+import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.sforce.ws.ConnectionException;
 
@@ -64,6 +65,11 @@ public class ConnectionLogic {
 		connector = Optional.empty();
 	}
 
+	/**
+	 * オブジェクト一覧の取得
+	 * @return オブジェクトの一覧
+	 * @throws ConnectionException 接続エラー
+	 */
 	public List<DescribeSObject> getSObjectList() throws ConnectionException {
 		List<DescribeSObject> list = new LinkedList<>();
 
@@ -77,6 +83,23 @@ public class ConnectionLogic {
 
 		return list;
 
+	}
+
+	/**
+	 * 項目一覧の取得
+	 * @param name オブジェクト名
+	 * @return 項目一覧
+	 * @throws ConnectionException 接続エラー
+	 */
+	public List<DescribeField> getFieldList(String name) throws ConnectionException {
+		List<DescribeField> list = new LinkedList<>();
+
+		if(connector.isPresent()) {
+			list = connector.get().getDescribeFields(name).stream()
+					.map(m -> new DescribeField(m)).collect(Collectors.toList());
+		}
+
+		return list;
 	}
 
 }

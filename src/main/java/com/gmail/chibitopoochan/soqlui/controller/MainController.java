@@ -2,6 +2,7 @@ package com.gmail.chibitopoochan.soqlui.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -11,8 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
+import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
@@ -36,22 +39,31 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 
 public class MainController implements Initializable, Controller {
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	// 画面上のコンポーネント
-	// 左側
+	// メニュー
+	@FXML private MenuItem menuFileConnection;
+
+	// 左側上段
 	@FXML private ComboBox<String> connectOption;
 	@FXML private Button connect;
 	@FXML private Button disconnect;
 	@FXML private ProgressIndicator progressIndicator;
-	@FXML private MenuItem menuFileConnection;
+
+	// 左側中断
 	@FXML private TableView<DescribeSObject> sObjectList;
 	@FXML private TableColumn<DescribeSObject, String> prefixColumn;
 	@FXML private TableColumn<DescribeSObject, String> sObjectColumn;
 	@FXML private TextField objectSearch;
+
+	// 左側下段
+	@FXML private TableView<DescribeField> fieldList;
+	@FXML private TextField columnSearch;
 
 	// 中央
 	@FXML private Button execute;
@@ -64,24 +76,68 @@ public class MainController implements Initializable, Controller {
 	private SceneManager manager;
 	private ConnectionSettingLogic setting;
 
-	// 状態管理
+	// 非同期のサービス
 	private ConnectService connectService;
 	private SOQLExecuteService executionService;
+	private FieldProvideService fieldService;
+
+	// 状態管理
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
+	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
+	private Map<String, TableColumn<DescribeField, String>> fieldColumnList = new HashMap<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.manager = SceneManager.getInstance();
 
-		// 接続情報の初期化
+		// 画面の初期化
 		initializeConnectOption();
 		initializeConnection();
 		initializeExecution();
 		initializeButtons();
 		initializeSObjectList();
-
+		initializeFieldList();
+		initializeField();
 	}
 
+	private void initializeFieldList() {
+		// 現在の列とレコードを削除
+		fieldList.getColumns().clear();
+		fieldList.getItems().clear();
+
+		// 列の追加（追加順で左の列から定義）
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_NAME);
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_LABEL);
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_TYPE);
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_LENGTH);
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_PICKLIST);
+		addFieldListColumn(DescribeField.FIELD_LIST_COLUMN_REF);
+
+		// 列のマッピング
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_NAME).setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getName()));
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_LABEL).setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getLabel()));
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_LENGTH).setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().getLength())));
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_PICKLIST).setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getPicklist()));
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_REF).setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getReference()));
+		fieldColumnList.get(DescribeField.FIELD_LIST_COLUMN_TYPE).setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getType()));
+
+		sObjectList.setOnMouseClicked(e -> {
+			if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+				fieldService.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
+				fieldService.start();
+			}
+		});
+	}
+
+	private void addFieldListColumn(String name) {
+		fieldColumnList.put(name, new TableColumn<DescribeField, String>());
+		fieldColumnList.get(name).setText(name);
+		fieldList.getColumns().add(fieldColumnList.get(name));
+	}
+
+	/**
+	 * オブジェクト一覧の初期化
+	 */
 	private void initializeSObjectList() {
 		// 既存の設定をクリア
 		prefixColumn.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getKeyPrefix()));
@@ -89,8 +145,45 @@ public class MainController implements Initializable, Controller {
 
 	}
 
+	/**
+	 * 項目一覧の初期化
+	 */
+	private void initializeField() {
+		fieldService = new FieldProvideService();
+		fieldService.connectionLogicProperty().bind(connectService.connectionLogicProperty());
+		fieldService.setOnSucceeded(e -> {
+			Platform.runLater(() -> {
+				fieldMasterList.clear();
+				fieldList.getItems().clear();
+
+				columnSearch.setText("");
+				columnSearch.setDisable(false);
+				fieldMasterList = FXCollections.observableArrayList(fieldService.getDescribeFieldList());
+				fieldList.setItems(fieldMasterList);
+
+			});
+			fieldService.reset();
+		});
+		fieldService.setOnFailed(e -> {
+			Platform.runLater(() -> {
+				// 例外を通知
+				Throwable exception = e.getSource().getException();
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.getMessage()));
+				alert.showAndWait();
+			});
+			fieldService.reset();
+
+		});
+	}
+
+	/**
+	 * 実行処理の初期化
+	 * TODO 外部クラスへの委譲
+	 */
 	private void initializeExecution() {
 		executionService = new SOQLExecuteService();
+		executionService.soqlProperty().bind(soqlArea.textProperty());
 		executionService.connectionLogicProperty().bind(connectService.connectionLogicProperty());
 		executionService.batchSizeProperty().bind(batchSize.textProperty());
 		executionService.allProperty().bind(all.selectedProperty());
@@ -104,7 +197,7 @@ public class MainController implements Initializable, Controller {
 				resultTable.getColumns().clear();
 
 				// 実行結果０件なら終了
-				if(!result.isEmpty()) {
+				if(result.isEmpty()) {
 					// 列を設定
 					for(String key : result.get(0).keySet()) {
 						TableColumn<SObjectRecord,String> newColumn = new TableColumn<>(key);
@@ -118,6 +211,11 @@ public class MainController implements Initializable, Controller {
 						resultTable.getItems().add(new SObjectRecord(record));
 					}
 
+				} else {
+					Throwable exception = e.getSource().getException();
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_002, exception.getMessage()));
+					alert.showAndWait();
 				}
 
 				executionService.reset();
@@ -164,6 +262,7 @@ public class MainController implements Initializable, Controller {
 
 	/**
 	 * 接続サービスの初期化
+	 * TODO 外部クラスへの委譲
 	 */
 	private void initializeConnection() {
 		// 結果ごとのイベントを設定
@@ -177,11 +276,16 @@ public class MainController implements Initializable, Controller {
 					connectOption.setDisable(false);
 					logger.debug("Connection Button Enabled");
 
-					// オブジェクト一覧のクリア
+					// 一覧のクリア
 					objectSearch.setText("");
 					objectMasterList.clear();
 					sObjectList.getItems().clear();
+					objectSearch.setDisable(true);
 
+					columnSearch.setText("");
+					fieldMasterList.clear();
+					fieldList.getItems().clear();
+					columnSearch.setDisable(true);
 				} else {
 					// ボタン等を制御
 					connect.setText("Reconnect");
@@ -189,8 +293,9 @@ public class MainController implements Initializable, Controller {
 					connectOption.setDisable(true);
 					logger.debug("Connection Button Disabled");
 
-					// オブジェクト一覧の表示
+					// 一覧の表示
 					objectSearch.setText("");
+					objectSearch.setDisable(false);
 					objectMasterList = FXCollections.observableArrayList(connectService.getDescribeSObjectList());
 					sObjectList.setItems(objectMasterList);
 					logger.debug("sObject List show");
@@ -230,10 +335,22 @@ public class MainController implements Initializable, Controller {
 		}
 
 		// オブジェクト一覧の絞り込み
+		objectSearch.setDisable(true);
 		objectSearch.textProperty().addListener(
 			(v, o, n) -> sObjectList.setItems(
 				objectMasterList.filtered(
-					t -> t.getName().toLowerCase().startsWith(n)))
+					t -> t.getName().toLowerCase().indexOf(n) > -1)
+			)
+		);
+
+		// 項目一覧の絞り込み
+		columnSearch.setDisable(true);
+		columnSearch.textProperty().addListener((v, o, n) ->
+			fieldList.setItems(
+				fieldMasterList.filtered(
+					t -> t.getName().toLowerCase().indexOf(n) > -1
+						|| t.getLabel().toLowerCase().indexOf(n) > -1)
+			)
 		);
 
 	}
@@ -277,8 +394,6 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void doExecute() {
 		// TODO オプションは後程設定
-		String soql = soqlArea.getText();
-		executionService.setSOQL(soql);
 		executionService.start();
 
 	}

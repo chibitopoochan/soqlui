@@ -12,6 +12,7 @@ public interface Constants {
 
 		public interface Error {
 			String ERR_001 = "ERR.001";
+			String ERR_002 = "ERR.002";
 		}
 
 		public interface Information {

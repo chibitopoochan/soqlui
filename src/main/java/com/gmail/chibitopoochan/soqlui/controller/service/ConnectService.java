@@ -1,6 +1,5 @@
 package com.gmail.chibitopoochan.soqlui.controller.service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
-import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -18,8 +16,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -29,7 +25,7 @@ public class ConnectService extends Service<Void> {
 	/**
 	 * メタ情報のプロパティ
 	 */
-	private ListProperty<DescribeSObject> describeSObjectList = new SimpleListProperty<DescribeSObject>(this, "describeSObjectList");
+	private ListProperty<DescribeSObject> describeSObjectList = new SimpleListProperty<>(this, "describeSObjectList");
 	public void setDescribeSObjectList(List<DescribeSObject> elements) {
 		describeSObjectList.setValue(FXCollections.observableArrayList(elements));
 	}

@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="600.0" minWidth="800.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gmail.chibitopoochan.soqlui.controller.MainController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gmail.chibitopoochan.soqlui.controller.MainController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -56,55 +56,6 @@
          </BorderPane.margin>
       </HBox>
    </bottom>
-   <left>
-      <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="547.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Connection" />
-            <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </VBox.margin></ComboBox>
-            <HBox prefHeight="27.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" onAction="#doConnect" text="Connect" />
-                  <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" onAction="#doDisconnect" text="Disconnect">
-                     <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </HBox.margin></Button>
-                  <ProgressIndicator fx:id="progressIndicator" visible="false" />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </VBox.margin>
-            </HBox>
-            <Separator prefWidth="200.0" />
-            <Label text="Objects">
-               <VBox.margin>
-                  <Insets bottom="5.0" top="5.0" />
-               </VBox.margin></Label>
-            <TextField fx:id="objectSearch" promptText="Serach...">
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin></TextField>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <TableView fx:id="sObjectList" minWidth="240.0" VBox.vgrow="ALWAYS">
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <columns>
-                        <TableColumn fx:id="sObjectColumn" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" text="sObject" />
-                        <TableColumn fx:id="prefixColumn" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Prefix" />
-                     </columns>
-                  </TableView>
-               </children>
-            </VBox>
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </VBox>
-   </left>
    <center>
       <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
         <items>
@@ -177,4 +128,73 @@
         </items>
       </SplitPane>
    </center>
+   <left>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+         <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Connection" />
+                  <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" />
+                  <HBox prefHeight="27.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" onAction="#doConnect" text="Connect" />
+                        <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" onAction="#doDisconnect" text="Disconnect">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <ProgressIndicator fx:id="progressIndicator" visible="false" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Separator prefWidth="200.0" />
+                  <Label text="Objects">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="objectSearch" promptText="Serach...">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TableView fx:id="sObjectList" minWidth="240.0" VBox.vgrow="ALWAYS">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn fx:id="sObjectColumn" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" text="sObject" />
+                        <TableColumn fx:id="prefixColumn" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" text="Prefix" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Fields">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="columnSearch" promptText="Search...">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <TableView fx:id="fieldList">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </items>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </SplitPane>
+   </left>
 </BorderPane>

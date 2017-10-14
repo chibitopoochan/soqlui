@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.xml.stream.XMLStreamException;
+
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
@@ -41,6 +43,7 @@ public class ConnectionSettingListController implements Initializable, Controlle
 		try{
 			// 接続情報を取得
 			setting = new ConnectionSettingLogic();
+			setting.loadSettings();
 
 			// 一覧を画面に設定
 			refreshList();
@@ -113,7 +116,11 @@ public class ConnectionSettingListController implements Initializable, Controlle
 	 */
 	private void refreshList() {
 		// 設定の再読み込み
-		setting.loadSettings();
+		try {
+			setting.loadSettings();
+		} catch (IllegalStateException | IOException | XMLStreamException e) {
+			e.printStackTrace();
+		}
 
 		// 一覧の更新
 		settingList.getItems().clear();

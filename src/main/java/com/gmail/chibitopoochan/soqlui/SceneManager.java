@@ -36,11 +36,7 @@ public class SceneManager {
 	// Stageの階層
 	private Deque<StageWrapper> stageStack = new ArrayDeque<>();
 
-	// 所有者のコントローラ
-	private Controller parentController;
-
-	// 現在のコントローラ
-	private Controller currentController;
+	private Deque<Controller> controllerStack = new ArrayDeque<>();
 
 	// FXMLのローダー
 	private FXMLLoaderWrapper loader = new FXMLLoaderWrapper();
@@ -109,35 +105,19 @@ public class SceneManager {
 	}
 
 	/**
-	 * Window所有者のコントローラを設定
-	 * @param parent 所有者のコントローラ
-	 */
-	public void setParentController(Controller parent) {
-		this.parentController = parent;
-	}
-
-	/**
-	 * Window所有者のコントローラを取得
-	 * @return
-	 */
-	public Controller getParentController() {
-		return parentController;
-	}
-
-	/**
 	 * 現在のコントローラを設定
 	 * @param current 現在のコントローラ
 	 */
-	public void setCurrentController(Controller current) {
-		this.currentController = current;
+	public void pushController(Controller current) {
+		controllerStack.push(current);
 	}
 
 	/**
 	 * 現在のコントローラを取得
 	 * @return 現在のコントローラ
 	 */
-	public Controller getCurrentController() {
-		return currentController;
+	public Controller popController() {
+		return controllerStack.pop();
 	}
 
 	/**
@@ -172,8 +152,7 @@ public class SceneManager {
 		logger.debug(String.format("New stage[%s]",title));
 
 		// コントローラを設定
-		parentController = currentController;
-		currentController = loader.getController();
+		controllerStack.push(loader.getController());
 
 		// 子画面の表示
 		logger.debug("Show window");
@@ -200,7 +179,10 @@ public class SceneManager {
 		logger.debug(String.format("Change to new stage[%s]", title));
 
 		// シーン変更の通知先を設定
-		currentController = loader.getController();
+		if(!controllerStack.isEmpty()) {
+			controllerStack.pop();
+		}
+		controllerStack.push(loader.getController());
 
 		// 画面の表示
 		logger.debug("Show window");
@@ -216,8 +198,10 @@ public class SceneManager {
 		StageWrapper currentStage = stageStack.pop();
 		logger.debug(String.format("Close window[%s]", currentStage.getTitle()));
 		currentStage.close();
-		parentController.onCloseChild();
-		currentController = parentController;
+
+		controllerStack.pop();
+		Controller currentController = controllerStack.peek();
+		currentController.onCloseChild();
 
 	}
 

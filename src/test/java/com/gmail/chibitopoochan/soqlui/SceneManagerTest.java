@@ -74,8 +74,7 @@ public class SceneManagerTest {
 		manager.getStageStack().clear();
 		manager.getStageStack().push(parentStage);
 		manager.setFXMLLoader(loader);
-		manager.setCurrentController(oldController);
-		manager.setParentController(oldController);
+		manager.pushController(oldController);
 
 	}
 
@@ -96,11 +95,10 @@ public class SceneManagerTest {
 		assertThat(currentStage.getOwner(), is(ownerWindow));
 		assertThat(currentStage.getModality(), is(Modality.WINDOW_MODAL));
 		assertFalse(currentStage.isResizable());
-		assertThat(currentStage.getTitle(), is(title));
+		assertThat(currentStage.getTitle(), is(config.getString(title)));
 
 		// コントローラの保存
-		assertThat(manager.getCurrentController(), is(newController));
-		assertThat(manager.getParentController(), is(oldController));
+		assertThat(manager.popController(), is(newController));
 
 		// 子画面の表示
 		assertTrue(currentStage.isShowing());
@@ -125,7 +123,7 @@ public class SceneManagerTest {
 		// 画面の設定
 		StageWrapperMock stage = (StageWrapperMock) manager.getStageStack().peek();
 		assertThat(stage.getScene(),is(currentScene));
-		assertThat(stage.getTitle(),is(title));
+		assertThat(stage.getTitle(),is(config.getString(title)));
 
 		// 画面の表示
 		assertTrue(stage.isShowing());
@@ -141,8 +139,8 @@ public class SceneManagerTest {
 	 */
 	@Test public void testSceneClose() {
 		// コントローラの設定
-		manager.setCurrentController(newController);
-		manager.setParentController(oldController);
+		manager.pushController(oldController);
+		manager.pushController(newController);
 
 		// シーンの終了
 		manager.sceneClose();
@@ -151,7 +149,7 @@ public class SceneManagerTest {
 		assertTrue(parentStage.isClose());
 		assertTrue(oldController.called());
 		assertFalse(newController.called());
-		assertEquals(manager.getCurrentController(), oldController);
+		assertEquals(manager.popController(), oldController);
 
 	}
 

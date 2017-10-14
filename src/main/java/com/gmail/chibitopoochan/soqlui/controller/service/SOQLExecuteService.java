@@ -123,9 +123,12 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 			@Override
 			protected List<Map<String, String>> call() throws Exception {
 				List<Map<String, String>> list = useLogic.execute(useSOQL, useAll, useBatchSize);
-				int toIndex = list.size() > useBatchSize ? useBatchSize : list.size();
-				return list.subList(0, toIndex);
+				if(!list.isEmpty()) {
+					int toIndex = list.size() > useBatchSize ? useBatchSize : list.size();
+					list = list.subList(0, toIndex);
+				}
 
+				return list;
 			}
 
 		};

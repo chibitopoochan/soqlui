@@ -52,6 +52,7 @@ public class ConnectionSettingController implements Initializable, Controller {
 		// 接続情報を取得
 		try {
 			settingLogic = new ConnectionSettingLogic();
+			settingLogic.loadSettings();
 
 			// 接続設定の指定があれば取得
 			if(parameter.containsKey("configuration")) {

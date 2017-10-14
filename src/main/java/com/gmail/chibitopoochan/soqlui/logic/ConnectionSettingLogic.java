@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gmail.chibitopoochan.soqlui.config.ConnectionSettingSet;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 
@@ -17,8 +20,21 @@ import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
  * API側とUI側の依存性を下げるために作成
  */
 public class ConnectionSettingLogic {
+	// クラス共通の参照
+	private static final Logger logger = LoggerFactory.getLogger(ConnectionSettingLogic.class);
+
 	private ConnectionSettingSet settings;
 	private Map<String, ConnectionSetting> cachedSettings = new HashMap<>();
+
+	public ConnectionSettingLogic() {
+		try {
+			// 接続情報を取得
+			loadSettings();
+		} catch (Exception e) {
+			// 例外を通知
+			logger.error("Initialize error", e);
+		}
+	}
 
 	/**
 	 * 設定ファイルの読み込み
@@ -26,9 +42,12 @@ public class ConnectionSettingLogic {
 	 * @throws IOException
 	 * @throws IllegalStateException
 	 */
-	public ConnectionSettingLogic() throws IllegalStateException, IOException, XMLStreamException {
+	public void loadSettings() throws IllegalStateException, IOException, XMLStreamException {
 		settings = ConnectionSettingSet.getInstance(true);
-		loadSettings();
+		cachedSettings = settings
+				.getConnectionSettingList()
+				.stream()
+				.collect(Collectors.toMap(ConnectionSetting::getName, setting -> setting));
 	}
 
 	/**
@@ -56,16 +75,6 @@ public class ConnectionSettingLogic {
 	 */
 	public boolean isExists(String name) {
 		return cachedSettings.containsKey(name);
-	}
-
-	/**
-	 * 接続設定を持っていなければ、設定ファイルから取得
-	 */
-	public void loadSettings() {
-		cachedSettings = settings
-				.getConnectionSettingList()
-				.stream()
-				.collect(Collectors.toMap(ConnectionSetting::getName, setting -> setting));
 	}
 
 	/**

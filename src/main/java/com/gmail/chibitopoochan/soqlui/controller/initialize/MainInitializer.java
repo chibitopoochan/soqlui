@@ -12,6 +12,7 @@ import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ResultTablePa
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SObjectListPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ConnectServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExecuteServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExportServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.FieldServiceInitializer;
 
 public class MainInitializer implements Initializer<MainController> {
@@ -42,6 +43,7 @@ public class MainInitializer implements Initializer<MainController> {
 		initList.add(new ConnectServiceInitializer());
 		initList.add(new ExecuteServiceInitializer());
 		initList.add(new FieldServiceInitializer());
+		initList.add(new ExportServiceInitializer());
 
 		initList.forEach(init -> {
 			init.setController(controller);

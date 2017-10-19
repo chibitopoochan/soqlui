@@ -21,17 +21,23 @@ import javafx.scene.control.TableView;
 public class ExecuteServiceInitializer implements ServiceInitializer<MainController>{
 	private SOQLExecuteService service;
 	private TableView<SObjectRecord> resultTable;
+	private MainController controller;
 
 	@Override
 	public void setController(MainController controller) {
 		this.service = controller.getExecutionService();
 		this.resultTable = controller.getResultTable();
+		this.controller = controller;
 	}
 
 	@Override
 	public void initialize() {
 		service.setOnSucceeded(this::succeeded);
 		service.setOnFailed(this::failed);
+		service.soqlProperty().bind(controller.getSoqlArea().textProperty());
+		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
+		service.batchSizeProperty().bind(controller.getBatchSize().textProperty());
+		service.allProperty().bind(controller.getAll().selectedProperty());
 	}
 
 	@Override

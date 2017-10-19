@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.MainInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
@@ -58,6 +59,7 @@ public class MainController implements Initializable, Controller {
 
 	// 中央
 	@FXML private Button execute;
+	@FXML private Button export;
 	@FXML private TextArea soqlArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
@@ -71,6 +73,7 @@ public class MainController implements Initializable, Controller {
 	private ConnectService connectService = new ConnectService();
 	private SOQLExecuteService executionService = new SOQLExecuteService();
 	private FieldProvideService fieldService = new FieldProvideService();
+	private ExportService exportService = new ExportService();
 
 	// 状態管理
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
@@ -87,51 +90,6 @@ public class MainController implements Initializable, Controller {
 		init = new MainInitializer();
 		init.setController(this);
 		init.initialize();
-
-	}
-
-	/**
-	 * 接続イベント
-	 */
-	public void doConnect() {
-		// 変数をバインド
-		progressIndicator.progressProperty().unbind();
-		progressIndicator.visibleProperty().unbind();
-		progressIndicator.progressProperty().bind(connectService.progressProperty());
-		progressIndicator.visibleProperty().bind(connectService.runningProperty());
-
-		connect.setDisable(true);
-
-		// 接続を開始
-		String selected = connectOption.getValue();
-		connectService.setConnectionSetting(setting.getConnectionSetting(selected));
-		connectService.setClosing(false);
-		connectService.start();
-
-	}
-
-	/**
-	 * 切断イベント
-	 */
-	public void doDisconnect() {
-		// 変数をバインド
-		progressIndicator.progressProperty().unbind();
-		progressIndicator.visibleProperty().unbind();
-		progressIndicator.progressProperty().bind(connectService.progressProperty());
-		progressIndicator.visibleProperty().bind(connectService.runningProperty());
-
-		// 切断を開始
-		connectService.setClosing(true);
-		connectService.start();
-
-	}
-
-	/**
-	 * SOQLを実行
-	 */
-	public void doExecute() {
-		// TODO オプションは後程設定
-		executionService.start();
 
 	}
 
@@ -153,6 +111,34 @@ public class MainController implements Initializable, Controller {
 	@Override
 	public void onCloseChild() {
 		init.reset();
+	}
+
+	/**
+	 * @return exportService
+	 */
+	public ExportService getExportService() {
+		return exportService;
+	}
+
+	/**
+	 * @param exportService セットする exportService
+	 */
+	public void setExportService(ExportService exportService) {
+		this.exportService = exportService;
+	}
+
+	/**
+	 * @return export
+	 */
+	public Button getExport() {
+		return export;
+	}
+
+	/**
+	 * @param export セットする export
+	 */
+	public void setExport(Button export) {
+		this.export = export;
 	}
 
 	/**

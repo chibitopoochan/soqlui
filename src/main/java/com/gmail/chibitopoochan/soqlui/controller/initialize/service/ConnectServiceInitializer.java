@@ -60,13 +60,13 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		this.columnSearch = controller.getColumnSearch();
 		this.fieldMasterList = controller.getFieldMasterList();
 		this.fieldList = controller.getFieldList();
-
 	}
 
 	@Override
 	public void initialize() {
 		service.setOnSucceeded(this::succeeded);
 		service.setOnFailed(this::failed);
+
 	}
 
 	@Override

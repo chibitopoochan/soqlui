@@ -1,16 +1,24 @@
 package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
+import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
+import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
+import com.gmail.chibitopoochan.soqlui.util.format.ExcelFormatDecoration;
+import com.gmail.chibitopoochan.soqlui.util.format.FormatDecoration;
+import com.gmail.chibitopoochan.soqlui.util.format.SimpleFormatDecoration;
+import com.gmail.chibitopoochan.soqlui.util.format.WithoutHeaderExcelFormatDecoration;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
-import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -44,10 +52,10 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		MenuItem copyNoHead		= new MenuItem("Copy select area(Excel No Head)");
 
 		// メニューのイベント設定
-		copyNormal.setOnAction(this::copyNormal);
-		copyWithExcel.setOnAction(this::copyWithExcel);
-		copyWithCSV.setOnAction(this::copyWithCSV);
-		copyNoHead.setOnAction(this::copyNoHead);
+		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
+		copyWithExcel.setOnAction(e -> copy(new ExcelFormatDecoration(), e.getSource()));
+		copyWithCSV.setOnAction(e -> copy(new CSVFormatDecoration(), e.getSource()));
+		copyNoHead.setOnAction(e -> copy(new WithoutHeaderExcelFormatDecoration(), e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -82,77 +90,11 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private void keyTyped(KeyEvent e) {
 		KeyCodeCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_ANY);
 		if(copyKey.match(e)) {
-			copyNormal(new ActionEvent(e.getSource(), e.getTarget()));
+			copy(new SimpleFormatDecoration(), e.getSource());
 		}
 	}
 
-	public void copyNoHead(ActionEvent e) {
-		FormatDecorator decorator = new FormatDecorator();
-		decorator.tableBefore = "<table border=\"1\">";
-		decorator.headerBefore = "<tr>";
-		decorator.headerValueBefore = "<td>";
-		decorator.headerValueAfter = "</td>";
-		decorator.headerAfter = "</tr>";
-		decorator.rowBefore = "<tr>";
-		decorator.valueBefore = "<td>";
-		decorator.valueAfter = "</td>";
-		decorator.rowAfter = "</tr>";
-		decorator.tableAfter = "</table>";
-		decorator.showHeader = false;
-
-		copy(decorator, e.getSource());
-
-		e.consume();
-
-	}
-
-	public void copyWithCSV(ActionEvent e) {
-		FormatDecorator decorator = new FormatDecorator();
-		decorator.headerAfter = System.lineSeparator();
-		decorator.headerValueBefore = "\"";
-		decorator.headerValueAfter = "\"";
-		decorator.valueBefore = "\"";
-		decorator.valueAfter = "\"";
-		decorator.rowAfter = System.lineSeparator();
-		decorator.valueBetween = ",";
-
-		copy(decorator, e.getSource());
-
-		e.consume();
-
-	}
-
-	public void copyWithExcel(ActionEvent e) {
-		FormatDecorator decorator = new FormatDecorator();
-		decorator.tableBefore = "<table border=\"1\">";
-		decorator.headerBefore = "<tr bgcolor=\"#5BA5DC\">";
-		decorator.headerValueBefore = "<th>";
-		decorator.headerValueAfter = "</th>";
-		decorator.headerAfter = "</tr>";
-		decorator.rowBefore = "<tr>";
-		decorator.valueBefore = "<td>";
-		decorator.valueAfter = "</td>";
-		decorator.rowAfter = "</tr>";
-		decorator.tableAfter = "</table>";
-
-		copy(decorator, e.getSource());
-
-		e.consume();
-
-	}
-
-	public void copyNormal(ActionEvent e) {
-		FormatDecorator decorator = new FormatDecorator();
-		decorator.headerAfter = System.lineSeparator();
-		decorator.rowAfter = System.lineSeparator();
-		decorator.valueBetween = "\t";
-		decorator.madatoryLastRowDecoration = false;
-
-		copy(decorator, e.getSource());
-		e.consume();
-	}
-
-	public void copy(FormatDecorator decorator, Object source) {
+	private void copy(FormatDecoration decorator, Object source) {
 		TableView<?> table;
 
 		if(source instanceof MenuItem) {
@@ -164,88 +106,52 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			throw new IllegalArgumentException("cannot cast to TableView/MenuItem from " + source);
 		}
 
-		selectedCopyToClipboard(decorator, table);
+		String formattedContent = FormatUtils.format(decorator,
+				() -> buildFormatValueProvider(table, decorator.isShowHeader()));
+
+		// クリップボードへコピー
+		ClipboardContent content = new ClipboardContent();
+		content.putString(formattedContent);
+		Clipboard.getSystemClipboard().setContent(content);
 
 	}
 
-	private class FormatDecorator {
-		private String tableBefore = "";
-		private String headerBefore = "";
-		private String headerValueBefore = "";
-		private String headerValueAfter = "";
-		private String headerAfter = "";
-		private String rowBefore = "";
-		private String valueBefore = "";
-		private String valueAfter = "";
-		private String valueBetween = "";
-		private String rowAfter = "";
-		private String tableAfter = "";
-
-		private boolean madatoryLastRowDecoration = true;
-		private boolean showHeader = true;
-
-	}
-
-	public void selectedCopyToClipboard(FormatDecorator decorator, TableView<?> table) {
+	private List<List<String>> buildFormatValueProvider(TableView<?> table, boolean withHeader) {
 		// 選択範囲を取得
 		ObservableList<TablePosition> positionList =
 				 (ObservableList<TablePosition>) table.getSelectionModel().getSelectedCells();
 
-		StringBuilder tempText = new StringBuilder();
+		List<List<String>> rowList = new LinkedList<>();
+		List<String> columnList = new LinkedList<>();
 
-		final int firstRow = positionList.stream().map(t -> t.getRow()).collect(Collectors.minBy((T1,T2) -> T1-T2)).orElse(0);
-		final int firstColumn = positionList.stream().map(t -> t.getColumn()).collect(Collectors.minBy((T1,T2) -> T1-T2)).orElse(0);
-		final int lastColumn = positionList.stream().map(t -> t.getColumn()).collect(Collectors.maxBy((T1,T2) -> T1-T2)).orElse(0);
-
-		tempText.append(decorator.tableBefore);
-
-		// ヘッダーを構築
-		if(decorator.showHeader) {
-			tempText.append(decorator.headerBefore);
-			for(int i = firstColumn; i <= lastColumn; i++) {
-				if(i != firstColumn) {
-					tempText.append(decorator.valueBetween);
-				}
-				tempText.append(decorator.headerValueBefore);
-				tempText.append(table.getVisibleLeafColumn(i).getText());
-				tempText.append(decorator.headerValueAfter);
-			}
-			tempText.append(decorator.headerAfter);
+		if(withHeader) {
+			table.getVisibleLeafColumns()
+				.stream()
+				.filter(column ->
+					positionList.stream().anyMatch(
+						position -> position.getTableColumn() == column
+					)
+				).forEach(column -> {
+				columnList.add(column.getText());
+			});
+			rowList.add(new ArrayList<>(columnList));
+			columnList.clear();
 		}
-
-		// 本体を構築
 		positionList.forEach(position -> {
-			if(position.getColumn()-firstColumn == 0) {
-				// 行の終了と開始
-				if (position.getRow()-firstRow == 0) {
-					tempText.append(decorator.rowBefore);
-				} else {
-					tempText.append(decorator.rowAfter);
-					tempText.append(decorator.rowBefore);
-				}
-			} else {
-				// 項目間
-				tempText.append(decorator.valueBetween);
+			if(position.getColumn() == 0 && !columnList.isEmpty()) {
+				rowList.add(new ArrayList<>(columnList));
+				columnList.clear();
 			}
 
-			// 項目
-			tempText.append(decorator.valueBefore);
 			Object column = table.getColumns().get(position.getColumn());
 			if (column instanceof TableColumn) {
-				tempText.append(((TableColumn<?,?>)column).getCellData(position.getRow()));
+				columnList.add(((TableColumn<?,String>)column).getCellData(position.getRow()));
 			}
-			tempText.append(decorator.valueAfter);
 
 		});
-		if(decorator.madatoryLastRowDecoration) {
-			tempText.append(decorator.rowAfter);
-		}
-		tempText.append(decorator.tableAfter);
+		rowList.add(columnList);
 
-		// クリップボードへコピー
-		ClipboardContent content = new ClipboardContent();
-		content.putString(tempText.toString());
-		Clipboard.getSystemClipboard().setContent(content);
+		return rowList;
 
 	}
 

@@ -105,7 +105,7 @@
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin></Separator>
-                        <Button fx:id="execute" mnemonicParsing="false" onAction="#doExecute" text="Execute">
+                        <Button fx:id="execute" mnemonicParsing="false" text="Execute">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
@@ -137,8 +137,8 @@
                   <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" />
                   <HBox prefHeight="27.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" onAction="#doConnect" text="Connect" />
-                        <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" onAction="#doDisconnect" text="Disconnect">
+                        <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" text="Connect" />
+                        <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" text="Disconnect">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>

@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.MainInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
+import com.gmail.chibitopoochan.soqlui.controller.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
@@ -26,7 +26,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -56,6 +58,7 @@ public class MainController implements Initializable, Controller {
 	// 左側下段
 	@FXML private TableView<DescribeField> fieldList;
 	@FXML private TextField columnSearch;
+	@FXML private Label objectName;
 
 	// 中央
 	@FXML private Button execute;
@@ -64,6 +67,10 @@ public class MainController implements Initializable, Controller {
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
 	@FXML private TableView<SObjectRecord> resultTable;
+
+	// 下段
+	@FXML private ProgressBar progressBar;
+	@FXML private Label progressText;
 
 	// 業務ロジック
 	private SceneManager manager;
@@ -111,6 +118,20 @@ public class MainController implements Initializable, Controller {
 	@Override
 	public void onCloseChild() {
 		init.reset();
+	}
+
+	/**
+	 * @return progressBar
+	 */
+	public ProgressBar getProgressBar() {
+		return progressBar;
+	}
+
+	/**
+	 * @param progress
+	 */
+	public void setProgressBar(ProgressBar progress) {
+		this.progressBar = progress;
 	}
 
 	/**
@@ -286,6 +307,34 @@ public class MainController implements Initializable, Controller {
 	 */
 	public ObservableList<DescribeField> getFieldMasterList() {
 		return fieldMasterList;
+	}
+
+	/**
+	 * @return progressText
+	 */
+	public Label getProgressText() {
+		return progressText;
+	}
+
+	/**
+	 * @param progressText セットする progressText
+	 */
+	public void setProgressText(Label progressText) {
+		this.progressText = progressText;
+	}
+
+	/**
+	 * @return objectName
+	 */
+	public Label getObjectName() {
+		return objectName;
+	}
+
+	/**
+	 * @param objectName セットする objectName
+	 */
+	public void setObjectName(Label objectName) {
+		this.objectName = objectName;
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.gmail.chibitopoochan.soqlui.util.format;
 
-public class FormatDecoration {
+public abstract class FormatDecoration {
 	private String tableBefore = "";
 	private String headerBefore = "";
 	private String headerValueBefore = "";

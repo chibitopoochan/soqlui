@@ -6,6 +6,6 @@ public class SimpleFormatDecoration extends FormatDecoration {
 		setRowAfter(System.lineSeparator());
 		setValueBetween("\t");
 		setMadatoryLastRowDecoration(false);
-
+		setShowHeader(false);
 	}
 }

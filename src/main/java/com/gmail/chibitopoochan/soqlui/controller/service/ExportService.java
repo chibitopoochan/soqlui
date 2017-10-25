@@ -138,8 +138,12 @@ public class ExportService extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				try(BufferedWriter out = Files.newBufferedWriter(exportPath, Charset.forName("UTF-8"))) {
-					List<Map<String, String>> recordList = useLogic.execute(useSOQL, useAll, useBatchSize);
 					List<List<String>> rowList = new LinkedList<>();
+
+					updateMessage("SOQL Executing...");
+					List<Map<String, String>> recordList = useLogic.execute(useSOQL, useAll, useBatchSize);
+					int size = useLogic.getSize();
+					int done = 0;
 
 					if(!recordList.isEmpty()) {
 						rowList.add(recordList.get(0).keySet().stream().collect(Collectors.toList()));
@@ -152,11 +156,18 @@ public class ExportService extends Service<Void> {
 
 						String csv = FormatUtils.format(new CSVFormatDecoration(), () -> rowList);
 						out.write(csv);
+
+						done += recordList.size();
+
+						updateProgress(done, size);
+						updateMessage(String.format("%d / %d", done, size));
+
 						rowList.clear();
 						recordList = useLogic.executeMore();
 					}
 
 					out.flush();
+					updateMessage("Exported " + size);
 				}
 
 				return null;

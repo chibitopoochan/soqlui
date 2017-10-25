@@ -27,12 +27,13 @@ public class FormatUtils {
 				tempText.append(decorator.getHeaderAfter());
 			} else {
 				tempText.append(decorator.getRowBefore());
-				columnList.forEach(value -> {
-					if(value != columnList.get(0)) {
-						tempText.append(decorator.getValueBetween());
-					}
+				tempText.append(decorator.getValueBefore());
+				tempText.append(columnList.get(0));
+				tempText.append(decorator.getValueAfter());
+				columnList.subList(1, columnList.size()).forEach(value -> {
+					tempText.append(decorator.getValueBetween());
 					tempText.append(decorator.getValueBefore());
-					tempText.append(value);
+					tempText.append(value == null ? "" : value);
 					tempText.append(decorator.getValueAfter());
 				});
 				tempText.append(decorator.getRowAfter());

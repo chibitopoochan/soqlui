@@ -1,6 +1,7 @@
 package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.service.FieldServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.parts.custom.DragSelectableTableCell;
@@ -21,6 +22,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 	private FieldProvideService service;
 	private TextField objectSearch;
 	private ObservableList<DescribeSObject> objectMasterList;
+	private FieldServiceInitializer initService;
 
 	@Override
 	public void setController(MainController controller) {
@@ -28,6 +30,9 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 		service = controller.getFieldService();
 		objectMasterList = controller.getObjectMasterList();
 		objectSearch = controller.getObjectSearch();
+
+		initService = new FieldServiceInitializer();
+		initService.setController(controller);
 	}
 
 	@Override
@@ -42,6 +47,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 
 		sObjectList.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+				initService.initialize();
 				service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
 				service.start();
 			}

@@ -29,7 +29,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 		service.setOnFailed(this::failed);
 		service.soqlProperty().bind(controller.getSoqlArea().textProperty());
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
-		service.batchSizeProperty().bind(controller.getBatchSize().textProperty());
+		service.setBatchSize("200");
 		service.allProperty().bind(controller.getAll().selectedProperty());
 
 	}

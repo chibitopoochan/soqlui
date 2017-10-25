@@ -3,10 +3,10 @@ package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.service.GenerateSOQLServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
@@ -14,16 +14,18 @@ import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.ExcelFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.FormatDecoration;
+import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.SimpleFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.WithoutHeaderExcelFormatDecoration;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -36,30 +38,50 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private TableView<SObjectRecord> resultTable;
 	private TableView<DescribeSObject> sObjectList;
 	private TableView<DescribeField> fieldList;
+	private Label objectName;
+	private TextArea soqlArea;
+	private MenuItem selectRecordCount;
+	private MenuItem selectAllColumns;
+	private MenuItem copyNormal;
+	private MenuItem copyWithExcel;
+	private MenuItem copyWithCSV;
+	private MenuItem copyNoHead;
+
+	private GenerateSOQLServiceInitializer initService;
+	private FieldProvideService service;
 
 	@Override
 	public void setController(MainController controller) {
 		this.resultTable = controller.getResultTable();
 		this.sObjectList = controller.getsObjectList();
 		this.fieldList = controller.getFieldList();
+		this.objectName = controller.getObjectName();
+		this.soqlArea = controller.getSoqlArea();
+		this.service = controller.getFieldService();
+
+		this.initService = new GenerateSOQLServiceInitializer();
+		initService.setController(controller);
 	}
 
 	@Override
 	public void initialize() {
-		MenuItem copyNormal		= new MenuItem("Copy select area");
-		MenuItem copyWithExcel	= new MenuItem("Copy select area(Excel)");
-		MenuItem copyWithCSV	= new MenuItem("Copy select area(CSV)");
-		MenuItem copyNoHead		= new MenuItem("Copy select area(Excel No Head)");
+		copyNormal		= new MenuItem("Copy select area");
+		copyWithExcel	= new MenuItem("Copy select area(Excel)");
+		copyWithCSV	= new MenuItem("Copy select area(CSV)");
+		copyNoHead		= new MenuItem("Copy select area(Excel No Head)");
+		selectRecordCount = new MenuItem("Select record count");
+		selectAllColumns = new MenuItem("Select all columns");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
 		copyWithExcel.setOnAction(e -> copy(new ExcelFormatDecoration(), e.getSource()));
 		copyWithCSV.setOnAction(e -> copy(new CSVFormatDecoration(), e.getSource()));
 		copyNoHead.setOnAction(e -> copy(new WithoutHeaderExcelFormatDecoration(), e.getSource()));
+		selectRecordCount.setOnAction(e -> query(new QueryFormatDecoration(), e.getSource()));
+		selectAllColumns.setOnAction(e -> queryWithAllColumns(new QueryFormatDecoration(), e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
-		contextMenu.getItems().addAll(copyNormal, copyWithExcel, copyWithCSV, copyNoHead);
 		resultTable.setContextMenu(contextMenu);
 		sObjectList.setContextMenu(contextMenu);
 		fieldList.setContextMenu(contextMenu);
@@ -77,14 +99,26 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	}
 
 	private void showContextMenu(MouseEvent e) {
-		if(e.getButton() == MouseButton.SECONDARY) {
-			Object souce = e.getSource();
-			if(souce instanceof TableView) {
-				TableView<?> table  = (TableView<?>) souce;
-				table.getContextMenu().setUserData(table);
-				table.getContextMenu().show(table, 0, 0);
-			}
+		if(e.getButton() != MouseButton.SECONDARY) 	return;
+		if(!(e.getSource() instanceof TableView)) return;
+
+		TableView<?> table  = (TableView<?>) e.getSource();
+		table.getContextMenu().setUserData(table);
+
+		if(table.getItems().isEmpty()) return;
+
+		ContextMenu context = table.getContextMenu();
+		context.getItems().clear();
+		if(table == sObjectList) {
+			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead);
+			context.show(table, 0, 0);
+
+		} else if(table == fieldList) {
+			context.getItems().addAll(copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
+			context.show(table, 0, 0);
+
 		}
+
 	}
 
 	private void keyTyped(KeyEvent e) {
@@ -94,7 +128,61 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		}
 	}
 
+	private void query(FormatDecoration decorator, Object source) {
+
+		// 項目を構築
+		String count = "count(id)";
+		List<String> columnList = new ArrayList<>();
+		columnList.add(count);
+		List<List<String>> rowList = new ArrayList<>();
+		rowList.add(columnList);
+
+		// SOQLの設定
+		decorator.setTableAfter("from " + getObjectName(source));
+		String formattedContent = FormatUtils.format(decorator, () -> rowList);
+		soqlArea.setText(formattedContent);
+
+	}
+
+	private void queryWithAllColumns(FormatDecoration decorator, Object source) {
+		initService.initialize();
+		initService.setFormatDecoration(decorator);
+		service.setSObject(getObjectName(source));
+		service.start();
+	}
+
+	private String getObjectName(Object source) {
+		// オブジェクト名の取得
+		String objectNameText = "";
+		if(source instanceof MenuItem) {
+			MenuItem item = (MenuItem) source;
+			TableView<?> table = (TableView<?>) item.getParentPopup().getUserData();
+			if(table == sObjectList) {
+				DescribeSObject object = sObjectList.getSelectionModel().getSelectedItem();
+				objectNameText = object.getName();
+			} else if(table == fieldList) {
+				objectNameText = objectName.getText();
+			} else {
+				throw new IllegalArgumentException("cannot cast to sObjectList/FieldList from " + source);
+			}
+		} else {
+			throw new IllegalArgumentException("cannot cast to TableView/MenuItem from " + source);
+		}
+
+		return objectNameText;
+	}
+
 	private void copy(FormatDecoration decorator, Object source) {
+		String formattedContent = buildFormat(decorator, source);
+
+		// クリップボードへコピー
+		ClipboardContent content = new ClipboardContent();
+		content.putString(formattedContent);
+		Clipboard.getSystemClipboard().setContent(content);
+
+	}
+
+	private String buildFormat(FormatDecoration decorator, Object source) {
 		TableView<?> table;
 
 		if(source instanceof MenuItem) {
@@ -106,18 +194,21 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			throw new IllegalArgumentException("cannot cast to TableView/MenuItem from " + source);
 		}
 
-		String formattedContent = FormatUtils.format(decorator,
-				() -> buildFormatValueProvider(table, decorator.isShowHeader()));
+		String formattedContent = FormatUtils.format(decorator,() -> buildFormatValueProvider(table, decorator.isShowHeader()));
 
-		// クリップボードへコピー
-		ClipboardContent content = new ClipboardContent();
-		content.putString(formattedContent);
-		Clipboard.getSystemClipboard().setContent(content);
-
+		return formattedContent;
 	}
 
+	/**
+	 * 選択された項目をもとにフォーマットを構築します
+	 * @param table 対象のTableView
+	 * @param withHeader ヘッダを含むならtrue
+	 * @return 選択項目の二次元配列
+	 */
+	@SuppressWarnings("unchecked")
 	private List<List<String>> buildFormatValueProvider(TableView<?> table, boolean withHeader) {
 		// 選択範囲を取得
+		@SuppressWarnings("rawtypes")
 		ObservableList<TablePosition> positionList =
 				 (ObservableList<TablePosition>) table.getSelectionModel().getSelectedCells();
 

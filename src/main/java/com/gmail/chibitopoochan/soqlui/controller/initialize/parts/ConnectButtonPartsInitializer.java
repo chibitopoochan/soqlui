@@ -16,6 +16,8 @@ import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -34,6 +36,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private SOQLExecuteService executor;
 	private ProgressIndicator progressIndicator;
 	private ExportService exportor;
+	private ProgressBar progressBar;
+	private Label progressText;
 
 	private Optional<File> exportHistory = Optional.empty();
 
@@ -50,6 +54,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.executor = controller.getExecutionService();
 		this.export = controller.getExport();
 		this.exportor = controller.getExportService();
+		this.progressBar = controller.getProgressBar();
+		this.progressText = controller.getProgressText();
 	}
 
 	public void initialize() {
@@ -99,15 +105,29 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	}
 
 	public void doExport() {
+		// 変数をバインド
+		progressBar.progressProperty().unbind();
+		progressBar.visibleProperty().unbind();
+		progressText.textProperty().unbind();
+		progressBar.progressProperty().bind(exportor.progressProperty());
+		progressBar.visibleProperty().bind(exportor.runningProperty());
+		progressText.textProperty().bind(exportor.messageProperty());
+
 		export.setDisable(true);
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Data Export");
 		chooser.getExtensionFilters().add(new ExtensionFilter("CSV Format", "csv"));
-		exportHistory.ifPresent(value -> chooser.setInitialDirectory(value));
+		exportHistory.ifPresent(value -> {
+			chooser.setInitialDirectory(value.getParentFile());
+			chooser.setInitialFileName(value.getName());
+		});
 
 		File saveFile = chooser.showSaveDialog(SceneManager.getInstance().getStageStack().peek().unwrap());
-		exportHistory = Optional.of(saveFile.getParentFile());
+		exportHistory = Optional.ofNullable(saveFile);
+		if(!exportHistory.isPresent()) {
+			return;
+		}
 
 		if(saveFile.exists()) {
 			saveFile.delete();

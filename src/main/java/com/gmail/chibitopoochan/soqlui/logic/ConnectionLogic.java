@@ -102,4 +102,13 @@ public class ConnectionLogic {
 		return list;
 	}
 
+	public int getSize() {
+		int size = 0;
+		if(connector.isPresent()) {
+			size = connector.get().getSize();
+		}
+
+		return size;
+	}
+
 }

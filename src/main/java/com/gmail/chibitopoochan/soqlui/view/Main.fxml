@@ -46,18 +46,8 @@
         </menus>
       </MenuBar>
    </top>
-   <bottom>
-      <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="18.0" prefWidth="600.0">
-         <children>
-            <ProgressBar prefWidth="200.0" progress="0.0" />
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </BorderPane.margin>
-      </HBox>
-   </bottom>
    <center>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
         <items>
             <VBox>
                <children>
@@ -122,10 +112,13 @@
                         </Button>
                      </children>
                   </HBox>
+                  <TableView fx:id="resultTable" />
                </children>
             </VBox>
-            <TableView fx:id="resultTable" />
         </items>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </SplitPane>
    </center>
    <left>
@@ -173,11 +166,25 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Fields">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Fields">
+                           <HBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="sObject :">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="objectName" text="None">
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
                   <TextField fx:id="columnSearch" promptText="Search...">
                      <VBox.margin>
                         <Insets bottom="5.0" />
@@ -197,4 +204,15 @@
          </padding>
       </SplitPane>
    </left>
+   <bottom>
+      <AnchorPane prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="0.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Label fx:id="progressText" alignment="CENTER" contentDisplay="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+         <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </padding>
+      </AnchorPane>
+   </bottom>
 </BorderPane>

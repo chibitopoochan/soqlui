@@ -18,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -47,6 +48,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 
 	private TableView<DescribeField> fieldList;
 
+	private Label objectName;
+
 	@Override
 	public void setController(MainController controller) {
 		this.service = controller.getConnectService();
@@ -60,6 +63,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		this.columnSearch = controller.getColumnSearch();
 		this.fieldMasterList = controller.getFieldMasterList();
 		this.fieldList = controller.getFieldList();
+		this.objectName = controller.getObjectName();
 	}
 
 	@Override
@@ -90,6 +94,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				columnSearch.setText("");
 				fieldMasterList.clear();
 				fieldList.getItems().clear();
+				objectName.setText("None");
 				columnSearch.setDisable(true);
 			} else {
 				// ボタン等を制御

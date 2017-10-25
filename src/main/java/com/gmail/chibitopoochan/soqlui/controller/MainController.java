@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.MainInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.MainControllerInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.controller.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
@@ -87,14 +87,14 @@ public class MainController implements Initializable, Controller {
 	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
 
 	// 初期化
-	private MainInitializer init;
+	private MainControllerInitializer init;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.manager = SceneManager.getInstance();
 
 		// 画面の初期化
-		init = new MainInitializer();
+		init = new MainControllerInitializer();
 		init.setController(this);
 		init.initialize();
 

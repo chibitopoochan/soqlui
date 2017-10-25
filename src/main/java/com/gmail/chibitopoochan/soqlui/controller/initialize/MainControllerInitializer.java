@@ -7,15 +7,15 @@ import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectButtonPartsInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectOptionPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ContextPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.FieldListPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ResultTablePartInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SOQLAreaPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SObjectListPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ConnectServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExecuteServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExportServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.service.FieldServiceInitializer;
 
-public class MainInitializer implements Initializer<MainController> {
+public class MainControllerInitializer implements Initializer<MainController> {
 	private MainController controller;
 	private Initializer<MainController> mainButtonsInit;
 	private Initializer<MainController> connectOptionInit;
@@ -34,10 +34,10 @@ public class MainInitializer implements Initializer<MainController> {
 		connectOptionInit = new ConnectOptionPartInitializer();
 		initList.add(mainButtonsInit);
 		initList.add(connectOptionInit);
-		initList.add(new FieldListPartInitializer());
 		initList.add(new ResultTablePartInitializer());
 		initList.add(new SObjectListPartInitializer());
 		initList.add(new ContextPartInitializer());
+		initList.add(new SOQLAreaPartInitializer());
 
 		// サービスの初期化
 		initList.add(new ConnectServiceInitializer());

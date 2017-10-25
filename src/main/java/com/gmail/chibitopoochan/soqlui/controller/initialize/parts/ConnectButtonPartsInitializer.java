@@ -51,7 +51,6 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.executor = controller.getExecutionService();
 		this.progressIndicator = controller.getProgressIndicator();
 		this.execute = controller.getExecute();
-		this.executor = controller.getExecutionService();
 		this.export = controller.getExport();
 		this.exportor = controller.getExportService();
 		this.progressBar = controller.getProgressBar();

@@ -111,13 +111,10 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		context.getItems().clear();
 		if(table == sObjectList) {
 			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead);
-			context.show(table, 0, 0);
-
-		} else if(table == fieldList) {
+		} else {
 			context.getItems().addAll(copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
-			context.show(table, 0, 0);
-
 		}
+		context.show(table, 0, 0);
 
 	}
 

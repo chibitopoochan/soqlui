@@ -41,7 +41,7 @@ public class ConnectService extends Service<Void> {
 	/**
 	 * 接続切断状態のプロパティ
 	 */
-	private BooleanProperty closing = new SimpleBooleanProperty(false);
+	private BooleanProperty closing = new SimpleBooleanProperty(true);
 	public void setClosing(boolean close) {
 		closing.set(close);
 	}

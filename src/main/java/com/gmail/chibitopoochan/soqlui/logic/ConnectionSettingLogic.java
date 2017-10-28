@@ -87,6 +87,32 @@ public class ConnectionSettingLogic {
 	}
 
 	/**
+	 * 前回選択された接続設定を取得
+	 * @param string 設定値が存在しない場合の初期値
+	 * @return 前回選択した接続設定名
+	 */
+	public String getSelectedName(String string) {
+		return cachedSettings.values()
+				.stream()
+				.filter(s -> s.isSelected())
+				.map(s -> s.getName())
+				.findFirst()
+				.orElse(string);
+	}
+
+	/**
+	 * 選択した接続設定を保存
+	 * @param name 接続した接続設定名
+	 */
+	public void setSelectedName(String name) {
+		cachedSettings.values().stream().forEach(s -> {
+			s.setSelected(name.equals(s.getName()));
+		});
+		storeSettings();
+
+	}
+
+	/**
 	 * 設定の更新（または追加）
 	 * @param setting 登録する設定
 	 */

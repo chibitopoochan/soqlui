@@ -191,6 +191,11 @@ public class ConnectionSettingSet {
 		writer.writeCharacters(setting.getAuthEndPoint());
 		writer.writeEndElement();
 
+		// 選択済み
+		writer.writeStartElement("", Properties.SELECTED, "");
+		writer.writeCharacters(Boolean.toString(setting.isSelected()));
+		writer.writeEndElement();
+
 		writer.writeEndElement();
 
 	}
@@ -235,17 +240,31 @@ public class ConnectionSettingSet {
 	private void analyzeEvent(XMLStreamReader reader) throws XMLStreamException {
 		switch(reader.next()) {
 		case XMLStreamConstants.START_ELEMENT:
-			if(reader.getLocalName().equals(Properties.CONNECTION_ELEMENT)) {
+			switch(reader.getLocalName()) {
+			case Properties.CONNECTION_ELEMENT:
 				setting = new ConnectionSetting();
 				setting.setName(reader.getAttributeValue(null, Properties.NAME));
-			} else if(reader.getLocalName().equals(Properties.USERNAME)) {
+				break;
+
+			case Properties.USERNAME:
 				setting.setUsername(reader.getElementText());
-			} else if(reader.getLocalName().equals(Properties.PASSWORD)) {
+				break;
+
+			case Properties.PASSWORD:
 				setting.setPassword(reader.getElementText());
-			} else if(reader.getLocalName().equals(Properties.TOKEN)) {
+				break;
+
+			case Properties.TOKEN:
 				setting.setToken(reader.getElementText());
-			} else if(reader.getLocalName().equals(Properties.AUTH_END_POINT)) {
+				break;
+
+			case Properties.AUTH_END_POINT:
 				setting.setAuthEndPoint(reader.getElementText());
+				break;
+
+			case Properties.SELECTED:
+				setting.setSelected(Boolean.parseBoolean(reader.getElementText()));
+				break;
 			}
 			break;
 

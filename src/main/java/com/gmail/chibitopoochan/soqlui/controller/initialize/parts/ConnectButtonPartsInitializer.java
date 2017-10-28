@@ -151,14 +151,15 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		progressIndicator.progressProperty().bind(connector.progressProperty());
 		progressIndicator.visibleProperty().bind(connector.runningProperty());
 
-		connect.setDisable(true);
-
 		// 接続を開始
 		String selected = connectOption.getValue();
 		connector.setConnectionSetting(setting.getConnectionSetting(selected));
 		connector.setClosing(false);
 		connector.start();
+		connect.setDisable(true);
 
+		// 接続名を保存
+		setting.setSelectedName(selected);
 	}
 
 }

@@ -32,7 +32,8 @@ public class ConnectOptionPartInitializer implements PartsInitializer<MainContro
 		} else {
 			options.getItems().addAll(option);
 		}
-		options.setValue(options.getItems().get(0));
+		options.setValue(controller.getSetting().getSelectedName(options.getItems().get(0)));
+		logger.debug(String.format("Default option [%s]", options.getValue()));
 		logger.debug(String.format("Load options [%s]", option.size()));
 	}
 

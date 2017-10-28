@@ -40,6 +40,7 @@ public interface Constants {
 		String PASSWORD = "password";
 		String TOKEN = "token";
 		String NAME = "name";
+		String SELECTED = "selected";
 	}
 
 }

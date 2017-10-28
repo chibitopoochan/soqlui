@@ -6,6 +6,7 @@ public class ConnectionSetting {
 	private String password;
 	private String token;
 	private String authEndPoint;
+	private boolean selected;
 
 	/**
 	 * @return username
@@ -66,6 +67,18 @@ public class ConnectionSetting {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+	/**
+	 * @return selected
+	 */
+	public boolean isSelected() {
+		return selected;
+	}
+	/**
+	 * @param selected セットする selected
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 }

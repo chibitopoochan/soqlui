@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +69,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
 	@FXML private TableView<SObjectRecord> resultTable;
+	@FXML private TextField resultSearch;
 
 	// 下段
 	@FXML private ProgressBar progressBar;
@@ -85,6 +88,7 @@ public class MainController implements Initializable, Controller {
 	// 状態管理
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
 	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
+	private ObservableList<SObjectRecord> resultMasterList = FXCollections.observableArrayList();
 
 	// 初期化
 	private MainControllerInitializer init;
@@ -117,7 +121,28 @@ public class MainController implements Initializable, Controller {
 	 */
 	@Override
 	public void onCloseChild() {
+		try {
+			setting.loadSettings();
+		} catch (IllegalStateException | IOException | XMLStreamException e) {
+			logger.error("Load settings error", e);
+		}
 		init.reset();
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public TextField getResultSearch() {
+		return resultSearch;
+	}
+
+	/**
+	 *
+	 * @param resultSearch
+	 */
+	public void setResultSearch(TextField resultSearch) {
+		this.resultSearch = resultSearch;
 	}
 
 	/**
@@ -335,6 +360,20 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setObjectName(Label objectName) {
 		this.objectName = objectName;
+	}
+
+	/**
+	 * @return resultMasterList
+	 */
+	public ObservableList<SObjectRecord> getResultMasterList() {
+		return resultMasterList;
+	}
+
+	/**
+	 * @param resultMasterList セットする resultMasterList
+	 */
+	public void setResultMasterList(ObservableList<SObjectRecord> resultMasterList) {
+		this.resultMasterList = resultMasterList;
 	}
 
 }

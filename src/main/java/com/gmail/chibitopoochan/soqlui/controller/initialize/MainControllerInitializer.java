@@ -7,6 +7,7 @@ import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectButtonPartsInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectOptionPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ContextPartInitializer;
+import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.FieldListPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ResultTablePartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SOQLAreaPartInitializer;
 import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SObjectListPartInitializer;
@@ -38,6 +39,7 @@ public class MainControllerInitializer implements Initializer<MainController> {
 		initList.add(new SObjectListPartInitializer());
 		initList.add(new ContextPartInitializer());
 		initList.add(new SOQLAreaPartInitializer());
+		initList.add(new FieldListPartInitializer());
 
 		// サービスの初期化
 		initList.add(new ConnectServiceInitializer());

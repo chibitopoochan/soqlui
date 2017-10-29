@@ -47,7 +47,7 @@
       </MenuBar>
    </top>
    <center>
-      <SplitPane orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
         <items>
             <VBox>
                <children>
@@ -112,8 +112,20 @@
                         </Button>
                      </children>
                   </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <TextField fx:id="resultSearch" promptText="Search...">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </TextField>
                   <TableView fx:id="resultTable" />
                </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
             </VBox>
         </items>
          <padding>

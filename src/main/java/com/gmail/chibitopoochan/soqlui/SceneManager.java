@@ -2,6 +2,7 @@ package com.gmail.chibitopoochan.soqlui;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.wrapper.FXMLLoaderWrapper;
 import com.gmail.chibitopoochan.soqlui.wrapper.StageWrapper;
 
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 
@@ -177,6 +179,11 @@ public class SceneManager {
 		currentStage.setScene(loader.load().getScene());
 		currentStage.setTitle(config.getString(title));
 		logger.debug(String.format("Change to new stage[%s]", title));
+
+		// アイコンの設定
+		Arrays.stream(config.getString(Configuration.ICON).split(";")).forEach(icon -> {
+			currentStage.getIcons().add(new Image(icon));
+		});
 
 		// シーン変更の通知先を設定
 		if(!controllerStack.isEmpty()) {

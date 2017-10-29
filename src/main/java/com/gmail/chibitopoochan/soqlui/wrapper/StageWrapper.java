@@ -2,7 +2,9 @@ package com.gmail.chibitopoochan.soqlui.wrapper;
 
 import java.util.Optional;
 
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -119,6 +121,14 @@ public class StageWrapper {
 	}
 
 	/**
+	 * {@link javafx.stage.Stage#getIcons()}をラップ
+	 * @param Image一覧
+	 */
+	public ObservableList<Image> getIcons() {
+		return stage.getIcons();
+	}
+
+	/**
 	 * {@link javafx.stage.Stage#getScene()}をラップ
 	 * @return シーン
 	 */
@@ -140,4 +150,5 @@ public class StageWrapper {
 	public String getTitle() {
 		return stage.getTitle();
 	}
+
 }

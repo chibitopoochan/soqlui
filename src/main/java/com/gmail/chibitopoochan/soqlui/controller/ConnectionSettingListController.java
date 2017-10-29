@@ -40,18 +40,11 @@ public class ConnectionSettingListController implements Initializable, Controlle
 	public void initialize(URL location, ResourceBundle resources) {
 		this.manager = SceneManager.getInstance();
 
-		try{
-			// 接続情報を取得
-			setting = new ConnectionSettingLogic();
-			setting.loadSettings();
+		// 接続情報を取得
+		setting = new ConnectionSettingLogic();
 
-			// 一覧を画面に設定
-			refreshList();
-
-		} catch(Exception ex) {
-			// 例外を通知
-			ex.printStackTrace();
-		}
+		// 一覧を画面に設定
+		refreshList();
 
 	}
 

@@ -24,6 +24,7 @@ public interface Constants {
 	public interface Configuration {
 		String RESOURCE = "Configuration";
 		String CONNECT_SETTING_PATH = "CONNECT_SETTING_PATH";
+		String ICON = "APPLICATION_ICON";
 		String VIEW_SU01 = "VIEW_SU01";
 		String VIEW_SU02 = "VIEW_SU02";
 		String VIEW_SU03 = "VIEW_SU03";

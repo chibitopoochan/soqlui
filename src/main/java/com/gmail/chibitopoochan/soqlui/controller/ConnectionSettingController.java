@@ -1,11 +1,8 @@
 package com.gmail.chibitopoochan.soqlui.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import javax.xml.stream.XMLStreamException;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
@@ -50,26 +47,19 @@ public class ConnectionSettingController implements Initializable, Controller {
 		Map<String, String> parameter = manager.getParameters();
 
 		// 接続情報を取得
-		try {
-			settingLogic = new ConnectionSettingLogic();
-			settingLogic.loadSettings();
+		settingLogic = new ConnectionSettingLogic();
 
-			// 接続設定の指定があれば取得
-			if(parameter.containsKey("configuration")) {
-				String name = parameter.get("configuration");
-				ConnectionSetting setting = settingLogic.getConnectionSetting(name);
-				nameField.setText(setting.getName());
-				nameField.setDisable(true);
-				usernameField.setText(setting.getUsername());
-				passwordField.setText(setting.getPassword());
-				tokenField.setText(setting.getToken());
-				authEndPointField.setText(setting.getAuthEndPoint());
-				edit = true;
-			}
-
-		} catch (IllegalStateException | IOException | XMLStreamException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+		// 接続設定の指定があれば取得
+		if(parameter.containsKey("configuration")) {
+			String name = parameter.get("configuration");
+			ConnectionSetting setting = settingLogic.getConnectionSetting(name);
+			nameField.setText(setting.getName());
+			nameField.setDisable(true);
+			usernameField.setText(setting.getUsername());
+			passwordField.setText(setting.getPassword());
+			tokenField.setText(setting.getToken());
+			authEndPointField.setText(setting.getAuthEndPoint());
+			edit = true;
 		}
 
 	}

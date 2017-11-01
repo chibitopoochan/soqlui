@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -70,6 +71,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private CheckBox all;
 	@FXML private TableView<SObjectRecord> resultTable;
 	@FXML private TextField resultSearch;
+	@FXML private TabPane tabArea;
 
 	// 下段
 	@FXML private ProgressBar progressBar;
@@ -88,7 +90,6 @@ public class MainController implements Initializable, Controller {
 	// 状態管理
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
 	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
-	private ObservableList<SObjectRecord> resultMasterList = FXCollections.observableArrayList();
 
 	// 初期化
 	private MainControllerInitializer init;
@@ -363,17 +364,17 @@ public class MainController implements Initializable, Controller {
 	}
 
 	/**
-	 * @return resultMasterList
+	 * @return tabArea
 	 */
-	public ObservableList<SObjectRecord> getResultMasterList() {
-		return resultMasterList;
+	public TabPane getTabArea() {
+		return tabArea;
 	}
 
 	/**
-	 * @param resultMasterList セットする resultMasterList
+	 * @param tabArea セットする tabArea
 	 */
-	public void setResultMasterList(ObservableList<SObjectRecord> resultMasterList) {
-		this.resultMasterList = resultMasterList;
+	public void setTabArea(TabPane tabArea) {
+		this.tabArea = tabArea;
 	}
 
 }

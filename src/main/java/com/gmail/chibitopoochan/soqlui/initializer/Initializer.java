@@ -1,4 +1,4 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize;
+package com.gmail.chibitopoochan.soqlui.initializer;
 
 import com.gmail.chibitopoochan.soqlui.controller.Controller;
 

@@ -1,10 +1,10 @@
 /**
  *
  */
-package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
+package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.Controller;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.Initializer;
+import com.gmail.chibitopoochan.soqlui.initializer.Initializer;
 
 /**
  * @author mamet

@@ -1,4 +1,4 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
+package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import java.util.stream.Collectors;
 

@@ -1,15 +1,15 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
+package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.GenerateSOQLServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
+import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
+import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.ExcelFormatDecoration;

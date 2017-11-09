@@ -1,10 +1,10 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
+package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.FieldServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
+import com.gmail.chibitopoochan.soqlui.initializer.service.FieldServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.parts.custom.DragSelectableTableCell;
+import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;

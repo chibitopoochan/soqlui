@@ -1,22 +1,22 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize;
+package com.gmail.chibitopoochan.soqlui.initializer;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectButtonPartsInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ConnectOptionPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ContextPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.FieldListPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.ResultTablePartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SOQLAreaPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SOQLHistoryPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.SObjectListPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.parts.TabContextPartInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ConnectServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExecuteServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.ExportServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.controller.initialize.service.FieldServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.ConnectButtonPartsInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.ConnectOptionPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.ContextPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.FieldListPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.ResultTablePartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.SOQLAreaPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.SOQLHistoryPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.SObjectListPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.TabContextPartInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.service.ConnectServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.service.ExecuteServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.service.ExportServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.service.FieldServiceInitializer;
 
 public class MainControllerInitializer implements Initializer<MainController> {
 	private MainController controller;

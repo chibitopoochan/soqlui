@@ -1,4 +1,4 @@
-package com.gmail.chibitopoochan.soqlui.controller.service;
+package com.gmail.chibitopoochan.soqlui.service;
 
 import java.io.BufferedWriter;
 import java.nio.charset.Charset;

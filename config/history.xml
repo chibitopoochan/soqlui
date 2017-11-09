@@ -68,4 +68,6 @@ Id
 ,SLAExpirationDate__c
 ,Data_Quality_Description__c
 ,Data_Quality_Score__c
-from Account</query><createdDate>2017/11/09 19:59:51</createdDate></history><history><query>12334567890123456789</query><createdDate>2017/11/09 20:00:50</createdDate></history><history><query>123345678901234567890</query><createdDate>2017/11/09 20:01:06</createdDate></history><history><query>select id from user</query><createdDate>2017/11/09 20:30:29</createdDate></history></histories>
+from Account</query><createdDate>2017/11/09 19:59:51</createdDate></history><history><query>12334567890123456789</query><createdDate>2017/11/09 20:00:50</createdDate></history><history><query>123345678901234567890</query><createdDate>2017/11/09 20:01:06</createdDate></history><history><query>select id from user</query><createdDate>2017/11/09 20:30:29</createdDate></history><history><query>select
+count(id)
+from Account</query><createdDate>2017/11/09 22:18:14</createdDate></history></histories>

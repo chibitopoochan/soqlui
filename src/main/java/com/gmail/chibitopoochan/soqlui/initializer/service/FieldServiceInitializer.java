@@ -1,39 +1,38 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize.service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+package com.gmail.chibitopoochan.soqlui.initializer.service;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
-import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
+import com.gmail.chibitopoochan.soqlui.service.ConnectService;
+import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
-import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
-import com.gmail.chibitopoochan.soqlui.util.format.FormatDecoration;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
-public class GenerateSOQLServiceInitializer implements ServiceInitializer<MainController> {
+public class FieldServiceInitializer implements ServiceInitializer<MainController> {
 	private ConnectService connectService;
+	private ObservableList<DescribeField> fieldMasterList;
+	private TableView<DescribeField> fieldList;
+	private TextField columnSearch;
 	private FieldProvideService fieldService;
-	private TextArea soqlArea;
-	private FormatDecoration decoration;
-
-	public void setFormatDecoration(FormatDecoration decoration) {
-		this.decoration = decoration;
-	}
+	private Label objectName;
 
 	@Override
 	public void setController(MainController controller) {
 		this.connectService = controller.getConnectService();
+		this.fieldMasterList = controller.getFieldMasterList();
+		this.fieldList = controller.getFieldList();
+		this.columnSearch = controller.getColumnSearch();
 		this.fieldService = controller.getFieldService();
-		this.soqlArea = controller.getSoqlArea();
+		this.objectName = controller.getObjectName();
 	}
 
 	@Override
@@ -46,18 +45,14 @@ public class GenerateSOQLServiceInitializer implements ServiceInitializer<MainCo
 	@Override
 	public void succeeded(WorkerStateEvent e) {
 		Platform.runLater(() -> {
-			decoration.setTableAfter("from " + fieldService.getSObject());
+			fieldMasterList.clear();
+			fieldList.getItems().clear();
 
-			List<DescribeField> fieldList = fieldService.getDescribeFieldList();
-			String soql = FormatUtils.format(decoration, () ->
-				fieldList.stream().map(f -> {
-					List<String> list = new ArrayList<>();
-					list.add(f.getName());
-					return list;
-				}).collect(Collectors.toList())
-			);
-
-			soqlArea.setText(soql);
+			columnSearch.setText("");
+			columnSearch.setDisable(false);
+			objectName.setText(fieldService.getSObject());
+			fieldMasterList.setAll(FXCollections.observableArrayList(fieldService.getDescribeFieldList()));
+			fieldList.setItems(fieldMasterList);
 
 		});
 		fieldService.reset();

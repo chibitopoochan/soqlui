@@ -1,8 +1,8 @@
-package com.gmail.chibitopoochan.soqlui.controller.initialize.parts;
+package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.service.ConnectService;
-import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.service.ConnectService;
+import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;

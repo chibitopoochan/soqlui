@@ -21,15 +21,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
-import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
-import com.gmail.chibitopoochan.soqlui.util.Constants.Properties;
+import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 /**
  * 接続設定一覧
  */
 public class ConnectionSettingSet {
+	public static final String CONNECTIONS_ELEMENT = "connections";
+	public static final String CONNECTION_ELEMENT = "connection";
+	public static final String AUTH_END_POINT = "authEndPoint";
+	public static final String USERNAME = "username";
+	public static final String PASSWORD = "password";
+	public static final String TOKEN = "token";
+	public static final String NAME = "name";
+	public static final String SELECTED = "selected";
+
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionSettingSet.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
@@ -148,7 +156,7 @@ public class ConnectionSettingSet {
 		try(OutputStream os = Files.newOutputStream(Paths.get(filePath.orElseThrow(IllegalStateException::new)))) {
 			XMLStreamWriter writer = factory.createXMLStreamWriter(os);
 
-			writer.writeStartElement(Properties.CONNECTIONS_ELEMENT);
+			writer.writeStartElement(CONNECTIONS_ELEMENT);
 			for(ConnectionSetting setting : connectionSettingList) {
 				write(writer, setting);
 			}
@@ -168,31 +176,31 @@ public class ConnectionSettingSet {
 	 * @throws XMLStreamException
 	 */
 	private void write(XMLStreamWriter writer, ConnectionSetting setting) throws XMLStreamException {
-		writer.writeStartElement("", Properties.CONNECTION_ELEMENT, "");
-		writer.writeAttribute("", "", Properties.NAME, setting.getName());
+		writer.writeStartElement("", CONNECTION_ELEMENT, "");
+		writer.writeAttribute("", "", NAME, setting.getName());
 
 		// ユーザ名
-		writer.writeStartElement("", Properties.USERNAME, "");
+		writer.writeStartElement("", USERNAME, "");
 		writer.writeCharacters(setting.getUsername());
 		writer.writeEndElement();
 
 		// パスワード
-		writer.writeStartElement("", Properties.PASSWORD, "");
+		writer.writeStartElement("", PASSWORD, "");
 		writer.writeCharacters(setting.getPassword());
 		writer.writeEndElement();
 
 		// トークン
-		writer.writeStartElement("", Properties.TOKEN, "");
+		writer.writeStartElement("", TOKEN, "");
 		writer.writeCharacters(setting.getToken());
 		writer.writeEndElement();
 
 		// Auth End Point
-		writer.writeStartElement("", Properties.AUTH_END_POINT, "");
+		writer.writeStartElement("", AUTH_END_POINT, "");
 		writer.writeCharacters(setting.getAuthEndPoint());
 		writer.writeEndElement();
 
 		// 選択済み
-		writer.writeStartElement("", Properties.SELECTED, "");
+		writer.writeStartElement("", SELECTED, "");
 		writer.writeCharacters(Boolean.toString(setting.isSelected()));
 		writer.writeEndElement();
 
@@ -241,35 +249,35 @@ public class ConnectionSettingSet {
 		switch(reader.next()) {
 		case XMLStreamConstants.START_ELEMENT:
 			switch(reader.getLocalName()) {
-			case Properties.CONNECTION_ELEMENT:
+			case CONNECTION_ELEMENT:
 				setting = new ConnectionSetting();
-				setting.setName(reader.getAttributeValue(null, Properties.NAME));
+				setting.setName(reader.getAttributeValue(null, NAME));
 				break;
 
-			case Properties.USERNAME:
+			case USERNAME:
 				setting.setUsername(reader.getElementText());
 				break;
 
-			case Properties.PASSWORD:
+			case PASSWORD:
 				setting.setPassword(reader.getElementText());
 				break;
 
-			case Properties.TOKEN:
+			case TOKEN:
 				setting.setToken(reader.getElementText());
 				break;
 
-			case Properties.AUTH_END_POINT:
+			case AUTH_END_POINT:
 				setting.setAuthEndPoint(reader.getElementText());
 				break;
 
-			case Properties.SELECTED:
+			case SELECTED:
 				setting.setSelected(Boolean.parseBoolean(reader.getElementText()));
 				break;
 			}
 			break;
 
 		case XMLStreamConstants.END_ELEMENT:
-			if(reader.getLocalName().equals(Properties.CONNECTION_ELEMENT)) {
+			if(reader.getLocalName().equals(CONNECTION_ELEMENT)) {
 				connectionSettingList.add(setting);
 			}
 			break;

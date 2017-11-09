@@ -1,12 +1,15 @@
 package com.gmail.chibitopoochan.soqlui.controller.initialize.service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
 import com.gmail.chibitopoochan.soqlui.model.ResultSet;
+import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.parts.custom.DragSelectableTableCell;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
@@ -20,6 +23,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -32,6 +36,8 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 	private MainController controller;
 	private TextField resultSearch;
 	private TabPane tabArea;
+	private SOQLHistoryLogic history;
+	private ListView<SOQLHistory> historyList;
 
 	@Override
 	public void setController(MainController controller) {
@@ -40,6 +46,9 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 		this.controller = controller;
 		this.resultSearch = controller.getResultSearch();
 		this.tabArea = controller.getTabArea();
+		this.historyList = controller.getHistoryList();
+		this.history = controller.getHistory();
+
 	}
 
 	@Override
@@ -83,6 +92,11 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 				tabArea.getTabs().add(resultTab);
 				tabArea.getContextMenu().getItems().forEach(m -> m.setDisable(false));
 				tabArea.getSelectionModel().select(resultTab);
+
+				// 履歴に追加
+				SOQLHistory soqlHistory = new SOQLHistory(Calendar.getInstance().getTime(), service.getSOQL());
+				historyList.getItems().add(soqlHistory);
+				history.addHistory(soqlHistory);
 
 			} else {
 				Alert alert = new Alert(AlertType.ERROR);

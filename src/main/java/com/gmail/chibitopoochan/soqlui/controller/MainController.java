@@ -16,8 +16,10 @@ import com.gmail.chibitopoochan.soqlui.controller.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.controller.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.controller.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 
@@ -29,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -73,6 +76,11 @@ public class MainController implements Initializable, Controller {
 	@FXML private TextField resultSearch;
 	@FXML private TabPane tabArea;
 
+	// 右側下段
+	@FXML private ListView<SOQLHistory> historyList;
+
+	@FXML private TextField historySearch;
+
 	// 下段
 	@FXML private ProgressBar progressBar;
 	@FXML private Label progressText;
@@ -80,6 +88,7 @@ public class MainController implements Initializable, Controller {
 	// 業務ロジック
 	private SceneManager manager;
 	private ConnectionSettingLogic setting = new ConnectionSettingLogic();
+	private SOQLHistoryLogic history = new SOQLHistoryLogic();
 
 	// 非同期のサービス
 	private ConnectService connectService = new ConnectService();
@@ -375,6 +384,33 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setTabArea(TabPane tabArea) {
 		this.tabArea = tabArea;
+	}
+	/**
+	 * @return historyList
+	 */
+	public ListView<SOQLHistory> getHistoryList() {
+		return historyList;
+	}
+
+	/**
+	 * @return historySearch
+	 */
+	public TextField getHistorySearch() {
+		return historySearch;
+	}
+
+	/**
+	 * @return history
+	 */
+	public SOQLHistoryLogic getHistory() {
+		return history;
+	}
+
+	/**
+	 * @param history セットする history
+	 */
+	public void setHistory(SOQLHistoryLogic history) {
+		this.history = history;
 	}
 
 }

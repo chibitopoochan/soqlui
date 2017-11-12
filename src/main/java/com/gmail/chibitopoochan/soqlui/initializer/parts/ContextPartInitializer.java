@@ -3,6 +3,7 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
@@ -46,6 +47,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private MenuItem copyWithExcel;
 	private MenuItem copyWithCSV;
 	private MenuItem copyNoHead;
+	private MenuItem createSOQL;
 
 	private GenerateSOQLServiceInitializer initService;
 	private FieldProvideService service;
@@ -71,6 +73,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		copyNoHead		= new MenuItem("Copy select area(Excel No Head)");
 		selectRecordCount = new MenuItem("Select record count");
 		selectAllColumns = new MenuItem("Select all columns");
+		createSOQL = new MenuItem("Create SOQL");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
@@ -79,6 +82,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		copyNoHead.setOnAction(e -> copy(new WithoutHeaderExcelFormatDecoration(), e.getSource()));
 		selectRecordCount.setOnAction(e -> query(new QueryFormatDecoration(), e.getSource()));
 		selectAllColumns.setOnAction(e -> queryWithAllColumns(new QueryFormatDecoration(), e.getSource()));
+		createSOQL.setOnAction(e -> querySelected(new QueryFormatDecoration(), e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -111,6 +115,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		context.getItems().clear();
 		if(table == sObjectList) {
 			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead);
+		} else if(table == fieldList) {
+			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
 		} else {
 			context.getItems().addAll(copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
 		}
@@ -135,9 +141,24 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		rowList.add(columnList);
 
 		// SOQLの設定
-		decorator.setTableAfter("from " + getObjectName(source));
+		decorator.setTableAfter(getObjectName(source));
 		String formattedContent = FormatUtils.format(decorator, () -> rowList);
 		soqlArea.setText(formattedContent);
+
+	}
+
+	private void querySelected(FormatDecoration decorator, Object source) {
+		List<String> selectedItems = fieldList.getSelectionModel().getSelectedItems().stream().map(i -> i.getName()).collect(Collectors.toList());
+
+		String soql = FormatUtils.format(decorator, () ->
+			selectedItems.stream().map(i -> {
+				List<String> list = new ArrayList<>();
+				list.add(i);
+				return list;
+			}).collect(Collectors.toList())
+		);
+
+		soqlArea.setText(soql + objectName.getText());
 
 	}
 

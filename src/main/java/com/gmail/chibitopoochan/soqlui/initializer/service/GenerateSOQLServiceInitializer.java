@@ -46,7 +46,7 @@ public class GenerateSOQLServiceInitializer implements ServiceInitializer<MainCo
 	@Override
 	public void succeeded(WorkerStateEvent e) {
 		Platform.runLater(() -> {
-			decoration.setTableAfter("from " + fieldService.getSObject());
+			decoration.setTableAfter(fieldService.getSObject());
 
 			List<DescribeField> fieldList = fieldService.getDescribeFieldList();
 			String soql = FormatUtils.format(decoration, () ->

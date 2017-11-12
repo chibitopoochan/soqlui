@@ -78,4 +78,4 @@ Id
 ,UsedLicenses
 ,Name
 ,MasterLabel
-from UserLicense</query><createdDate>2017/11/11 14:39:27</createdDate></history></histories>
+from UserLicense</query><createdDate>2017/11/11 14:39:27</createdDate></history><history><query>select id from user</query><createdDate>2017/11/11 16:31:30</createdDate></history></histories>

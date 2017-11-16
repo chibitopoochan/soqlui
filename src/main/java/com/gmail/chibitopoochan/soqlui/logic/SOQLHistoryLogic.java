@@ -74,4 +74,9 @@ public class SOQLHistoryLogic {
 		}
 	}
 
+	public void removeHistory(SOQLHistory history) {
+		cachedList.remove(history);
+		storeHistory();
+	}
+
 }

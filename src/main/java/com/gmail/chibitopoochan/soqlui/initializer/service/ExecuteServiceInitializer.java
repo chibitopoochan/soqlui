@@ -46,9 +46,8 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 		this.controller = controller;
 		this.resultSearch = controller.getResultSearch();
 		this.tabArea = controller.getTabArea();
-		this.historyList = controller.getHistoryList();
 		this.history = controller.getHistory();
-
+		this.historyList = controller.getHistoryList();
 	}
 
 	@Override
@@ -96,6 +95,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 				// 履歴に追加
 				SOQLHistory soqlHistory = new SOQLHistory(Calendar.getInstance().getTime(), service.getSOQL());
 				historyList.getItems().add(soqlHistory);
+				historyList.setItems(historyList.getItems().sorted((i, j) -> -i.getCreatedDate().compareTo(j.getCreatedDate())));
 				history.addHistory(soqlHistory);
 
 			} else {

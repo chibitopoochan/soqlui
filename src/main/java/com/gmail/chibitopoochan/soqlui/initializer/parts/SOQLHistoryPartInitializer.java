@@ -19,6 +19,7 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 	@Override
 	public void initialize() {
 		historyList.getItems().addAll(logic.getHistoryList());
+		historyList.setItems(historyList.getItems().sorted((i, j) -> -i.getCreatedDate().compareTo(j.getCreatedDate())));
 	}
 
 }

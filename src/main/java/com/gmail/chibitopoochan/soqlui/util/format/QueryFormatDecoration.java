@@ -8,7 +8,11 @@ public class QueryFormatDecoration extends FormatDecoration {
 		setHeaderAfter(System.lineSeparator());
 		setValueBefore(",");
 		setRowAfter(System.lineSeparator());
-		setTableAfter("from ");
+	}
+
+	@Override
+	public void setTableAfter(String value) {
+		super.setTableAfter("from " + value);
 	}
 
 }

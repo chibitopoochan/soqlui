@@ -15,11 +15,13 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 	private ExportService service;
 	private MainController controller;
 	private Button export;
+	private Button cancel;
 
 	@Override
 	public void setController(MainController controller) {
 		this.service = controller.getExportService();
 		this.export = controller.getExport();
+		this.cancel = controller.getCancel();
 		this.controller = controller;
 	}
 
@@ -27,11 +29,24 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 	public void initialize() {
 		service.setOnSucceeded(this::succeeded);
 		service.setOnFailed(this::failed);
+		service.setOnCancelled(this::cancelled);
 		service.soqlProperty().bind(controller.getSoqlArea().textProperty());
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
 		service.setBatchSize("200");
 		service.allProperty().bind(controller.getAll().selectedProperty());
 
+	}
+
+	public void cancelled(WorkerStateEvent e) {
+		Platform.runLater(() -> {
+			// 例外を通知
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, "Cancelled"));
+			alert.showAndWait();
+			service.reset();
+			export.setDisable(false);
+			cancel.setDisable(true);
+		});
 	}
 
 	@Override
@@ -44,6 +59,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 			alert.showAndWait();
 			service.reset();
 			export.setDisable(false);
+			cancel.setDisable(true);
 		});
 	}
 
@@ -54,6 +70,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 			confirm.showAndWait();
 			service.reset();
 			export.setDisable(false);
+			cancel.setDisable(true);
 		});
 	}
 

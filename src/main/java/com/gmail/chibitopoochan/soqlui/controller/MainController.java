@@ -69,6 +69,7 @@ public class MainController implements Initializable, Controller {
 	// 中央
 	@FXML private Button execute;
 	@FXML private Button export;
+	@FXML private Button cancel;
 	@FXML private TextArea soqlArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
@@ -412,5 +413,20 @@ public class MainController implements Initializable, Controller {
 	public void setHistory(SOQLHistoryLogic history) {
 		this.history = history;
 	}
+
+	/**
+	 * @return cancel
+	 */
+	public Button getCancel() {
+		return cancel;
+	}
+
+	/**
+	 * @param cancel セットする cancel
+	 */
+	public void setCancel(Button cancel) {
+		this.cancel = cancel;
+	}
+
 
 }

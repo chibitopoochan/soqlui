@@ -168,6 +168,8 @@ public class ExportService extends Service<Void> {
 
 					out.flush();
 					updateMessage("Exported " + size);
+				} catch (Exception e) {
+					updateMessage("Cancelled");
 				}
 
 				return null;

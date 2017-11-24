@@ -38,6 +38,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private ExportService exportor;
 	private ProgressBar progressBar;
 	private Label progressText;
+	private Button cancel;
 
 	private Optional<File> exportHistory = Optional.empty();
 
@@ -55,6 +56,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.exportor = controller.getExportService();
 		this.progressBar = controller.getProgressBar();
 		this.progressText = controller.getProgressText();
+		this.cancel = controller.getCancel();
+
 	}
 
 	public void initialize() {
@@ -75,6 +78,19 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		disconnect.setOnAction(e -> doDisconnect());
 		execute.setOnAction(e -> doExecute());
 		export.setOnAction(e -> doExport());
+		cancel.setOnAction(e -> doCancel());
+
+	}
+
+	/**
+	 * 処理のキャンセル
+	 */
+	public void doCancel() {
+		if(executor.isRunning()) {
+			executor.cancel();
+		} else if (exportor.isRunning()) {
+			exportor.cancel();
+		}
 
 	}
 
@@ -99,6 +115,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	 */
 	public void doExecute() {
 		// TODO オプションは後程設定
+		cancel.setDisable(false);
 		executor.start();
 
 	}
@@ -112,6 +129,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		progressBar.visibleProperty().bind(exportor.runningProperty());
 		progressText.textProperty().bind(exportor.messageProperty());
 
+		cancel.setDisable(false);
 		export.setDisable(true);
 
 		FileChooser chooser = new FileChooser();
@@ -125,6 +143,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		File saveFile = chooser.showSaveDialog(SceneManager.getInstance().getStageStack().peek().unwrap());
 		exportHistory = Optional.ofNullable(saveFile);
 		if(!exportHistory.isPresent()) {
+			cancel.setDisable(true);
+			export.setDisable(false);
 			return;
 		}
 

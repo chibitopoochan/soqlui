@@ -34,6 +34,10 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 
 	private Button execute;
 
+	private Button export;
+
+	private Button cancel;
+
 	private ComboBox<String> connectOption;
 
 	private TextField objectSearch;
@@ -64,6 +68,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		this.fieldMasterList = controller.getFieldMasterList();
 		this.fieldList = controller.getFieldList();
 		this.objectName = controller.getObjectName();
+		this.export = controller.getExport();
+		this.cancel = controller.getCancel();
 	}
 
 	@Override
@@ -83,6 +89,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				disconnect.setDisable(true);
 				connectOption.setDisable(false);
 				execute.setDisable(true);
+				export.setDisable(true);
+				cancel.setDisable(true);
 				logger.debug("Connection Button Enabled");
 
 				// 一覧のクリア
@@ -103,6 +111,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				disconnect.setDisable(false);
 				connectOption.setDisable(true);
 				execute.setDisable(false);
+				export.setDisable(false);
+				cancel.setDisable(true);
 				logger.debug("Connection Button Disabled");
 
 				// 一覧の表示

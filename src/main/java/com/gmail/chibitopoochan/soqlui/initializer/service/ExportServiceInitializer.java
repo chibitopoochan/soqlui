@@ -16,10 +16,12 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 	private MainController controller;
 	private Button export;
 	private Button cancel;
+	private Button execute;
 
 	@Override
 	public void setController(MainController controller) {
 		this.service = controller.getExportService();
+		this.execute = controller.getExecute();
 		this.export = controller.getExport();
 		this.cancel = controller.getCancel();
 		this.controller = controller;
@@ -44,6 +46,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, "Cancelled"));
 			alert.showAndWait();
 			service.reset();
+			execute.setDisable(false);
 			export.setDisable(false);
 			cancel.setDisable(true);
 		});
@@ -58,6 +61,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.toString()));
 			alert.showAndWait();
 			service.reset();
+			execute.setDisable(false);
 			export.setDisable(false);
 			cancel.setDisable(true);
 		});
@@ -69,6 +73,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 			Alert confirm = new Alert(AlertType.INFORMATION, "Export finished.");
 			confirm.showAndWait();
 			service.reset();
+			execute.setDisable(false);
 			export.setDisable(false);
 			cancel.setDisable(true);
 		});

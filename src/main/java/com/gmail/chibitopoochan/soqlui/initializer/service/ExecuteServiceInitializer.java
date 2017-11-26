@@ -23,6 +23,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -38,6 +39,9 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 	private TabPane tabArea;
 	private SOQLHistoryLogic history;
 	private ListView<SOQLHistory> historyListView;
+	private Button execute;
+	private Button export;
+	private Button cancel;
 
 	@Override
 	public void setController(MainController controller) {
@@ -48,13 +52,16 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 		this.tabArea = controller.getTabArea();
 		this.history = controller.getHistory();
 		this.historyListView = controller.getHistoryList();
+		this.execute = controller.getExecute();
+		this.export = controller.getExport();
+		this.cancel = controller.getCancel();
 	}
 
 	@Override
 	public void initialize() {
 		service.setOnSucceeded(this::succeeded);
 		service.setOnFailed(this::failed);
-		service.setOnCancelled(this::failed);
+		service.setOnCancelled(this::cancelled);
 		service.soqlProperty().bind(controller.getSoqlArea().textProperty());
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
 		service.batchSizeProperty().bind(controller.getBatchSize().textProperty());
@@ -107,6 +114,9 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 			}
 
 			service.reset();
+			execute.setDisable(false);
+			export.setDisable(false);
+			cancel.setDisable(true);
 
 		});
 	}
@@ -145,6 +155,21 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 
 	}
 
+	public void cancelled(WorkerStateEvent e) {
+		Platform.runLater(() -> {
+			// 例外を通知
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, "Cancelled"));
+			alert.showAndWait();
+			service.reset();
+
+			execute.setDisable(false);
+			export.setDisable(false);
+			cancel.setDisable(true);
+
+		});
+	}
+
 	@Override
 	public void failed(WorkerStateEvent e) {
 		Platform.runLater(() -> {
@@ -154,6 +179,11 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.toString()));
 			alert.showAndWait();
 			service.reset();
+
+			execute.setDisable(false);
+			export.setDisable(false);
+			cancel.setDisable(true);
+
 		});
 	}
 

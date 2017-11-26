@@ -116,6 +116,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	public void doExecute() {
 		// TODO オプションは後程設定
 		cancel.setDisable(false);
+		export.setDisable(true);
+		execute.setDisable(true);
 		executor.start();
 
 	}
@@ -131,6 +133,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 
 		cancel.setDisable(false);
 		export.setDisable(true);
+		execute.setDisable(true);
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Data Export");
@@ -145,6 +148,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		if(!exportHistory.isPresent()) {
 			cancel.setDisable(true);
 			export.setDisable(false);
+			execute.setDisable(false);
 			return;
 		}
 

@@ -114,6 +114,13 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	 * SOQLを実行
 	 */
 	public void doExecute() {
+		progressBar.progressProperty().unbind();
+		progressBar.progressProperty().bind(executor.progressProperty());
+		progressBar.visibleProperty().unbind();
+		progressBar.visibleProperty().bind(executor.runningProperty());
+		progressText.textProperty().unbind();
+		progressText.textProperty().bind(executor.messageProperty());
+
 		// TODO オプションは後程設定
 		cancel.setDisable(false);
 		export.setDisable(true);

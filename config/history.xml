@@ -1,84 +1,4 @@
-<histories><history><query>select id from user</query><createdDate>2017/11/11 16:31:30</createdDate></history><history><query>select
-Id
-,LicenseDefinitionKey
-,TotalLicenses
-,Status
-,UsedLicenses
-,Name
-,MasterLabel
-from UserLicense</query><createdDate>2017/11/11 14:39:27</createdDate></history><history><query>select
-count(id)
-from Account</query><createdDate>2017/11/09 22:18:14</createdDate></history><history><query>select id from user</query><createdDate>2017/11/09 20:30:29</createdDate></history><history><query>select
-Id
-,IsDeleted
-,MasterRecordId
-,Name
-,Type
-,ParentId
-,BillingStreet
-,BillingCity
-,BillingState
-,BillingPostalCode
-,BillingCountry
-,BillingLatitude
-,BillingLongitude
-,BillingGeocodeAccuracy
-,BillingAddress
-,ShippingStreet
-,ShippingCity
-,ShippingState
-,ShippingPostalCode
-,ShippingCountry
-,ShippingLatitude
-,ShippingLongitude
-,ShippingGeocodeAccuracy
-,ShippingAddress
-,Phone
-,Fax
-,AccountNumber
-,Website
-,PhotoUrl
-,Sic
-,Industry
-,AnnualRevenue
-,NumberOfEmployees
-,Ownership
-,TickerSymbol
-,Description
-,Rating
-,Site
-,OwnerId
-,CreatedDate
-,CreatedById
-,LastModifiedDate
-,LastModifiedById
-,SystemModstamp
-,LastActivityDate
-,LastViewedDate
-,LastReferencedDate
-,IsPartner
-,IsCustomerPortal
-,Jigsaw
-,JigsawCompanyId
-,CleanStatus
-,AccountSource
-,DunsNumber
-,Tradestyle
-,NaicsCode
-,NaicsDesc
-,YearStarted
-,SicDesc
-,DandbCompanyId
-,CustomerPriority__c
-,SLA__c
-,Active__c
-,NumberofLocations__c
-,UpsellOpportunity__c
-,SLASerialNumber__c
-,SLAExpirationDate__c
-,Data_Quality_Description__c
-,Data_Quality_Score__c
-from Account</query><createdDate>2017/11/09 19:59:51</createdDate></history><history><query>select id from user</query><createdDate>2017/11/13 21:00:28</createdDate></history><history><query>select id from user</query><createdDate>2017/11/13 21:01:20</createdDate></history><history><query>select
+<histories><history><query>select id from user</query><createdDate>2017/11/13 21:01:20</createdDate></history><history><query>select
 Id
 ,IsDeleted
 from Case</query><createdDate>2017/11/18 11:16:39</createdDate></history><history><query>select
@@ -211,4 +131,46 @@ id
 ,Priority
 ,Subject
 ,Data_Quality_Description__c
-from Case</query><createdDate>2017/11/24 19:58:09</createdDate></history></histories>
+from Case</query><createdDate>2017/11/24 19:58:09</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 22:02:53</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 22:19:50</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 23:00:35</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 23:02:21</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 23:03:41</createdDate></history><history><query>select
+id
+,Status
+,Type
+,Priority
+,Subject
+,Data_Quality_Description__c
+from Case</query><createdDate>2017/11/26 23:03:54</createdDate></history></histories>

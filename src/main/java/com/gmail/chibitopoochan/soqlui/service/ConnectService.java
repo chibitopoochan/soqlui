@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
+import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -86,10 +88,27 @@ public class ConnectService extends Service<Void> {
 		return connectionSetting;
 	}
 
+	/**
+	 * プロキシ情報のプロパティ
+	 */
+	private ObjectProperty<ProxySettingLogic> proxyLogic = new SimpleObjectProperty<ProxySettingLogic>(this, "proxyLogic",new ProxySettingLogic());
+	public void setProxyLogic(ProxySettingLogic logic) {
+		proxyLogic.set(logic);
+	}
+
+	public ProxySettingLogic getProxyLogic() {
+		return proxyLogic.get();
+	}
+
+	public ObjectProperty<ProxySettingLogic> proxyLogicProperty() {
+		return proxyLogic;
+	}
+
 	@Override
 	protected Task<Void> createTask() {
 		final ConnectionSetting useSetting = getConnectionSetting();
 		final ConnectionLogic useLogic = getConnectionLogic();
+		final ProxySettingLogic useProxy = getProxyLogic();
 		final boolean closeOnly = isClosing();
 
 		return new Task<Void>() {
@@ -106,8 +125,15 @@ public class ConnectService extends Service<Void> {
 					useLogic.disconnect();
 					logger.info("Connection Disconnect");
 
-					// Salesforceへ接続
-					useLogic.connect(useSetting);
+					ProxySetting proxy = useProxy.getProxySetting();
+					if(Boolean.valueOf(proxy.getUseProxy())) {
+						// Proxyが有効ならProxy経由でSalesforceへ接続
+						useLogic.connect(useSetting, proxy);
+					} else {
+						// Proxyが無効なら、そのまま接続
+						useLogic.connect(useSetting);
+
+					}
 					logger.info(String.format("Connected to Salesforce [%s]", useSetting.getName()));
 
 					// Object一覧を取得

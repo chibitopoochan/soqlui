@@ -32,6 +32,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
+                  <MenuItem fx:id="menuFileProxy" mnemonicParsing="false" onAction="#openProxySetting" text="Proxy" />
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>

@@ -128,6 +128,19 @@ public class MainController implements Initializable, Controller {
 	}
 
 	/**
+	 * プロキシ設定画面の表示
+	 */
+	public void openProxySetting() {
+		try {
+			logger.debug("Open Window [Proxy Setting]");
+			manager.sceneOpen(Configuration.VIEW_SU04, Configuration.TITLE_SU04);
+		} catch (IOException e) {
+			logger.error("Open window error", e);
+		}
+
+	}
+
+	/**
 	 * 接続情報を更新
 	 */
 	@Override

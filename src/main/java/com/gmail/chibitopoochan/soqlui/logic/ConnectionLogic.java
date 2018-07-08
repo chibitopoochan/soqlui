@@ -10,6 +10,7 @@ import com.gmail.chibitopoochan.soqlexec.api.Connector;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 import com.sforce.ws.ConnectionException;
 
 public class ConnectionLogic {
@@ -25,7 +26,17 @@ public class ConnectionLogic {
 				selectedSetting.getUsername(),
 				selectedSetting.getPassword() + selectedSetting.getToken(),
 				selectedSetting.getAuthEndPoint()));
+	}
 
+	/**
+	 * Salesforceへの接続
+	 * @param selected 使用する接続情報
+	 * @param proxy プロキシ接続
+	 * @throws Exception ログイン時の例外
+	 */
+	public void connect(ConnectionSetting selectedSetting, ProxySetting proxy) throws Exception {
+		Connector.setProxySetting(proxy.getHost(), proxy.getPortNumber(), proxy.getUsername(), proxy.getPassword());
+		connect(selectedSetting);
 	}
 
 	/**

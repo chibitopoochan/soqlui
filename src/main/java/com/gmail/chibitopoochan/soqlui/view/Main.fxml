@@ -239,8 +239,8 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <TextField promptText="Search..." />
-                  <ListView minWidth="240.0" prefHeight="200.0" prefWidth="240.0" VBox.vgrow="ALWAYS">
+                  <TextField fx:id="favoriteSearch" promptText="Search..." />
+                  <ListView fx:id="favoriteList" minWidth="240.0" prefHeight="200.0" prefWidth="240.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>

@@ -1,7 +1,4 @@
-<histories><history><query>select id from user</query><createdDate>2017/11/13 21:01:20</createdDate></history><history><query>select
-Id
-,IsDeleted
-from Case</query><createdDate>2017/11/18 11:16:39</createdDate></history><history><query>select
+<histories><history><query>select
 Id
 ,IsDeleted
 from Case</query><createdDate>2017/11/18 11:16:59</createdDate></history><history><query>select
@@ -173,4 +170,4 @@ id
 ,Priority
 ,Subject
 ,Data_Quality_Description__c
-from Case</query><createdDate>2017/11/26 23:03:54</createdDate></history></histories>
+from Case</query><createdDate>2017/11/26 23:03:54</createdDate></history><history><query>select id from user</query><createdDate>2018/07/08 21:56:27</createdDate></history><history><query>select id, username, email from user</query><createdDate>2018/07/08 21:56:38</createdDate></history></histories>

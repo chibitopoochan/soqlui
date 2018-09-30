@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,54 +21,60 @@ import javax.xml.stream.XMLStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
+import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
-public class SOQLHistorySet {
+public class FavoriteSet {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(SOQLHistorySet.class);
+	private static final Logger logger = LoggerFactory.getLogger(FavoriteSet.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 
 	// XMLの要素定義
-	public static final String HISTORIES_ELEMENT = "histories";
-	public static final String HISTORY_ELEMENT = "history";
-	public static final String CREATED_DATE = "createdDate";
+	public static final String FAVORITES_ELEMENT = "favorites";
+	public static final String FAVORITE_ELEMENT = "favorite";
+	public static final String NAME = "name";
 	public static final String SOQL = "query";
 
 	// Singletonのインスタンス
-	private static SOQLHistorySet instance;
+	private static FavoriteSet instance;
 
 	// 解析関連の情報
 	private Optional<String> filePath = Optional.empty();
-	private List<SOQLHistory> historyList = new LinkedList<>();
-	private SOQLHistory history;
+	private List<SOQLFavorite> favoriteList = new LinkedList<>();
+	private SOQLFavorite favorite;
 
-	private SOQLHistorySet() {
+	/**
+	 * ファイルを読み込んだFavoriteSetを作成
+	 */
+	private FavoriteSet() {
 		loadFilePath();
 		try {
-			loadHistory();
+			loadFavorite();
 		} catch (IllegalStateException | IOException | XMLStreamException | ParseException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * SOQLHistoryのファクトリメソッド
+	 * FavoriteSetのファクトリメソッド
 	 * @return
 	 */
-	public static SOQLHistorySet getInstance() {
+	public static FavoriteSet getInstance() {
 		if(instance == null) {
-			instance = new SOQLHistorySet();
+			instance = new FavoriteSet();
 		}
 
 		return instance;
 
 	}
 
+	/**
+	 * ファイルパスの取得
+	 */
 	public void loadFilePath() {
-		filePath = Optional.of(config.getString(Configuration.HISTORY_PATH));
+		filePath = Optional.of(config.getString(Configuration.FAVORITE_PATH));
 		logger.info(MessageHelper.getMessage(Message.Information.MSG_001, filePath.get()));
 
 	}
@@ -82,12 +87,12 @@ public class SOQLHistorySet {
 		instance = null;
 	}
 
-	public List<SOQLHistory> getHistoryList() {
-		return historyList;
+	public List<SOQLFavorite> getFavoriteList() {
+		return favoriteList;
 	}
 
-	public void setHistoryList(List<SOQLHistory> list) {
-		this.historyList = list;
+	public void setFavoriteList(List<SOQLFavorite> list) {
+		this.favoriteList = list;
 	}
 
 	/**
@@ -96,7 +101,7 @@ public class SOQLHistorySet {
 	 * @throws IOException 入出力の例外
 	 * @throws IllegalStateException 設定ファイル未指定
 	 */
-	public void storeHistory() throws XMLStreamException, IllegalStateException, IOException {
+	public void storeFavorite() throws XMLStreamException, IllegalStateException, IOException {
 		// XMLファイルの出力
 		XMLOutputFactory factory = XMLOutputFactory.newFactory();
 
@@ -105,8 +110,8 @@ public class SOQLHistorySet {
 		try(OutputStream os = Files.newOutputStream(Paths.get(filePath.orElseThrow(IllegalStateException::new)))) {
 			XMLStreamWriter writer = factory.createXMLStreamWriter(os);
 
-			writer.writeStartElement(HISTORIES_ELEMENT);
-			for(SOQLHistory setting : historyList) {
+			writer.writeStartElement(FAVORITES_ELEMENT);
+			for(SOQLFavorite setting : favoriteList) {
 				write(writer, setting);
 			}
 			writer.writeEndElement();
@@ -124,17 +129,17 @@ public class SOQLHistorySet {
 	 * @param setting
 	 * @throws XMLStreamException
 	 */
-	private void write(XMLStreamWriter writer, SOQLHistory history) throws XMLStreamException {
-		writer.writeStartElement("", HISTORY_ELEMENT, "");
+	private void write(XMLStreamWriter writer, SOQLFavorite favorite) throws XMLStreamException {
+		writer.writeStartElement("", FAVORITE_ELEMENT, "");
 
 		// SOQL
 		writer.writeStartElement("", SOQL, "");
-		writer.writeCharacters(history.getQuery());
+		writer.writeCharacters(favorite.getQuery());
 		writer.writeEndElement();
 
-		// パスワード
-		writer.writeStartElement("", CREATED_DATE, "");
-		writer.writeCharacters(DateFormat.getDateTimeInstance().format(history.getCreatedDate()));
+		// 名称
+		writer.writeStartElement("", NAME, "");
+		writer.writeCharacters(favorite.getName());
 		writer.writeEndElement();
 
 		writer.writeEndElement();
@@ -142,15 +147,15 @@ public class SOQLHistorySet {
 	}
 
 	/**
-	 * 接続設定の読み込み
+	 * お気に入りの読み込み
 	 * @throws IOException 入出力の例外
 	 * @throws IllegalStateException 設定ファイル未指定
 	 * @throws XMLStreamException XML操作の例外
 	 * @throws ParseException 日付形式の例外
 	 */
-	public void loadHistory() throws IllegalStateException, IOException, XMLStreamException, ParseException {
+	public void loadFavorite() throws IllegalStateException, IOException, XMLStreamException, ParseException {
 		// 接続設定一覧を初期化
-		historyList = new LinkedList<>();
+		favoriteList = new LinkedList<>();
 
 		// XMLファイルの解析
 		XMLInputFactory factory = XMLInputFactory.newFactory();
@@ -182,24 +187,24 @@ public class SOQLHistorySet {
 		switch(reader.next()) {
 		case XMLStreamConstants.START_ELEMENT:
 			switch(reader.getLocalName()) {
-			case HISTORY_ELEMENT:
-				history = new SOQLHistory();
+			case FAVORITE_ELEMENT:
+				favorite = new SOQLFavorite();
 				break;
 
-			case CREATED_DATE:
-				history.setCreatedDate(DateFormat.getDateTimeInstance().parse(reader.getElementText()));
+			case NAME:
+				favorite.setName(reader.getElementText());
 				break;
 
 			case SOQL:
-				history.setQuery(reader.getElementText());
+				favorite.setQuery(reader.getElementText());
 				break;
 
 			}
 			break;
 
 		case XMLStreamConstants.END_ELEMENT:
-			if(reader.getLocalName().equals(HISTORY_ELEMENT)) {
-				historyList.add(history);
+			if(reader.getLocalName().equals(FAVORITE_ELEMENT)) {
+				favoriteList.add(favorite);
 			}
 			break;
 

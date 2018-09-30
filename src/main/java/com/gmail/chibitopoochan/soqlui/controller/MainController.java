@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.initializer.MainControllerInitializer;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
 import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
@@ -77,10 +79,13 @@ public class MainController implements Initializable, Controller {
 	@FXML private TextField resultSearch;
 	@FXML private TabPane tabArea;
 
-	// 右側下段
-	@FXML private ListView<SOQLHistory> historyList;
+	// 右側上段
+	@FXML private TextField favoriteSearch;
+	@FXML private ListView<SOQLFavorite> favoriteList;
 
+	// 右側下段
 	@FXML private TextField historySearch;
+	@FXML private ListView<SOQLHistory> historyList;
 
 	// 下段
 	@FXML private ProgressBar progressBar;
@@ -90,6 +95,7 @@ public class MainController implements Initializable, Controller {
 	private SceneManager manager;
 	private ConnectionSettingLogic setting = new ConnectionSettingLogic();
 	private SOQLHistoryLogic history = new SOQLHistoryLogic();
+	private FavoriteLogic favorite = new FavoriteLogic();
 
 	// 非同期のサービス
 	private ConnectService connectService = new ConnectService();
@@ -428,6 +434,27 @@ public class MainController implements Initializable, Controller {
 	}
 
 	/**
+	 * @return favoriteList
+	 */
+	public ListView<SOQLFavorite> getFavoriteList() {
+		return favoriteList;
+	}
+
+	/**
+	 * @return favorite
+	 */
+	public FavoriteLogic getFavoriteLogic() {
+		return favorite;
+	}
+
+	/**
+	 * @param favorite セットする favorite
+	 */
+	public void setFavorite(FavoriteLogic favorite) {
+		this.favorite = favorite;
+	}
+
+	/**
 	 * @return cancel
 	 */
 	public Button getCancel() {
@@ -439,6 +466,13 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setCancel(Button cancel) {
 		this.cancel = cancel;
+	}
+
+	/**
+	 * @return favoriteSearch
+	 */
+	public TextField getFavoriteSearch() {
+		return favoriteSearch;
 	}
 
 

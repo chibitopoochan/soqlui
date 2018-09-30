@@ -7,8 +7,11 @@ import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
+import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
+import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
@@ -20,8 +23,10 @@ import com.gmail.chibitopoochan.soqlui.util.format.SimpleFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.WithoutHeaderExcelFormatDecoration;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -35,10 +40,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * コンテキストメニューの初期設定
+ * @author mamet
+ */
 public class ContextPartInitializer implements PartsInitializer<MainController> {
 	private TableView<SObjectRecord> resultTable;
 	private TableView<DescribeSObject> sObjectList;
 	private TableView<DescribeField> fieldList;
+
 	private Label objectName;
 	private TextArea soqlArea;
 	private MenuItem selectRecordCount;
@@ -57,6 +67,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		this.resultTable = controller.getResultTable();
 		this.sObjectList = controller.getsObjectList();
 		this.fieldList = controller.getFieldList();
+
 		this.objectName = controller.getObjectName();
 		this.soqlArea = controller.getSoqlArea();
 		this.service = controller.getFieldService();
@@ -67,13 +78,13 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 	@Override
 	public void initialize() {
-		copyNormal		= new MenuItem("Copy select area");
-		copyWithExcel	= new MenuItem("Copy select area(Excel)");
-		copyWithCSV	= new MenuItem("Copy select area(CSV)");
-		copyNoHead		= new MenuItem("Copy select area(Excel No Head)");
-		selectRecordCount = new MenuItem("Select record count");
-		selectAllColumns = new MenuItem("Select all columns");
-		createSOQL = new MenuItem("Create SOQL");
+		copyNormal			= new MenuItem("Copy select area");
+		copyWithExcel		= new MenuItem("Copy select area(Excel)");
+		copyWithCSV			= new MenuItem("Copy select area(CSV)");
+		copyNoHead			= new MenuItem("Copy select area(Excel No Head)");
+		selectRecordCount	= new MenuItem("Select record count");
+		selectAllColumns	= new MenuItem("Select all columns");
+		createSOQL			= new MenuItem("Create SOQL");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));

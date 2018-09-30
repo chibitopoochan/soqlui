@@ -1,7 +1,9 @@
 package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
 import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
+import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 
 import javafx.collections.FXCollections;
@@ -18,11 +20,18 @@ public class HistoryContextPartInitializer implements PartsInitializer<MainContr
 	private TextArea soqlArea;
 	private SOQLHistoryLogic logic;
 
+	private ListView<SOQLFavorite> favoriteList;
+	private FavoriteLogic favoriteLogic;
+
 	@Override
 	public void setController(MainController controller) {
 		this.historyList = controller.getHistoryList();
 		this.soqlArea = controller.getSoqlArea();
 		this.logic = controller.getHistory();
+
+		this.favoriteList = controller.getFavoriteList();
+		this.favoriteLogic = controller.getFavoriteLogic();
+
 	}
 
 	@Override
@@ -31,19 +40,53 @@ public class HistoryContextPartInitializer implements PartsInitializer<MainContr
 		MenuItem copyArea = new MenuItem("Copy SOQL Area");
 		MenuItem copyClip = new MenuItem("Copy Clipboard");
 		MenuItem removeHistory = new MenuItem("Remove History");
+		MenuItem addFavorite = new MenuItem("Add favorite");
 
 		// メニューのイベント設定
 		copyArea.setOnAction(this::copyArea);
 		copyClip.setOnAction(this::copyClip);
 		removeHistory.setOnAction(this::removeHistory);
+		addFavorite.setOnAction(this::addFavorite);
 
 		// メニューの登録
 		ContextMenu menu = new ContextMenu();
-		menu.getItems().addAll(copyArea, copyClip, removeHistory);
+		menu.getItems().addAll(copyArea, copyClip, removeHistory, addFavorite);
 
 		// イベントの設定
 		historyList.setContextMenu(menu);
 
+	}
+
+	/**
+	 * お気に入りに追加
+	 * @param e イベント
+	 */
+	private void addFavorite(ActionEvent e) {
+		// お気に入りに値を設定
+		SOQLFavorite favorite = buildFavorite(e.getSource());
+
+		// ファイルに書き込み
+		favoriteLogic.addFavorite(favorite);
+
+		// お気に入りの再表示
+		favoriteList.getItems().setAll(favoriteLogic.getFavoriteList());
+
+	}
+
+	/**
+	 * 履歴からお気に入りに変換
+	 * @param source 選択された要素
+	 * @return お気に入り情報
+	 */
+	private SOQLFavorite buildFavorite(Object source) {
+		SOQLFavorite favorite = new SOQLFavorite();
+
+		// 選択行を取得
+		SOQLHistory history = historyList.getSelectionModel().getSelectedItem();
+		favorite.setName(history.getCreatedDate().toString());
+		favorite.setQuery(history.getQuery());
+
+		return favorite;
 	}
 
 	/**

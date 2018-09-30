@@ -13,17 +13,21 @@ public interface Constants {
 		public interface Error {
 			String ERR_001 = "ERR.001";
 			String ERR_002 = "ERR.002";
+			String ERR_003 = "ERR.003";
 		}
 
 		public interface Information {
 			String MSG_001 = "MSG.001";
 			String MSG_002 = "MSG.002";
+			String MSG_003 = "MSG.003";
 		}
 
 	}
 
 	public interface Configuration {
 		String RESOURCE = "Configuration";
+
+		String FAVORITE_PATH = "FAVORITE_PATH";
 
 		String CONNECT_SETTING_PATH = "CONNECT_SETTING_PATH";
 

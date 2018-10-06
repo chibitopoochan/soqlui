@@ -6,7 +6,10 @@ import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -60,11 +63,19 @@ public class FavoriteContextPartInitializer implements PartsInitializer<MainCont
 			TextInputDialog dialog = new TextInputDialog(favorite.getName());
 			dialog.setContentText(MessageHelper.getMessage(Message.Information.MSG_003));
 			dialog.showAndWait().ifPresent(name -> {
+				// 入力値チェック
+				if(name == null || name.length() == 0) {
+					Alert errorDialog = new Alert(AlertType.ERROR, "Error");
+					errorDialog.setContentText(MessageHelper.getMessage(Message.Error.ERR_004));
+					errorDialog.showAndWait();
+					return;
+				}
+
 				// 新しい名前を設定
-				favorite.setName(name);
+				logic.rename(favorite.getName(), name);
 
 				// お気に入りの再表示
-				list.getItems().setAll(logic.getFavoriteList());
+				list.setItems(FXCollections.observableArrayList(logic.getFavoriteList()));
 
 			});
 
@@ -76,7 +87,7 @@ public class FavoriteContextPartInitializer implements PartsInitializer<MainCont
 	private void remove(ActionEvent e) {
 		SOQLFavorite favorite = list.getSelectionModel().getSelectedItem();
 		logic.removeFavorite(favorite);
-		list.getItems().setAll(logic.getFavoriteList());
+		list.setItems(FXCollections.observableArrayList(logic.getFavoriteList()));
 	}
 
 }

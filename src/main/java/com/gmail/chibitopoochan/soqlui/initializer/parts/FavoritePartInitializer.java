@@ -28,13 +28,17 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 	public void initialize() {
 		// お気に入りの設定
 		list.getItems().addAll(logic.getFavoriteList());
+		list.setItems(list.getItems().sorted());
 		list.setCellFactory(param ->{
 			final ListCell<SOQLFavorite> listCells = new ListCell<SOQLFavorite>(){
 				@Override
 				public void updateItem(SOQLFavorite item, boolean empty) {
 					super.updateItem(item, empty);
 
-					if(!empty) {
+					if(item == null || empty) {
+						setText("");
+						setTooltip(null);
+					} else {
 						setText(item.getName());
 						setTooltip(new Tooltip(item.getQuery()));
 					}

@@ -2,7 +2,6 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
-import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 
 import javafx.collections.FXCollections;
@@ -33,7 +32,10 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 				public void updateItem(SOQLHistory item, boolean empty) {
 					super.updateItem(item, empty);
 
-					if(!empty) {
+					if(item == null || empty) {
+						setText("");
+						setTooltip(null);
+					} else {
 						setText(item.toString());
 						setTooltip(new Tooltip(item.getQuery()));
 					}
@@ -47,6 +49,7 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 		historySearch.textProperty().addListener(
 			(v, o, n) -> historyList.setItems(
 				FXCollections.observableArrayList(logic.getHistoryList()).
+				sorted((i, j) -> -i.getCreatedDate().compareTo(j.getCreatedDate())).
 				filtered(
 					t -> t.getQuery().toLowerCase().indexOf(n) > -1
 					|| n.length() == 0)

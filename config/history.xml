@@ -1,14 +1,6 @@
 <histories><history><query>select
 Id
 ,IsDeleted
-from Case</query><createdDate>2017/11/18 11:16:59</createdDate></history><history><query>select
-Id
-,IsDeleted
-,CaseNumber
-
-from Case</query><createdDate>2017/11/18 11:23:23</createdDate></history><history><query>select
-Id
-,IsDeleted
 ,CaseNumber
 from Case</query><createdDate>2017/11/18 11:24:14</createdDate></history><history><query>select
 id, Status
@@ -163,11 +155,14 @@ id
 ,Priority
 ,Subject
 ,Data_Quality_Description__c
-from Case</query><createdDate>2017/11/26 23:03:41</createdDate></history><history><query>select
+from Case</query><createdDate>2017/11/26 23:03:54</createdDate></history><history><query>select id from user</query><createdDate>2018/07/08 21:56:27</createdDate></history><history><query>select id, username, email from user</query><createdDate>2018/07/08 21:56:38</createdDate></history><history><query>select
+Name
+,Type
+from Account</query><createdDate>2018/10/06 18:10:36</createdDate></history><history><query>select id from user</query><createdDate>2018/10/06 18:12:09</createdDate></history><history><query>select
 id
 ,Status
 ,Type
 ,Priority
 ,Subject
 ,Data_Quality_Description__c
-from Case</query><createdDate>2017/11/26 23:03:54</createdDate></history><history><query>select id from user</query><createdDate>2018/07/08 21:56:27</createdDate></history><history><query>select id, username, email from user</query><createdDate>2018/07/08 21:56:38</createdDate></history></histories>
+from Case</query><createdDate>2018/10/06 18:12:21</createdDate></history></histories>

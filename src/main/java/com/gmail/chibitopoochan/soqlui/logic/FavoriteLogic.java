@@ -2,7 +2,6 @@ package com.gmail.chibitopoochan.soqlui.logic;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -11,9 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.config.FavoriteSet;
 import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
-import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
-import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 /**
  * お気に入りのロジック
@@ -57,6 +55,18 @@ public class FavoriteLogic {
 	public void addFavorite(SOQLFavorite favorite) {
 		cachedList.add(favorite);
 		storeFavorite();
+	}
+
+	/**
+	 * お気に入りの名前変更
+	 * Nullの場合はエラー
+	 * @param oldName 旧名称
+	 * @param newName 新名称
+	 */
+	public void rename(String oldName, String newName) {
+		cachedList.stream().filter(f -> f.getName().equals(oldName)).forEach(f -> f.setName(newName));
+		storeFavorite();
+
 	}
 
 	/**

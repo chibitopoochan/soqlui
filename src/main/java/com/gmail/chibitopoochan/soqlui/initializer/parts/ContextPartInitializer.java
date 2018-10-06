@@ -7,11 +7,8 @@ import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
-import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
-import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
-import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
@@ -23,10 +20,8 @@ import com.gmail.chibitopoochan.soqlui.util.format.SimpleFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.WithoutHeaderExcelFormatDecoration;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -161,6 +156,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private void querySelected(FormatDecoration decorator, Object source) {
 		List<String> selectedItems = fieldList.getSelectionModel().getSelectedItems().stream().map(i -> i.getName()).collect(Collectors.toList());
 
+		decorator.setTableAfter(getObjectName(source));
 		String soql = FormatUtils.format(decorator, () ->
 			selectedItems.stream().map(i -> {
 				List<String> list = new ArrayList<>();
@@ -169,7 +165,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			}).collect(Collectors.toList())
 		);
 
-		soqlArea.setText(soql + objectName.getText());
+		soqlArea.setText(soql);
 
 	}
 

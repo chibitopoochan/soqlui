@@ -7,6 +7,7 @@ import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
@@ -65,11 +66,13 @@ public class HistoryContextPartInitializer implements PartsInitializer<MainContr
 		// お気に入りに値を設定
 		SOQLFavorite favorite = buildFavorite(e.getSource());
 
+		// お気に入りの再表示
+		ObservableList<SOQLFavorite> observableList = FXCollections.observableArrayList(favoriteLogic.getFavoriteList());
+		observableList.add(favorite);
+		favoriteList.setItems(observableList);
+
 		// ファイルに書き込み
 		favoriteLogic.addFavorite(favorite);
-
-		// お気に入りの再表示
-		favoriteList.getItems().setAll(favoriteLogic.getFavoriteList());
 
 	}
 

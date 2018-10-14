@@ -9,6 +9,7 @@ import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,6 +24,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 	private TextField objectSearch;
 	private ObservableList<DescribeSObject> objectMasterList;
 	private FieldServiceInitializer initService;
+	private ProgressIndicator progress;
 
 	@Override
 	public void setController(MainController controller) {
@@ -30,6 +32,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 		service = controller.getFieldService();
 		objectMasterList = controller.getObjectMasterList();
 		objectSearch = controller.getObjectSearch();
+		progress = controller.getFieldProgressIndicator();
 
 		initService = new FieldServiceInitializer();
 		initService.setController(controller);
@@ -47,6 +50,12 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 
 		sObjectList.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+				// 変数をバインド
+				progress.progressProperty().unbind();
+				progress.visibleProperty().unbind();
+				progress.progressProperty().bind(service.progressProperty());
+				progress.visibleProperty().bind(service.runningProperty());
+
 				initService.initialize();
 				service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
 				service.start();

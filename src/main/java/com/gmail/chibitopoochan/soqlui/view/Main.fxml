@@ -199,6 +199,7 @@
                               <Insets bottom="5.0" top="5.0" />
                            </padding>
                         </Label>
+                        <ProgressIndicator fx:id="FieldProgressIndicator" visible="false" />
                      </children>
                   </HBox>
                   <TextField fx:id="columnSearch" promptText="Search...">

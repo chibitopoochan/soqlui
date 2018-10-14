@@ -27,7 +27,7 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 	@Override
 	public void initialize() {
 		// お気に入りの設定
-		list.getItems().addAll(logic.getFavoriteList());
+		list.setItems(FXCollections.observableArrayList(logic.getFavoriteList()));
 		list.setItems(list.getItems().sorted());
 		list.setCellFactory(param ->{
 			final ListCell<SOQLFavorite> listCells = new ListCell<SOQLFavorite>(){
@@ -41,6 +41,7 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 					} else {
 						setText(item.getName());
 						setTooltip(new Tooltip(item.getQuery()));
+
 					}
 
 				}

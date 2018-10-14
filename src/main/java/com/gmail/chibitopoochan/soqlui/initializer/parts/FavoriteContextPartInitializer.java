@@ -75,7 +75,10 @@ public class FavoriteContextPartInitializer implements PartsInitializer<MainCont
 				logic.rename(favorite.getName(), name);
 
 				// お気に入りの再表示
+				// TODO 手法的にきれいにしたい
+				list.setItems(FXCollections.observableArrayList());
 				list.setItems(FXCollections.observableArrayList(logic.getFavoriteList()));
+				list.setItems(list.getItems().sorted());
 
 			});
 
@@ -88,6 +91,7 @@ public class FavoriteContextPartInitializer implements PartsInitializer<MainCont
 		SOQLFavorite favorite = list.getSelectionModel().getSelectedItem();
 		logic.removeFavorite(favorite);
 		list.setItems(FXCollections.observableArrayList(logic.getFavoriteList()));
+		list.setItems(list.getItems().sorted());
 	}
 
 }

@@ -1,22 +1,30 @@
 package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.initializer.service.FieldServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.parts.custom.DragSelectableTableCell;
+import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 public class FieldListPartInitializer implements PartsInitializer<MainController> {
 	private TableView<DescribeField> fieldList;
 	private TextField columnSearch;
 	private ObservableList<DescribeField> fieldMasterList;
+	private FieldServiceInitializer initService;
+	private FieldProvideService service;
+	private ProgressIndicator progress;
 
 	@Override
 	public void setController(MainController controller) {
@@ -24,6 +32,11 @@ public class FieldListPartInitializer implements PartsInitializer<MainController
 		this.columnSearch = controller.getColumnSearch();
 		this.fieldList = controller.getFieldList();
 		this.fieldMasterList = controller.getFieldMasterList();
+		this.service = controller.getFieldService();
+		this.progress = controller.getFieldProgressIndicator();
+
+		initService = new FieldServiceInitializer();
+		initService.setController(controller);
 	}
 
 	@Override
@@ -42,6 +55,9 @@ public class FieldListPartInitializer implements PartsInitializer<MainController
 		fieldList.getSelectionModel().setCellSelectionEnabled(true);
 		fieldList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+		// マウスのクリックイベント
+		fieldList.setOnMouseClicked(this::cellClickEvent);
+
 		// 項目一覧の絞り込み
 		columnSearch.setDisable(true);
 		columnSearch.textProperty().addListener((v, o, n) ->
@@ -53,6 +69,29 @@ public class FieldListPartInitializer implements PartsInitializer<MainController
 			)
 		);
 
+	}
+
+	/**
+	 * マウスのクリックイベント
+	 * 参照項目なら参照先オブジェクトの項目一覧を取得
+	 * @param e Mouseイベント
+	 */
+	private void cellClickEvent(MouseEvent e) {
+		if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+			DescribeField selectedRecord = fieldList.getSelectionModel().getSelectedItem();
+			if(selectedRecord.getType().equals("reference")) {
+				// 変数をバインド
+				progress.progressProperty().unbind();
+				progress.visibleProperty().unbind();
+				progress.progressProperty().bind(service.progressProperty());
+				progress.visibleProperty().bind(service.runningProperty());
+
+				initService.initialize();
+				service.setSObject(selectedRecord.getReference());
+				service.start();
+
+			}
+		}
 	}
 
 	private SimpleStringProperty getNameCallback(TableColumn.CellDataFeatures<DescribeField,String> d) {

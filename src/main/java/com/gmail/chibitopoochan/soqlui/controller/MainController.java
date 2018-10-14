@@ -67,6 +67,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private TableView<DescribeField> fieldList;
 	@FXML private TextField columnSearch;
 	@FXML private Label objectName;
+	@FXML private ProgressIndicator fieldProgressIndicator;
 
 	// 中央
 	@FXML private Button execute;
@@ -278,6 +279,13 @@ public class MainController implements Initializable, Controller {
 	 */
 	public TableView<DescribeField> getFieldList() {
 		return fieldList;
+	}
+
+	/**
+	 * @return progressIndicator
+	 */
+	public ProgressIndicator getFieldProgressIndicator() {
+		return fieldProgressIndicator;
 	}
 
 	/**

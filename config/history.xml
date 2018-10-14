@@ -1,8 +1,4 @@
 <histories><history><query>select
-Id
-,IsDeleted
-,CaseNumber
-from Case</query><createdDate>2017/11/18 11:24:14</createdDate></history><history><query>select
 id, Status
 
 from Case</query><createdDate>2017/11/18 11:28:45</createdDate></history><history><query>select
@@ -165,4 +161,14 @@ id
 ,Priority
 ,Subject
 ,Data_Quality_Description__c
-from Case</query><createdDate>2018/10/06 18:12:21</createdDate></history></histories>
+from Case</query><createdDate>2018/10/06 18:12:21</createdDate></history><history><query>select
+Id
+,IsDeleted
+,MasterRecordId
+,Name
+,Type
+,RecordTypeId
+,ParentId
+,BillingStreet
+,BillingCity
+from Account</query><createdDate>2018/10/06 19:52:09</createdDate></history></histories>

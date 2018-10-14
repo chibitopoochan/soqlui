@@ -1,8 +1,4 @@
-<favorites><favorite><query>select id from user</query><name>Sun Jul 08 21:56:27 JST 2018</name></favorite><favorite><query>select
-id
-,Status
+<favorites><favorite><query>select id from user</query><name>test2</name></favorite><favorite><query>select
+Name
 ,Type
-,Priority
-,Subject
-,Data_Quality_Description__c
-from Case</query><name>Test2</name></favorite></favorites>
+from Account</query><name>test</name></favorite></favorites>

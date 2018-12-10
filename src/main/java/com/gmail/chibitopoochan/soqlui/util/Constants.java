@@ -15,6 +15,7 @@ public interface Constants {
 			String ERR_002 = "ERR.002";
 			String ERR_003 = "ERR.003";
 			String ERR_004 = "ERR.004";
+			String ERR_005 = "ERR.005";
 		}
 
 		public interface Information {

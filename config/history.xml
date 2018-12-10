@@ -1,11 +1,4 @@
 <histories><history><query>select
-id, Status
-
-from Case</query><createdDate>2017/11/18 11:28:45</createdDate></history><history><query>select
-id
-,Status
-,Type
-from Case</query><createdDate>2017/11/18 11:29:15</createdDate></history><history><query>select
 id
 ,Status
 ,Type
@@ -171,4 +164,74 @@ Id
 ,ParentId
 ,BillingStreet
 ,BillingCity
-from Account</query><createdDate>2018/10/06 19:52:09</createdDate></history></histories>
+from Account</query><createdDate>2018/10/06 19:52:09</createdDate></history><history><query>select id from user</query><createdDate>2018/12/09 22:59:02</createdDate></history><history><query>select
+Id
+,IsDeleted
+,MasterRecordId
+,Name
+,Type
+,RecordTypeId
+,ParentId
+,BillingStreet
+,BillingCity
+,BillingState
+,BillingPostalCode
+,BillingCountry
+,BillingLatitude
+,BillingLongitude
+,BillingGeocodeAccuracy
+,BillingAddress
+,ShippingStreet
+,ShippingCity
+,ShippingState
+,ShippingPostalCode
+,ShippingCountry
+,ShippingLatitude
+,ShippingLongitude
+,ShippingGeocodeAccuracy
+,ShippingAddress
+,Phone
+,Fax
+,AccountNumber
+,Website
+,PhotoUrl
+,Sic
+,Industry
+,AnnualRevenue
+,NumberOfEmployees
+,Ownership
+,TickerSymbol
+,Description
+,Rating
+,Site
+,OwnerId
+,CreatedDate
+,CreatedById
+,LastModifiedDate
+,LastModifiedById
+,SystemModstamp
+,LastActivityDate
+,LastViewedDate
+,LastReferencedDate
+,IsPartner
+,IsCustomerPortal
+,Jigsaw
+,JigsawCompanyId
+,CleanStatus
+,AccountSource
+,DunsNumber
+,Tradestyle
+,NaicsCode
+,NaicsDesc
+,YearStarted
+,SicDesc
+,CustomerPriority__c
+,SLA__c
+,Active__c
+,NumberofLocations__c
+,UpsellOpportunity__c
+,SLASerialNumber__c
+,SLAExpirationDate__c
+,Data_Quality_Description__c
+,Data_Quality_Score__c
+from Account</query><createdDate>2018/12/10 21:59:25</createdDate></history></histories>

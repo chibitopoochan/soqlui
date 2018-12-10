@@ -133,7 +133,10 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 			// 例外を通知
 			Throwable exception = e.getSource().getException();
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_001, exception.getMessage()));
+			alert.setContentText(MessageHelper.getMessage(Message.Error.ERR_005
+					,exception.getMessage()
+					,exception.getLocalizedMessage()
+					,exception.getStackTrace()[0].toString()));
 			alert.showAndWait();
 			service.reset();
 

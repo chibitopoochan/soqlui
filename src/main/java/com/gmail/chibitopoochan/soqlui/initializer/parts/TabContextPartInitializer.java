@@ -19,15 +19,19 @@ public class TabContextPartInitializer implements PartsInitializer<MainControlle
 
 	@Override
 	public void initialize() {
+		setMenuItems(tabArea);
+	}
+
+	private void setMenuItems(TabPane tabPane) {
 		// メニュー作成
 		MenuItem close = new MenuItem("Close");
 		MenuItem closeOther = new MenuItem("Close Other");
 		MenuItem closeAll = new MenuItem("Close All");
 
 		// メニューのイベント設定
-		close.setOnAction(e -> close());
-		closeOther.setOnAction(e -> closeOther());
-		closeAll.setOnAction(e -> closeAll());
+		close.setOnAction(e -> close(tabPane));
+		closeOther.setOnAction(e -> closeOther(tabPane));
+		closeAll.setOnAction(e -> closeAll(tabPane));
 
 		// メニューの登録
 		ContextMenu menu = new ContextMenu();
@@ -35,25 +39,25 @@ public class TabContextPartInitializer implements PartsInitializer<MainControlle
 		menu.getItems().forEach(m -> m.setDisable(true));
 
 		// イベントの設定
-		tabArea.setContextMenu(menu);
+		tabPane.setContextMenu(menu);
 
 	}
 
-	private void close() {
-		Tab source = tabArea.getSelectionModel().getSelectedItem();
+	private void close(TabPane tabPane) {
+		Tab source = tabPane.getSelectionModel().getSelectedItem();
 		source.getOnClosed().handle(new Event(Tab.CLOSED_EVENT));
 		source.getTabPane().getTabs().remove(source);
 		source.getOnClosed().handle(new Event(Tab.CLOSED_EVENT));
 	}
 
-	private void closeOther() {
-		Tab source = tabArea.getSelectionModel().getSelectedItem();
+	private void closeOther(TabPane tabPane) {
+		Tab source = tabPane.getSelectionModel().getSelectedItem();
 		source.getTabPane().getTabs().removeIf(t -> t != source);
 		source.getTabPane().getSelectionModel().select(source);
 	}
 
-	private void closeAll() {
-		Tab source = tabArea.getSelectionModel().getSelectedItem();
+	private void closeAll(TabPane tabPane) {
+		Tab source = tabPane.getSelectionModel().getSelectedItem();
 		source.getTabPane().getTabs().clear();
 		source.getOnClosed().handle(new Event(Tab.CLOSED_EVENT));
 	}

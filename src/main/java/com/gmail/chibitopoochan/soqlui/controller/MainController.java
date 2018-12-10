@@ -74,6 +74,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private Button export;
 	@FXML private Button cancel;
 	@FXML private TextArea soqlArea;
+	@FXML private TabPane queryTabArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
 	@FXML private TableView<SObjectRecord> resultTable;
@@ -481,6 +482,20 @@ public class MainController implements Initializable, Controller {
 	 */
 	public TextField getFavoriteSearch() {
 		return favoriteSearch;
+	}
+
+	/**
+	 * @return queryTabArea
+	 */
+	public TabPane getQueryTabArea() {
+		return queryTabArea;
+	}
+
+	/**
+	 * @param queryTabArea セットする queryTabArea
+	 */
+	public void setQueryTabArea(TabPane queryTabArea) {
+		this.queryTabArea = queryTabArea;
 	}
 
 

@@ -183,6 +183,7 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
+                  <TabPane fx:id="fieldTabArea" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="Fields">
@@ -200,7 +201,7 @@
                               <Insets bottom="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <ProgressIndicator fx:id="FieldProgressIndicator" visible="false" />
+                        <ProgressIndicator fx:id="fieldProgressIndicator" visible="false" />
                      </children>
                   </HBox>
                   <TextField fx:id="columnSearch" promptText="Search...">

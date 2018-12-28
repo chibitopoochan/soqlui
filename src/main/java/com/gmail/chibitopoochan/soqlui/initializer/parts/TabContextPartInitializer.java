@@ -10,16 +10,18 @@ import javafx.scene.control.TabPane;
 
 public class TabContextPartInitializer implements PartsInitializer<MainController> {
 	private TabPane tabArea;
+	private TabPane fieldTabArea;
 
 	@Override
 	public void setController(MainController controller) {
 		this.tabArea = controller.getTabArea();
-
+		this.fieldTabArea = controller.getFieldTabArea();
 	}
 
 	@Override
 	public void initialize() {
 		setMenuItems(tabArea);
+		setMenuItems(fieldTabArea);
 	}
 
 	private void setMenuItems(TabPane tabPane) {

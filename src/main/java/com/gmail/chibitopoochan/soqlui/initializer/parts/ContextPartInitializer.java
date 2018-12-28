@@ -104,7 +104,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		// マウスイベントの登録
 		resultTable.setOnMouseClicked(this::showContextMenu);
 		sObjectList.addEventHandler(MouseEvent.MOUSE_CLICKED, this::showContextMenu);
-		fieldList.setOnMouseClicked(this::showContextMenu);
+		fieldList.addEventHandler(MouseEvent.MOUSE_CLICKED, this::showContextMenu);
 
 	}
 

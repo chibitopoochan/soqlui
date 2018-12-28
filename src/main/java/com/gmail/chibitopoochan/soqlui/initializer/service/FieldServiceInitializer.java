@@ -2,6 +2,7 @@ package com.gmail.chibitopoochan.soqlui.initializer.service;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
+import com.gmail.chibitopoochan.soqlui.model.ResultSet;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
@@ -11,9 +12,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -24,6 +28,7 @@ public class FieldServiceInitializer implements ServiceInitializer<MainControlle
 	private TextField columnSearch;
 	private FieldProvideService fieldService;
 	private Label objectName;
+	private TabPane tabArea;
 
 	@Override
 	public void setController(MainController controller) {
@@ -33,6 +38,7 @@ public class FieldServiceInitializer implements ServiceInitializer<MainControlle
 		this.columnSearch = controller.getColumnSearch();
 		this.fieldService = controller.getFieldService();
 		this.objectName = controller.getObjectName();
+		this.tabArea = controller.getFieldTabArea();
 	}
 
 	@Override
@@ -45,14 +51,14 @@ public class FieldServiceInitializer implements ServiceInitializer<MainControlle
 	@Override
 	public void succeeded(WorkerStateEvent e) {
 		Platform.runLater(() -> {
-			fieldMasterList.clear();
-			fieldList.getItems().clear();
-
-			columnSearch.setText("");
-			columnSearch.setDisable(false);
-			objectName.setText(fieldService.getSObject());
-			fieldMasterList.setAll(FXCollections.observableArrayList(fieldService.getDescribeFieldList()));
-			fieldList.setItems(fieldMasterList);
+			Tab fieldTab = new Tab(fieldService.getSObject());
+			fieldTab.setUserData(FXCollections.observableArrayList(fieldService.getDescribeFieldList()));
+			fieldTab.setOnClosed(this::tabClosed);
+			fieldTab.setOnSelectionChanged(this::tabChanged);
+			tabArea.getTabs().add(fieldTab);
+			tabArea.getSelectionModel().select(fieldTab);
+			tabArea.getContextMenu().getItems().forEach(m -> m.setDisable(false));
+			setFieldList(fieldTab);
 
 		});
 		fieldService.reset();
@@ -69,6 +75,32 @@ public class FieldServiceInitializer implements ServiceInitializer<MainControlle
 			fieldService.reset();
 		});
 
+	}
+
+	private void tabClosed(Event e) {
+		ObservableList<Tab> tabList = tabArea.getTabs();
+		if(tabList.isEmpty()) {
+			columnSearch.setText("");
+			columnSearch.setDisable(true);
+			objectName.setText("");
+			fieldMasterList.clear();
+			fieldList.setItems(fieldMasterList);
+			tabArea.getContextMenu().getItems().forEach(m -> m.setDisable(true));
+		} else {
+			tabArea.getSelectionModel().selectNext();
+		}
+	}
+
+	private void tabChanged(Event e){
+		setFieldList((Tab) e.getSource());
+	}
+
+	private void setFieldList(Tab tab) {
+		columnSearch.setText("");
+		columnSearch.setDisable(false);
+		objectName.setText(tab.getText());
+		fieldMasterList.setAll((ObservableList<DescribeField>)tab.getUserData());
+		fieldList.setItems(fieldMasterList);
 	}
 
 }

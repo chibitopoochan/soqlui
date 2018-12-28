@@ -9,6 +9,7 @@ import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -57,6 +58,7 @@ public class FieldListPartInitializer implements PartsInitializer<MainController
 
 		// マウスのクリックイベント
 		fieldList.setOnMouseClicked(this::cellClickEvent);
+		fieldList.addEventHandler(MouseEvent.MOUSE_CLICKED, this::cellClickEvent);
 
 		// 項目一覧の絞り込み
 		columnSearch.setDisable(true);

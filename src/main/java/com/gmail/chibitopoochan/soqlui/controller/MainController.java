@@ -64,6 +64,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private TextField objectSearch;
 
 	// 左側下段
+	@FXML private TabPane fieldTabArea;
 	@FXML private TableView<DescribeField> fieldList;
 	@FXML private TextField columnSearch;
 	@FXML private Label objectName;
@@ -496,6 +497,27 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setQueryTabArea(TabPane queryTabArea) {
 		this.queryTabArea = queryTabArea;
+	}
+
+	/**
+	 * @return fieldTabArea
+	 */
+	public TabPane getFieldTabArea() {
+		return fieldTabArea;
+	}
+
+	/**
+	 * @param fieldTabArea セットする fieldTabArea
+	 */
+	public void setFieldTabArea(TabPane fieldTabArea) {
+		this.fieldTabArea = fieldTabArea;
+	}
+
+	/**
+	 * @param fieldProgressIndicator セットする fieldProgressIndicator
+	 */
+	public void setFieldProgressIndicator(ProgressIndicator fieldProgressIndicator) {
+		this.fieldProgressIndicator = fieldProgressIndicator;
 	}
 
 

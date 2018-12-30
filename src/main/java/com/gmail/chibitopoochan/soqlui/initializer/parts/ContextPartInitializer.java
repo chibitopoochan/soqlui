@@ -3,12 +3,14 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
+import com.gmail.chibitopoochan.soqlui.model.ResultSet;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
@@ -53,6 +55,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private MenuItem copyWithCSV;
 	private MenuItem copyNoHead;
 	private MenuItem createSOQL;
+	private MenuItem createWithSelect;
 
 	private GenerateSOQLServiceInitializer initService;
 	private FieldProvideService service;
@@ -80,6 +83,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		selectRecordCount	= new MenuItem("Select record count");
 		selectAllColumns	= new MenuItem("Select all columns");
 		createSOQL			= new MenuItem("Create SOQL");
+		createWithSelect    = new MenuItem("Create SOQL with selected");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
@@ -89,6 +93,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		selectRecordCount.setOnAction(e -> query(new QueryFormatDecoration(), e.getSource()));
 		selectAllColumns.setOnAction(e -> queryWithAllColumns(new QueryFormatDecoration(), e.getSource()));
 		createSOQL.setOnAction(e -> querySelected(new QueryFormatDecoration(), e.getSource()));
+		createWithSelect.setOnAction(e -> queryWithCondition(new QueryFormatDecoration(), e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -124,7 +129,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		} else if(table == fieldList) {
 			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
 		} else {
-			context.getItems().addAll(copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
+			context.getItems().addAll(createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
 		}
 		context.show(table, 0, 0);
 
@@ -167,6 +172,44 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		soqlArea.setText(soql);
 
+	}
+
+	private void queryWithCondition(FormatDecoration decorator, Object source) {
+		// 列毎にセルを集計
+		Map<String, List<String>> conditions = resultTable
+				.getSelectionModel()
+				.getSelectedCells()
+				.stream()
+				.collect(Collectors.groupingBy(
+						k -> k.getTableColumn().getText()
+						,Collectors.mapping(
+								v -> (String) v.getTableColumn().getCellData(v.getRow())
+								,Collectors.toList()
+						)
+				));
+
+		ResultSet resultSet = (ResultSet) resultTable.getUserData();
+		StringBuilder soql = new StringBuilder(resultSet.getSOQL());
+
+		// 条件を構築
+		// TODO 型によって囲み文字が異なる
+		conditions.forEach((k,v) ->
+			soql
+			.append(" or ")
+			.append(k)
+			.append(" in (")
+			.append(v.stream().map(i -> String.format("'%s'", i)).collect(Collectors.joining(",")))
+			.append(")")
+			.append(System.lineSeparator())
+		);
+
+		String soqlText = soql.toString();
+
+		if(!soqlText.matches("(?s).+\\s+where\\s+.+")) {
+			soqlText = soqlText.replaceFirst(" or ", " where ");
+		}
+
+		soqlArea.setText(soqlText);
 	}
 
 	private void queryWithAllColumns(FormatDecoration decorator, Object source) {

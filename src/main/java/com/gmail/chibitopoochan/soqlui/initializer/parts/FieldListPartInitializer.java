@@ -9,7 +9,6 @@ import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;

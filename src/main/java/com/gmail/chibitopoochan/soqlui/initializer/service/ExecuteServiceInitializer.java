@@ -87,6 +87,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 				});
 
 				resultSet.setSearchText("");
+				resultSet.setSOQL(service.getSOQL());
 
 				ObservableList<SObjectRecord> resultMasterList = FXCollections.observableArrayList();
 				resultMasterList.addAll(result.stream().map(SObjectRecord::new).collect(Collectors.toList()));
@@ -141,6 +142,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 
 		// 行を設定
 		resultTable.setItems(result.getRecords());
+		resultTable.setUserData(result);
 
 		// 検索文字を設定
 		resultSearch.setDisable(false);

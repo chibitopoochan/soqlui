@@ -8,6 +8,7 @@ public class ResultSet {
 	private String searchText;
 	private ObservableList<SObjectRecord> records;
 	private ObservableList<TableColumn<SObjectRecord,String>> columns;
+	private String soql;
 
 	public ResultSet() {
 		searchText = "";
@@ -63,6 +64,20 @@ public class ResultSet {
 	 */
 	public void setColumns(ObservableList<TableColumn<SObjectRecord, String>> columns) {
 		this.columns = columns;
+	}
+
+	/**
+	 * @return soql
+	 */
+	public String getSOQL() {
+		return soql;
+	}
+
+	/**
+	 * @param soql セットする soql
+	 */
+	public void setSOQL(String soql) {
+		this.soql = soql;
 	}
 
 }

@@ -11,6 +11,8 @@ import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -25,6 +27,8 @@ import javafx.scene.control.TextField;
 public class ConnectServiceInitializer implements ServiceInitializer<MainController> {
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(ConnectServiceInitializer.class);
+
+	private BooleanProperty withExecute = new SimpleBooleanProperty();
 
 	private ConnectService service;
 
@@ -70,6 +74,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		this.objectName = controller.getObjectName();
 		this.export = controller.getExport();
 		this.cancel = controller.getCancel();
+		this.withExecute.bind(controller.withExecuteProperty());
 	}
 
 	@Override
@@ -104,6 +109,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				fieldList.getItems().clear();
 				objectName.setText("None");
 				columnSearch.setDisable(true);
+
 			} else {
 				// ボタン等を制御
 				connect.setText("Reconnect");
@@ -121,6 +127,12 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				objectMasterList.setAll(FXCollections.observableArrayList(service.getDescribeSObjectList()));
 				sObjectList.setItems(objectMasterList);
 				logger.debug("sObject List show");
+
+				// SOQL実行も行う場合、イベントハンドラを呼び出す
+				// TODO nullで問題ないか？
+				if(withExecute.get()) {
+					execute.getOnAction().handle(null);
+				}
 
 			}
 			service.reset();

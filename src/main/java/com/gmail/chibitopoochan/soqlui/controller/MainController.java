@@ -1,8 +1,14 @@
 package com.gmail.chibitopoochan.soqlui.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -25,8 +31,12 @@ import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -109,6 +119,7 @@ public class MainController implements Initializable, Controller {
 	// 状態管理
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
 	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
+	private BooleanProperty withExecute = new SimpleBooleanProperty(false);
 
 	// 初期化
 	private MainControllerInitializer init;
@@ -121,6 +132,47 @@ public class MainController implements Initializable, Controller {
 		init = new MainControllerInitializer();
 		init.setController(this);
 		init.initialize();
+
+		// 初期値を設定
+		Map<String, String> parameters = manager.getParameters();
+		if(parameters.containsKey("param")) {
+			String fileName = parameters.get("param");
+			Optional<String> envName = Optional.empty();
+
+			// ファイル名のチェック
+			if(fileName.endsWith(".soql")) {
+				String fileNameExcludeExtention = fileName.substring(0, fileName.lastIndexOf(".soql"));
+				int indexOfLastPrefix = fileNameExcludeExtention.lastIndexOf(".");
+				if(indexOfLastPrefix > -1) {
+					envName = Optional.of(fileNameExcludeExtention.substring(indexOfLastPrefix+1));
+				}
+
+				// ファイルの存在チェック
+				File file = new File(fileName);
+				if(file.exists()) {
+					// ファイルの読み込み
+					try(BufferedReader br = Files.newBufferedReader(file.toPath())) {
+						soqlArea.setText(br.lines().collect(Collectors.joining(System.lineSeparator())));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					// 初期化
+					envName.ifPresent(env -> connectOption.getSelectionModel().select(env));
+
+					// 接続の実行
+					// TODO nullで問題ないか？
+					setWithExecute(true);
+					connect.getOnAction().handle(null);
+
+				}
+
+			}
+
+			logger.debug(fileName);
+
+
+		}
 
 	}
 
@@ -520,5 +572,25 @@ public class MainController implements Initializable, Controller {
 		this.fieldProgressIndicator = fieldProgressIndicator;
 	}
 
+	/**
+	 * @return withExecute
+	 */
+	public boolean withExecute() {
+		return withExecute.get();
+	}
+
+	/**
+	 * @param withExecute セットする withExecute
+	 */
+	public void setWithExecute(boolean withExecute) {
+		this.withExecute.set(withExecute);
+	}
+
+	/**
+	 * 接続後、SOQL実行有無のプロパティ
+	 */
+	public BooleanProperty withExecuteProperty() {
+		return withExecute;
+	}
 
 }

@@ -40,4 +40,13 @@ public class SOQLUI extends Application {
 		launch(args);
 	}
 
+	/* (非 Javadoc)
+	 * @see javafx.application.Application#init()
+	 */
+	@Override
+	public void init() throws Exception {
+		SceneManager manager = SceneManager.getInstance();
+		getParameters().getUnnamed().forEach(param -> manager.putParameter("param", param));
+	}
+
 }

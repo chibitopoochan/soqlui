@@ -1,83 +1,4 @@
 <histories><history><query>select
-Id
-,IsDeleted
-,MasterRecordId
-,Name
-,Type
-,RecordTypeId
-,ParentId
-,BillingStreet
-,BillingCity
-,BillingState
-,BillingPostalCode
-,BillingCountry
-,BillingLatitude
-,BillingLongitude
-,BillingGeocodeAccuracy
-,BillingAddress
-,ShippingStreet
-,ShippingCity
-,ShippingState
-,ShippingPostalCode
-,ShippingCountry
-,ShippingLatitude
-,ShippingLongitude
-,ShippingGeocodeAccuracy
-,ShippingAddress
-,Phone
-,Fax
-,AccountNumber
-,Website
-,PhotoUrl
-,Sic
-,Industry
-,AnnualRevenue
-,NumberOfEmployees
-,Ownership
-,TickerSymbol
-,Description
-,Rating
-,Site
-,OwnerId
-,CreatedDate
-,CreatedById
-,LastModifiedDate
-,LastModifiedById
-,SystemModstamp
-,LastActivityDate
-,LastViewedDate
-,LastReferencedDate
-,IsPartner
-,IsCustomerPortal
-,Jigsaw
-,JigsawCompanyId
-,CleanStatus
-,AccountSource
-,DunsNumber
-,Tradestyle
-,NaicsCode
-,NaicsDesc
-,YearStarted
-,SicDesc
-,CustomerPriority__c
-,SLA__c
-,Active__c
-,NumberofLocations__c
-,UpsellOpportunity__c
-,SLASerialNumber__c
-,SLAExpirationDate__c
-,Data_Quality_Description__c
-,Data_Quality_Score__c
-from Account</query><createdDate>2018/12/28 16:59:02</createdDate></history><history><query>select
-Type
-,RecordTypeId
-,ParentId
-,BillingStreet
-from Account</query><createdDate>2018/12/28 16:59:18</createdDate></history><history><query>select
-count(id)
-from Contact</query><createdDate>2018/12/28 16:59:47</createdDate></history><history><query>select
-count(id)
-from UserLogin</query><createdDate>2018/12/28 17:00:43</createdDate></history><history><query>select
 count(id)
 from Account</query><createdDate>2018/12/28 17:12:50</createdDate></history><history><query>select
 count(id)
@@ -268,4 +189,4 @@ Id
 ,RecordTypeId
 ,ParentId
 ,BillingStreet
-from Account where IsDeleted = false</query><createdDate>2018/12/29 7:56:12</createdDate></history><history><query>select id from user</query><createdDate>2019/02/03 23:22:33</createdDate></history><history><query>select id from user</query><createdDate>2019/02/03 23:23:54</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:06:45</createdDate></history></histories>
+from Account where IsDeleted = false</query><createdDate>2018/12/29 7:56:12</createdDate></history><history><query>select id from user</query><createdDate>2019/02/03 23:22:33</createdDate></history><history><query>select id from user</query><createdDate>2019/02/03 23:23:54</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:06:45</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:17:46</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:33:06</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:51:52</createdDate></history><history><query>select id from user</query><createdDate>2019/02/17 18:52:03</createdDate></history></histories>

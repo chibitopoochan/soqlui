@@ -21,11 +21,11 @@ public class ConnectionLogic {
 	 * @param selected 使用する接続情報
 	 * @throws Exception ログイン時の例外
 	 */
-	public void connect(ConnectionSetting selectedSetting) throws Exception {
-		connector = Optional.of(Connector.login(
-				selectedSetting.getUsername(),
-				selectedSetting.getPassword() + selectedSetting.getToken(),
-				selectedSetting.getAuthEndPoint()));
+	public void connect(ConnectionSetting selectedSetting, boolean reset) throws Exception {
+		if(reset) {
+			Connector.resetProxySetting();
+		}
+		connect(selectedSetting);
 	}
 
 	/**
@@ -37,6 +37,13 @@ public class ConnectionLogic {
 	public void connect(ConnectionSetting selectedSetting, ProxySetting proxy) throws Exception {
 		Connector.setProxySetting(proxy.getHost(), proxy.getPortNumber(), proxy.getUsername(), proxy.getPassword());
 		connect(selectedSetting);
+	}
+
+	private void connect(ConnectionSetting selectedSetting) throws Exception {
+		connector = Optional.of(Connector.login(
+				selectedSetting.getUsername(),
+				selectedSetting.getPassword() + selectedSetting.getToken(),
+				selectedSetting.getAuthEndPoint()));
 	}
 
 	/**

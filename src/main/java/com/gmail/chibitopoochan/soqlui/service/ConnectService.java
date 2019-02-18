@@ -131,7 +131,7 @@ public class ConnectService extends Service<Void> {
 						useLogic.connect(useSetting, proxy);
 					} else {
 						// Proxyが無効なら、そのまま接続
-						useLogic.connect(useSetting);
+						useLogic.connect(useSetting, true);
 
 					}
 					logger.info(String.format("Connected to Salesforce [%s]", useSetting.getName()));

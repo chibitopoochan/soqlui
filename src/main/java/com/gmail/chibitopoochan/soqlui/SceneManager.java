@@ -207,8 +207,10 @@ public class SceneManager {
 		currentStage.close();
 
 		controllerStack.pop();
-		Controller currentController = controllerStack.peek();
-		currentController.onCloseChild();
+		if(!controllerStack.isEmpty()) {
+			Controller currentController = controllerStack.peek();
+			currentController.onCloseChild();
+		}
 
 	}
 

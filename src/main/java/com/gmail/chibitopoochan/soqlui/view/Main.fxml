@@ -33,12 +33,8 @@
             <items>
                   <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
                   <MenuItem fx:id="menuFileProxy" mnemonicParsing="false" onAction="#openProxySetting" text="Proxy" />
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#onSave" text="Save" />
+              <MenuItem mnemonicParsing="false" onAction="#onClose" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

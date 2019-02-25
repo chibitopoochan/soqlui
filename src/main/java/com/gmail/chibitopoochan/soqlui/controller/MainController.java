@@ -2,6 +2,7 @@ package com.gmail.chibitopoochan.soqlui.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -39,9 +40,13 @@ import javafx.collections.ObservableList;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -52,6 +57,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.FileChooserBuilder;
 
 public class MainController implements Initializable, Controller {
 	// クラス共通の参照
@@ -199,6 +207,37 @@ public class MainController implements Initializable, Controller {
 			logger.error("Open window error", e);
 		}
 
+	}
+
+	/**
+	 * ファイルへの保存
+	 */
+	public void onSave() {
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("ファイルへの保存");
+		chooser.setSelectedExtensionFilter(new ExtensionFilter("soql file", "soql"));
+		chooser.setInitialFileName("untitled."+connectOption.getSelectionModel().getSelectedItem()+".soql");
+
+		File saveFile = chooser.showSaveDialog(manager.getStageStack().peek().unwrap());
+		if(saveFile == null) return;
+
+		try(FileWriter writer = new FileWriter(saveFile)) {
+			writer.write(soqlArea.getText());
+			Alert resultDialog = new Alert(AlertType.NONE);
+			resultDialog.setContentText("ファイルを保存しました。");
+			resultDialog.setTitle("確認");
+			resultDialog.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * アプリのクローズ
+	 */
+	public void onClose() {
+		manager.sceneClose();
 	}
 
 	/**

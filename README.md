@@ -1,2 +1,48 @@
 # soqlui
-my soql executor using by Salesforce operation(GUI ver)
+SOQLをローカルで実行するクライアントツール
+
+[![MIT licensed][shield-license]]
+
+## Description
+ブラウザを起動せずにローカルで実行できるSOQLのクライアントツール。
+
+## Usage
+### Install
+```sh
+git clone https://github.com/ahuglajbclajep/my-project.git
+cd my-project
+```
+
+### Run
+実行
+
+### Check
+```sh
+firefox http://localhost:8080/my-project &
+```
+とか
+
+## Hints
+### Options
+コマンドのオプションとか
+
+### Distribute
+`*.zip`にするタスクとかあるなら
+
+### Examples Of Command
+コマンドの実行結果の例とか
+
+## Future Releases
+今後の方針
+
+## Contribution
+1. Fork it
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create new Pull Request
+
+## License
+[MIT](LICENSE)
+
+[shield-license]: https://img.shields.io/badge/license-MIT-green.svg

@@ -2,7 +2,6 @@ package com.gmail.chibitopoochan.soqlui.initializer.service;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
-import com.gmail.chibitopoochan.soqlui.model.ResultSet;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
@@ -95,6 +94,7 @@ public class FieldServiceInitializer implements ServiceInitializer<MainControlle
 		setFieldList((Tab) e.getSource());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setFieldList(Tab tab) {
 		columnSearch.setText("");
 		columnSearch.setDisable(false);

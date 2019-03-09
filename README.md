@@ -8,13 +8,11 @@ SOQLをローカルで実行するクライアントツール
 
 ## Usage
 ### Install
-```sh
-git clone https://github.com/ahuglajbclajep/my-project.git
-cd my-project
-```
+インストーラー「SOQLUI-x.x.exe」を実行してください。
 
 ### Run
-実行
+SOQLUIを実行します。
+または拡張子「soql」を開きます。
 
 ### Check
 ```sh

@@ -170,7 +170,7 @@ public class SceneManager {
 	 */
 	public void sceneChange(String resource, String title) throws IOException {
 		// 画面構成のロード
-		logger.debug(String.format("FXML loading... [%s]", resource));
+		logger.debug(String.format("FXML loading... [%s][%s]", resource, config.getString(resource)));
 		loader.recreate();
 		loader.setLocation(getClass().getResource(config.getString(resource)));
 

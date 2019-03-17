@@ -45,6 +45,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -53,6 +54,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -62,6 +64,8 @@ public class MainController implements Initializable, Controller {
 
 	// 画面上のコンポーネント
 	// メニュー
+	@FXML private Menu menuIcon;
+	@FXML private MenuItem menuFileProxy;
 	@FXML private MenuItem menuFileConnection;
 
 	// 左側上段
@@ -88,6 +92,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private Button export;
 	@FXML private Button cancel;
 	@FXML private TextArea soqlArea;
+	@FXML private WebView soqlWebArea;
 	@FXML private TabPane queryTabArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
@@ -226,6 +231,14 @@ public class MainController implements Initializable, Controller {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void minimam() {
+		manager.minimized();
+	}
+
+	public void onChangeSize() {
+		manager.sizeChange();
 	}
 
 	/**
@@ -625,6 +638,10 @@ public class MainController implements Initializable, Controller {
 	 */
 	public BooleanProperty withExecuteProperty() {
 		return withExecute;
+	}
+
+	public WebView getSoqlWebArea() {
+		return soqlWebArea;
 	}
 
 }

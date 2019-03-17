@@ -1,5 +1,6 @@
 package com.gmail.chibitopoochan.soqlui.wrapper;
 
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 
 public class SceneWrapper {
@@ -17,5 +18,10 @@ public class SceneWrapper {
 
 	public Scene unwrap() {
 		return scene;
+	}
+
+	public ObservableList<String> getStylesheets() {
+		return scene.getStylesheets();
+
 	}
 }

@@ -1,6 +1,7 @@
 package com.gmail.chibitopoochan.soqlui;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -11,11 +12,13 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gmail.chibitopoochan.soqlui.config.mock.StageWrapperMock;
 import com.gmail.chibitopoochan.soqlui.controller.Controller;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.wrapper.FXMLLoaderWrapper;
 import com.gmail.chibitopoochan.soqlui.wrapper.StageWrapper;
 
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
@@ -144,7 +147,7 @@ public class SceneManager {
 
 		// 子画面の設定
 		StageWrapper parentStage = stageStack.peek();
-		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.UTILITY);
+		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.DECORATED);
 		currentStage.setScene(loader.load().getScene());
 		currentStage.initOwner(parentStage.getScene().getWindow());
 		currentStage.initModality(Modality.WINDOW_MODAL);
@@ -163,22 +166,30 @@ public class SceneManager {
 	}
 
 	/**
-	 * 画面の変更
+	 * 画面の初期化
 	 * @param resource FXMLを定義したリソース名
 	 * @param title 画面タイトルのリソース名
 	 * @throws IOException リソース取得時のエラー
 	 */
-	public void sceneChange(String resource, String title) throws IOException {
+	public void sceneInit(String resource, String title) throws IOException {
 		// 画面構成のロード
 		logger.debug(String.format("FXML loading... [%s][%s]", resource, config.getString(resource)));
 		loader.recreate();
 		loader.setLocation(getClass().getResource(config.getString(resource)));
 
 		// 画面の設定
-		StageWrapper currentStage = stageStack.peek();
+//		StageWrapper currentStage = stageStack.peek();
+		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.UNDECORATED);
 		currentStage.setScene(loader.load().getScene());
 		currentStage.setTitle(config.getString(title));
 		logger.debug(String.format("Change to new stage[%s]", title));
+
+		// 子画面のスタイルを設定
+		final ObservableList<String> style = currentStage.getScene().getStylesheets();
+		if(style != null) {
+			style.clear();
+		}
+		style.addAll("/view/css/main.css");
 
 		// アイコンの設定
 		Arrays.stream(config.getString(Configuration.ICON).split(";")).forEach(icon -> {
@@ -186,6 +197,7 @@ public class SceneManager {
 		});
 
 		// シーン変更の通知先を設定
+		setPrimaryStage(currentStage);
 		if(!controllerStack.isEmpty()) {
 			controllerStack.pop();
 		}
@@ -212,6 +224,14 @@ public class SceneManager {
 			currentController.onCloseChild();
 		}
 
+	}
+
+	public void sizeChange() {
+		stageStack.peek().setMaximized(!stageStack.peek().isMaximized());
+	}
+
+	public void minimized() {
+		stageStack.peek().setIconified(true);
 	}
 
 }

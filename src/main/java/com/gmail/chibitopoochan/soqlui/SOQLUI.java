@@ -28,8 +28,7 @@ public class SOQLUI extends Application {
 	 */
 	public void internalStart(StageWrapper primaryStage) throws IOException {
 		SceneManager manager = SceneManager.getInstance();
-		manager.setPrimaryStage(primaryStage);
-		manager.sceneChange(Configuration.VIEW_SU01, Configuration.TITLE_SU01);
+		manager.sceneInit(Configuration.VIEW_SU01, Configuration.TITLE_SU01);
 	}
 
 	/**

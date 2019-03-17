@@ -137,6 +137,30 @@ public class StageWrapper {
 	}
 
 	/**
+	 * {@link javafx.stage.Stage#setMaximized(boolean)}をラップ
+	 * @param flag 最大化
+	 */
+	public void setMaximized(boolean flag) {
+		stage.setMaximized(flag);
+	}
+
+	/**
+	 * {@link javafx.stage.Stage#isMaximized()}をラップ
+	 * @return 最大化有無
+	 */
+	public boolean isMaximized() {
+		return stage.isMaximized();
+	}
+
+	/**
+	 * {@link javafx.stage.Stage#setIconified(boolean)}をラップ
+	 * @param flag アイコン化
+	 */
+	public void setIconified(boolean flag) {
+		stage.setIconified(flag);
+	}
+
+	/**
 	 * {@link javafx.stage.Stage#close()}をラップ
 	 */
 	public void close() {

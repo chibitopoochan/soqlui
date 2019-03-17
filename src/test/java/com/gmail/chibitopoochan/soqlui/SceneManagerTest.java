@@ -115,7 +115,7 @@ public class SceneManagerTest {
 		manager.putParameter("param2", "value2");
 
 		// シーンの変更
-		manager.sceneChange(Configuration.VIEW_SU01, title);
+		manager.sceneInit(Configuration.VIEW_SU01, title);
 
 		// 画面構成のロード
 		assertThat(loader.getLocation(),is(location));

@@ -24,7 +24,7 @@ public class SceneManagerMock extends SceneManager {
 	 * @see com.gmail.chibitopoochan.soqlui.SceneManager#sceneChange(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void sceneChange(String resource, String title) throws IOException {
+	public void sceneInit(String resource, String title) throws IOException {
 		this.resource = resource;
 		this.title = title;
 	}

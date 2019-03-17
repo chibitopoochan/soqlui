@@ -1,0 +1,82 @@
+.root {
+	base-color: #101010;
+	light-color: #303030;
+	input-color: #212121;
+	focus-color: #505050;
+	text-color: #A0A0A0;
+
+	-fx-base: base-color;
+	-fx-border-color: light-color;
+}
+
+.label {
+	-fx-text-fill: text-color;
+}
+
+.label.titlebar {
+	-fx-background-color: light-color;
+}
+
+.menu-bar {
+	-fx-background-color: light-color;
+}
+
+.menu {
+	-fx-background-color: light-color;
+}
+
+.menu:showing {
+	-fx-background-color: focus-color;
+}
+
+.menu-item {
+	-fx-background-color: input-color;
+}
+
+.combo-box {
+	-fx-background-color: input-color;
+}
+
+.text-area {
+	-fx-text-fill: text-color;
+}
+.content {
+	-fx-background-color: input-color;
+}
+
+.text-field {
+	-fx-background-color: input-color;
+	-fx-text-fill: text-color;
+}
+
+.button {
+	-fx-text-fill: text-color;
+	-fx-background-color: input-color;
+}
+
+.button:hover {
+	-fx-background-color: focus-color;
+}
+
+.button.titlebar {
+	-fx-text-fill: text-color;
+	-fx-background-color: light-color;
+}
+
+.button.titlebar:hover {
+	-fx-background-color: focus-color;
+}
+
+.list-view {
+	-fx-background-color: input-color;
+	-fx-text-fill: text-color;
+}
+
+.table-view {
+	-fx-background-color: light-color;
+	-fx-text-fill: text-color;
+}
+
+.column-header {
+	-fx-background-color: light-color;
+}

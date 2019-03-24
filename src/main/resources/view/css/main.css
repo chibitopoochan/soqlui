@@ -33,6 +33,10 @@
 	-fx-background-color: input-color;
 }
 
+.menu-item:hover {
+	-fx-background-color: focus-color;
+}
+
 .combo-box {
 	-fx-background-color: input-color;
 }

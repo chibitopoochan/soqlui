@@ -43,6 +43,8 @@ public class SceneManager {
 
 	// FXMLのローダー
 	private FXMLLoaderWrapper loader = new FXMLLoaderWrapper();
+	private double savedLocationX;
+	private double savedLocationY;
 
 	/**
 	 * 非公開のコンストラクタ
@@ -230,6 +232,16 @@ public class SceneManager {
 
 	public void minimized() {
 		stageStack.peek().setIconified(true);
+	}
+
+	public void saveLocation(double x, double y) {
+		this.savedLocationX = x - stageStack.peek().getScene().getWindow().getX();
+		this.savedLocationY = y - stageStack.peek().getScene().getWindow().getY();
+	}
+
+	public void moveLocation(double x, double y) {
+		stageStack.peek().getScene().getWindow().setX(x - savedLocationX);
+		stageStack.peek().getScene().getWindow().setY(y - savedLocationY);
 	}
 
 }

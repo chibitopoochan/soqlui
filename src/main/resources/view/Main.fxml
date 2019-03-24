@@ -26,10 +26,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gmail.chibitopoochan.soqlui.controller.MainController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="titlebar" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gmail.chibitopoochan.soqlui.controller.MainController">
    <top>
       <HBox BorderPane.alignment="TOP_LEFT">
-	      <MenuBar BorderPane.alignment="CENTER">
+	      <MenuBar minWidth="150.0" prefHeight="25.0" prefWidth="175.0" BorderPane.alignment="CENTER">
 	        <menus>
 	          <Menu fx:id="menuIcon" mnemonicParsing="false" style="-fx-background-image: url('/image/icon16x16.jpeg'); -fx-background-position: left; -fx-background-repeat: no-repeat;" text="_" />
 	          <Menu mnemonicParsing="false" text="File">
@@ -47,7 +47,7 @@
 	          </Menu>
 	        </menus>
 	      </MenuBar>
-         <Label alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" prefHeight="23.0" prefWidth="241.0" styleClass="titlebar" text="SOQL UI" />
+         <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="23.0" prefWidth="534.0" text="SOQL UI" />
          <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" prefHeight="25.0" prefWidth="546.0" HBox.hgrow="ALWAYS">
             <children>
                <Button mnemonicParsing="false" onAction="#minimam" styleClass="titlebar" text="＿" />

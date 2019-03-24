@@ -41,7 +41,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -68,6 +67,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private Menu menuIcon;
 	@FXML private MenuItem menuFileProxy;
 	@FXML private MenuItem menuFileConnection;
+	@FXML private Label titleLabel;
 
 	// 左側上段
 	@FXML private ComboBox<String> connectOption;
@@ -145,43 +145,53 @@ public class MainController implements Initializable, Controller {
 		// 初期値を設定
 		Map<String, String> parameters = manager.getParameters();
 		if(parameters.containsKey("param")) {
-			String fileName = parameters.get("param");
-			Optional<String> envName = Optional.empty();
+			loadSOQLFile(parameters);
+		}
 
-			// ファイル名のチェック
-			if(fileName.endsWith(".soql")) {
-				String fileNameExcludeExtention = fileName.substring(0, fileName.lastIndexOf(".soql"));
-				int indexOfLastPrefix = fileNameExcludeExtention.lastIndexOf(".");
-				if(indexOfLastPrefix > -1) {
-					envName = Optional.of(fileNameExcludeExtention.substring(indexOfLastPrefix+1));
+		// ウィンドウの移動を設定
+		titleLabel.setOnMousePressed(event -> {
+			manager.saveLocation(event.getScreenX(),event.getScreenY());
+		});
+		titleLabel.setOnMouseDragged(event -> {
+			manager.moveLocation(event.getScreenX(), event.getScreenY());
+		});
+	}
+
+	private void loadSOQLFile(Map<String, String> parameters) {
+		String fileName = parameters.get("param");
+		Optional<String> envName = Optional.empty();
+
+		// ファイル名のチェック
+		if(fileName.endsWith(".soql")) {
+			String fileNameExcludeExtention = fileName.substring(0, fileName.lastIndexOf(".soql"));
+			int indexOfLastPrefix = fileNameExcludeExtention.lastIndexOf(".");
+			if(indexOfLastPrefix > -1) {
+				envName = Optional.of(fileNameExcludeExtention.substring(indexOfLastPrefix+1));
+			}
+
+			// ファイルの存在チェック
+			File file = new File(fileName);
+			if(file.exists()) {
+				// ファイルの読み込み
+				try(BufferedReader br = Files.newBufferedReader(file.toPath())) {
+					soqlArea.setText(br.lines().collect(Collectors.joining(System.lineSeparator())));
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 
-				// ファイルの存在チェック
-				File file = new File(fileName);
-				if(file.exists()) {
-					// ファイルの読み込み
-					try(BufferedReader br = Files.newBufferedReader(file.toPath())) {
-						soqlArea.setText(br.lines().collect(Collectors.joining(System.lineSeparator())));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				// 初期化
+				envName.ifPresent(env -> connectOption.getSelectionModel().select(env));
 
-					// 初期化
-					envName.ifPresent(env -> connectOption.getSelectionModel().select(env));
-
-					// 接続の実行
-					// TODO nullで問題ないか？
-					setWithExecute(true);
-					connect.getOnAction().handle(null);
-
-				}
+				// 接続の実行
+				// TODO nullで問題ないか？
+				setWithExecute(true);
+				connect.getOnAction().handle(null);
 
 			}
 
-			logger.debug(fileName);
-
-
 		}
+
+		logger.debug(fileName);
 
 	}
 
@@ -643,6 +653,20 @@ public class MainController implements Initializable, Controller {
 
 	public WebView getSoqlWebArea() {
 		return soqlWebArea;
+	}
+
+	/**
+	 * @return titleLabel
+	 */
+	public Label getTitleLabel() {
+		return titleLabel;
+	}
+
+	/**
+	 * @param titleLabel セットする titleLabel
+	 */
+	public void setTitleLabel(Label titleLabel) {
+		this.titleLabel = titleLabel;
 	}
 
 }

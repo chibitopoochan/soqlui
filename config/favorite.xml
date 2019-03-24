@@ -1,4 +1,1 @@
-<favorites><favorite><query>select id from user</query><name>test2</name></favorite><favorite><query>select
-Name
-,Type
-from Account</query><name>test</name></favorite></favorites>
+<favorites></favorites>

@@ -67,6 +67,8 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 				soqlWebArea.setOnKeyPressed(this::keyPressed);
 				soqlWebArea.setOnMouseExited(this::applyToText);
 				soqlArea.textProperty().addListener((e,o,n) -> applyToWeb());
+				applyToWeb();
+				soqlWebArea.setVisible(true);
 			}
 		});
 
@@ -91,6 +93,7 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		String text = soqlArea.getText();
 
 		try {
+			text = text == null ? "" : text;
 			JSObject obj = (JSObject) soqlWebArea.getEngine().executeScript("editor");
 			obj.call("setValue", text);
 		} catch (JSException e) {

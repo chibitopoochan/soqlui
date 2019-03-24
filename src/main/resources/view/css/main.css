@@ -38,6 +38,7 @@
 }
 
 .text-area {
+	-fx-background-color: input-color;
 	-fx-text-fill: text-color;
 }
 .content {

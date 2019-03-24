@@ -7,6 +7,22 @@
     </encoder>
   </appender>
 
+  <appender name="FILEOUT"
+    class="ch.qos.logback.core.FileAppender">
+    <file>./log/SOQLUI.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+    <fileNamePattern>SOQLUI.%i.log</fileNamePattern>
+        <minIndex>1</minIndex>
+        <maxIndex>3</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+       <maxFileSize>5MB</maxFileSize>
+    </triggeringPolicy>
+    <encoder>
+      <Pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+    </encoder>
+  </appender>
+
   <logger name="jp.or.nurs.sug">
     <level value="DEBUG" />
   </logger>
@@ -14,5 +30,6 @@
   <root>
     <level value="DEBUG" />
     <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILEOUT" />
   </root>
 </configuration>

@@ -1,7 +1,6 @@
 package com.gmail.chibitopoochan.soqlui;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -12,7 +11,6 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gmail.chibitopoochan.soqlui.config.mock.StageWrapperMock;
 import com.gmail.chibitopoochan.soqlui.controller.Controller;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.wrapper.FXMLLoaderWrapper;

@@ -68,7 +68,7 @@
                   <TabPane fx:id="queryTabArea" prefHeight="35.0" prefWidth="490.0" tabClosingPolicy="UNAVAILABLE" />
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <WebView fx:id="soqlWebArea" layoutX="-124.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <WebView fx:id="soqlWebArea" layoutX="-124.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         <TextArea fx:id="soqlArea" visible="false" />
                      </children>
                   </AnchorPane>

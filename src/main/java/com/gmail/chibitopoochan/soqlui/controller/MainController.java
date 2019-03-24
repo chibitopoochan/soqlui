@@ -41,6 +41,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -223,7 +224,7 @@ public class MainController implements Initializable, Controller {
 
 		try(FileWriter writer = new FileWriter(saveFile)) {
 			writer.write(soqlArea.getText());
-			Alert resultDialog = new Alert(AlertType.NONE);
+			Alert resultDialog = new Alert(AlertType.INFORMATION);
 			resultDialog.setContentText("ファイルを保存しました。");
 			resultDialog.setTitle("確認");
 			resultDialog.showAndWait();

@@ -3,6 +3,8 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,17 +16,21 @@ import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ConnectButtonPartsInitializer implements PartsInitializer<MainController>{
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(ConnectButtonPartsInitializer.class);
+	private static final Pattern bindPattern = Pattern.compile(":[a-zA-Z]+");
 
 	private ConnectionSettingLogic setting;
 	private Button connect;
@@ -39,6 +45,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private ProgressBar progressBar;
 	private Label progressText;
 	private Button cancel;
+	private TextArea soqlArea;
+	private StringProperty actualSOQL;
 
 	private Optional<File> exportHistory = Optional.empty();
 
@@ -57,7 +65,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.progressBar = controller.getProgressBar();
 		this.progressText = controller.getProgressText();
 		this.cancel = controller.getCancel();
-
+		this.soqlArea = controller.getSoqlArea();
+		this.actualSOQL = controller.actualSOQL();
 	}
 
 	public void initialize() {
@@ -111,9 +120,42 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	}
 
 	/**
+	 * 拡張SOQLを実際のSOQLに変換
+	 */
+	private void convertToActualSOQL() {
+		// SOQLからバインド変数を抽出
+		String soql = soqlArea.getText();
+		Matcher bindMatcher = bindPattern.matcher(soql);
+
+		// SOQLを再構築
+		StringBuffer workSOQL = new StringBuffer();
+		while(bindMatcher.find()) {
+			// バインド変数の入力
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("バインド変数");
+			dialog.setHeaderText("バインド変数に代入する値を入力してください");
+			dialog.setContentText("変数"+bindMatcher.group());
+			Optional<String> result = dialog.showAndWait();
+
+			// SOQLの組み換え
+			if(result.isPresent()) {
+				bindMatcher.appendReplacement(workSOQL, String.format("'%s'", result.get()));
+			} else {
+				return;
+			}
+
+		}
+		bindMatcher.appendTail(workSOQL);
+		actualSOQL.set(workSOQL.toString());
+
+	}
+
+	/**
 	 * SOQLを実行
 	 */
 	public void doExecute() {
+		convertToActualSOQL();
+
 		progressBar.progressProperty().unbind();
 		progressBar.progressProperty().bind(executor.progressProperty());
 		progressBar.visibleProperty().unbind();
@@ -121,7 +163,6 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		progressText.textProperty().unbind();
 		progressText.textProperty().bind(executor.messageProperty());
 
-		// TODO オプションは後程設定
 		cancel.setDisable(false);
 		export.setDisable(true);
 		execute.setDisable(true);
@@ -130,6 +171,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	}
 
 	public void doExport() {
+		convertToActualSOQL();
+
 		// 変数をバインド
 		progressBar.progressProperty().unbind();
 		progressBar.visibleProperty().unbind();

@@ -43,7 +43,7 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 
 	/**
 	 * SOQLプロパティ.
-	 * 実行するSOQLの設定
+	 * 実行するSOQLの設定（独自構文を含む）
 	 */
 	private StringProperty soql = new SimpleStringProperty(this, "soql");
 	public void setSOQL(String query) {
@@ -56,6 +56,23 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 
 	public StringProperty soqlProperty() {
 		return soql;
+	}
+
+	/**
+	 * SOQLプロパティ.
+	 * 実際に実行するSOQLの設定
+	 */
+	private StringProperty actualSOQL = new SimpleStringProperty(this, "actualSOQL");
+	public void setActualSOQL(String query) {
+		actualSOQL.set(query);
+	}
+
+	public String getActualSOQL() {
+		return actualSOQL.get();
+	}
+
+	public StringProperty actualSOQL() {
+		return actualSOQL;
 	}
 
 	/**
@@ -114,7 +131,7 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 	@Override
 	protected Task<List<Map<String, String>>> createTask() {
 		final ConnectionLogic useLogic = connectionLogic.get();
-		final String useSOQL = getSOQL();
+		final String useSOQL = getActualSOQL();
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
 

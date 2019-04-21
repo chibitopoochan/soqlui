@@ -34,6 +34,8 @@ import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -94,6 +96,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private Button cancel;
 	@FXML private TextArea soqlArea;
 	@FXML private WebView soqlWebArea;
+	private StringProperty actualSOQL = new SimpleStringProperty(this, "actualSOQL");
 	@FXML private TabPane queryTabArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
@@ -224,14 +227,17 @@ public class MainController implements Initializable, Controller {
 	 * ファイルへの保存
 	 */
 	public void onSave() {
+		// ダイアログの生成
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("ファイルへの保存");
 		chooser.setSelectedExtensionFilter(new ExtensionFilter("soql file", "soql"));
 		chooser.setInitialFileName("untitled."+connectOption.getSelectionModel().getSelectedItem()+".soql");
 
+		// 保存先の取得
 		File saveFile = chooser.showSaveDialog(manager.getStageStack().peek().unwrap());
 		if(saveFile == null) return;
 
+		// ファイルの保存
 		try(FileWriter writer = new FileWriter(saveFile)) {
 			writer.write(soqlArea.getText());
 			Alert resultDialog = new Alert(AlertType.INFORMATION);
@@ -667,6 +673,10 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setTitleLabel(Label titleLabel) {
 		this.titleLabel = titleLabel;
+	}
+
+	public StringProperty actualSOQL() {
+		return actualSOQL;
 	}
 
 }

@@ -63,6 +63,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 		service.setOnFailed(this::failed);
 		service.setOnCancelled(this::cancelled);
 		service.soqlProperty().bind(controller.getSoqlArea().textProperty());
+		service.actualSOQL().bind(controller.actualSOQL());
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
 		service.batchSizeProperty().bind(controller.getBatchSize().textProperty());
 		service.allProperty().bind(controller.getAll().selectedProperty());

@@ -1,5 +1,5 @@
 # SOQLUI
-![MIT licensed][shield-license]
+![MIT licensed][MIT]
 
 SOQLをローカルで実行するクライアントツール
 
@@ -43,11 +43,16 @@ SOQLを実行します。
 5. Create new Pull Request
 
 ## ライセンス - License
-### SOQLUI
+### SOQLUI ![MIT licensed][MIT]
 
-[MIT](LICENSE)
+Copyright (c) 2017 chibitopoochan
+All rights reserved.
 
-### [Ace](https://ace.c9.io) (Used editor section)
+
+https://github.com/mametochoko/soqlui
+
+
+### [Ace](https://ace.c9.io) ![License][BSD]
 
 Copyright (c) 2010, Ajax.org B.V.
 All rights reserved.
@@ -56,4 +61,8 @@ All rights reserved.
 https://github.com/ajaxorg/ace/blob/master/LICENSE
 
 
-[shield-license]: https://img.shields.io/badge/license-MIT-green.svg
+### [Apache POI](https://poi.apache.org/) ![License][Apache2.0]
+
+[Apache2.0]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+[MIT]: https://img.shields.io/badge/license-MIT-green.svg
+[BSD]: https://img.shields.io/badge/License-BSD%203--Clause-red.svg

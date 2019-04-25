@@ -178,7 +178,6 @@ public class SceneManager {
 		loader.setLocation(getClass().getResource(config.getString(resource)));
 
 		// 画面の設定
-//		StageWrapper currentStage = stageStack.peek();
 		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.UNDECORATED);
 		currentStage.setScene(loader.load().getScene());
 		currentStage.setTitle(config.getString(title));

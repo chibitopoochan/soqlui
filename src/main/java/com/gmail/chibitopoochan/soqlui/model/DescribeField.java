@@ -1,6 +1,6 @@
 package com.gmail.chibitopoochan.soqlui.model;
 
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import com.gmail.chibitopoochan.soqlexec.model.FieldMetaInfo;
 
@@ -15,62 +15,56 @@ public class DescribeField {
 	public static final String FIELD_LIST_COLUMN_PICKLIST = "Picklist";
 	public static final String FIELD_LIST_COLUMN_REF = "Reference";
 
-	private String name;
-	private String label;
-	private int length;
-	private String type;
-	private String picklist;
-	private String reference;
+	private Map<String, String> metaInfo;
 
 	public DescribeField(FieldMetaInfo info) {
-		name = info.getName();
-		label = info.getLabel();
-		length = info.getLength();
-		type = info.getType();
-		picklist = info.getPicklist().stream().collect(Collectors.joining(";"));
-		reference = info.getReferenceToList().stream().collect(Collectors.joining(";"));
+		metaInfo = info.getMetaInfo();
 	}
 
 	/**
 	 * @return name
 	 */
 	public String getName() {
-		return name;
+		return metaInfo.get("Name");
 	}
 
 	/**
 	 * @return label
 	 */
 	public String getLabel() {
-		return label;
+		return metaInfo.get("Label");
 	}
 
 	/**
 	 * @return length
 	 */
-	public int getLength() {
-		return length;
+	public String getLength() {
+		return metaInfo.get("Length");
 	}
 
 	/**
 	 * @return type
 	 */
 	public String getType() {
-		return type;
+		return metaInfo.get("Type");
 	}
 
 	/**
 	 * @return picklist
 	 */
 	public String getPicklist() {
-		return picklist;
+		return metaInfo.get("PicklistValues.Active");
 	}
 
 	/**
 	 * @return reference
 	 */
 	public String getReference() {
-		return reference;
+		return metaInfo.get("ReferenceTo");
+	}
+
+	public Map<String,String> getMetaInfo(){
+		return metaInfo;
 	}
 
 }

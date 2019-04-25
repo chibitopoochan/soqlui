@@ -95,7 +95,7 @@ public class ConnectionLogic {
 			list = connector.get()
 			.getDescribeSObjects()
 			.stream()
-			.map(m -> new DescribeSObject(m.getName(), m.getLabel(), m.getKeyPrefix()))
+			.map(m -> new DescribeSObject(m))
 			.collect(Collectors.toList());
 		}
 

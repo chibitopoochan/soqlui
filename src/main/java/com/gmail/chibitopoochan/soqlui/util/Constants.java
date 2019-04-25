@@ -39,6 +39,8 @@ public interface Constants {
 		String PROXY_PATH = "PROXY_PATH";
 		String ICON = "APPLICATION_ICON";
 
+		String FORMAT_PATH = "FORMAT_PATH";
+
 		String VIEW_SU01 = "VIEW_SU01";
 		String VIEW_SU02 = "VIEW_SU02";
 		String VIEW_SU03 = "VIEW_SU03";

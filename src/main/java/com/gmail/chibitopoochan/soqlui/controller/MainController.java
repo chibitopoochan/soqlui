@@ -265,6 +265,10 @@ public class MainController implements Initializable, Controller {
 		manager.sceneClose();
 	}
 
+	public SceneManager getManager() {
+		return manager;
+	}
+
 	/**
 	 * 接続情報を更新
 	 */

@@ -1,11 +1,32 @@
 package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.ss.util.CellUtil;
+
+import com.gmail.chibitopoochan.soqlui.SceneManager;
+import com.gmail.chibitopoochan.soqlui.config.Format;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
@@ -22,6 +43,8 @@ import com.gmail.chibitopoochan.soqlui.util.format.SimpleFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.WithoutHeaderExcelFormatDecoration;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -36,6 +59,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.DirectoryChooser;
 
 /**
  * コンテキストメニューの初期設定
@@ -56,9 +80,12 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private MenuItem copyNoHead;
 	private MenuItem createSOQL;
 	private MenuItem createWithSelect;
+	private MenuItem exportExcelFormat;
 
 	private GenerateSOQLServiceInitializer initService;
 	private FieldProvideService service;
+
+	private SceneManager manager;
 
 	@Override
 	public void setController(MainController controller) {
@@ -72,6 +99,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		this.initService = new GenerateSOQLServiceInitializer();
 		initService.setController(controller);
+
+		this.manager = controller.getManager();
 	}
 
 	@Override
@@ -84,6 +113,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		selectAllColumns	= new MenuItem("Select all columns");
 		createSOQL			= new MenuItem("Create SOQL");
 		createWithSelect    = new MenuItem("Create SOQL with selected");
+		exportExcelFormat	= new MenuItem("Export to Excel Format");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
@@ -94,6 +124,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		selectAllColumns.setOnAction(e -> queryWithAllColumns(new QueryFormatDecoration(), e.getSource()));
 		createSOQL.setOnAction(e -> querySelected(new QueryFormatDecoration(), e.getSource()));
 		createWithSelect.setOnAction(e -> queryWithCondition(new QueryFormatDecoration(), e.getSource()));
+		exportExcelFormat.setOnAction(e -> exportExcelFormat(e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -113,6 +144,90 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 	}
 
+	private void exportExcelFormat(Object source) {
+		// 項目一覧を取得
+		List<DescribeField> list = fieldList.getItems();
+
+		// フォーマットを読み込み
+		Format format = Format.getInstance();
+
+		// ダイアログの生成
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("フォルダへの保存");
+		File dir = chooser.showDialog(manager.getStageStack().peek().unwrap());
+
+		if(dir == null) return;
+
+		// 項目のメタ情報を加工
+		Set<String> keySet = new HashSet<>();
+		for(String key : list.get(0).getMetaInfo().keySet()) {
+			keySet.add("$"+key);
+		}
+
+		Workbook book = null;
+		OutputStream out = null;
+		InputStream input = null;
+		try{
+			input = new FileInputStream(new File(format.getFilePath()));
+			book = WorkbookFactory.create(input);
+			out = new FileOutputStream(Paths.get(dir.getAbsolutePath(), getObjectName(source)+".xlsx").toFile());
+			// 開始地点のセルを走査
+			Map<String,CellAddress> cellMap = new HashMap<>();
+			Map<String,Sheet> sheetMap = new HashMap<>();
+			for(Sheet s : book) {
+				for(Row r : s) {
+					for(Cell c : r) {
+						if(c.getCellType() == CellType.STRING && keySet.contains(c.getStringCellValue())) {
+							cellMap.put(c.getStringCellValue(), c.getAddress());
+							sheetMap.put(c.getStringCellValue(), c.getSheet());
+						}
+					}
+				}
+			}
+
+			// セルに値を埋め込む
+			for(DescribeField field : list) {
+				for(String key : keySet) {
+					if(cellMap.containsKey(key)) {
+						// 必要なデータを準備
+						CellAddress a = cellMap.get(key);
+						Sheet s = sheetMap.get(key);
+						Row r = CellUtil.getRow(a.getRow(), s);
+						Cell c = CellUtil.getCell(r, a.getColumn());
+
+						// 値を設定
+						c.setCellValue(field.getMetaInfo().get(key.substring(1)));
+
+						// セルの位置を移動
+						cellMap.put(key, new CellAddress(a.getRow()+1, a.getColumn()));
+					}
+				}
+			}
+
+			// ファイルを書き込み
+			book.write(out);
+
+			Alert confirm = new Alert(AlertType.INFORMATION, "Export finished.");
+			confirm.showAndWait();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alert confirm = new Alert(AlertType.INFORMATION, "Export failed.\n" + e.getMessage());
+			confirm.showAndWait();
+			return;
+		} finally {
+			try {
+				input.close();
+				out.close();
+				book.close();
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 	private void showContextMenu(MouseEvent e) {
 		if(e.getButton() != MouseButton.SECONDARY) 	return;
 		if(!(e.getSource() instanceof TableView)) return;
@@ -127,7 +242,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		if(table == sObjectList) {
 			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead);
 		} else if(table == fieldList) {
-			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
+			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, exportExcelFormat);
 		} else {
 			context.getItems().addAll(createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead);
 		}

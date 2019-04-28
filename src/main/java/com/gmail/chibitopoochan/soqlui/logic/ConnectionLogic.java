@@ -1,5 +1,6 @@
 package com.gmail.chibitopoochan.soqlui.logic;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,25 @@ public class ConnectionLogic {
 		return list;
 	}
 
+	/**
+	 * ユーザ情報の取得
+	 * @return ユーザ情報
+	 * @throws ConnectionException 接続エラー
+	 */
+	public Map<String, String> getUserInfo() throws ConnectionException {
+		Map<String,String> userInfo = new HashMap<>();
+
+		if(connector.isPresent()) {
+			userInfo = connector.get().getUserInfo();
+		}
+
+		return userInfo;
+	}
+
+	/**
+	 * レコードの行数を取得
+	 * @return 行数
+	 */
 	public int getSize() {
 		int size = 0;
 		if(connector.isPresent()) {

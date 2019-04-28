@@ -1,6 +1,7 @@
 package com.gmail.chibitopoochan.soqlui.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,11 @@ import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
@@ -38,6 +41,22 @@ public class ConnectService extends Service<Void> {
 
 	public ListProperty<DescribeSObject> describeSObjectListProperty() {
 		return describeSObjectList;
+	}
+
+	/**
+	 * ユーザ情報のプロパティ
+	 */
+	private MapProperty<String, String> userInfoMap = new SimpleMapProperty<>(this, "userInfoMap");
+	public void setUserInfoMap(Map<String, String> elements) {
+		userInfoMap.setValue(FXCollections.observableMap(elements));
+	}
+
+	public Map<String, String> getUserInfoMap() {
+		return userInfoMap.getValue();
+	}
+
+	public MapProperty<String, String> userInfoMap() {
+		return userInfoMap;
 	}
 
 	/**
@@ -138,6 +157,9 @@ public class ConnectService extends Service<Void> {
 
 					// Object一覧を取得
 					setDescribeSObjectList(useLogic.getSObjectList());
+
+					// ユーザ情報を取得
+					setUserInfoMap(useLogic.getUserInfo());
 
 				}
 

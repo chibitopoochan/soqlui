@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
@@ -39,6 +38,7 @@ import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.ResultSet;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
+import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
@@ -87,12 +87,13 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private MenuItem createSOQL;
 	private MenuItem createWithSelect;
 	private MenuItem exportExcelFormat;
-	private MenuItem browseSetting;
 	private MenuItem browseRecord;
+	private MenuItem browseProxy;
 
 	private GenerateSOQLServiceInitializer initService;
 	private FieldProvideService service;
 	private ConnectionSettingLogic settingLogic;
+	private ConnectService connectService;
 
 	private SceneManager manager;
 
@@ -111,6 +112,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		this.manager = controller.getManager();
 		this.settingLogic = controller.getSetting();
+		this.connectService = controller.getConnectService();
+
 	}
 
 	@Override
@@ -124,8 +127,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		createSOQL			= new MenuItem("Create SOQL");
 		createWithSelect    = new MenuItem("Create SOQL with selected");
 		exportExcelFormat	= new MenuItem("Export to Excel Format");
-		browseSetting		= new MenuItem("Open setting on browser");
-		browseRecord		= new MenuItem("Open record(s) on browser");
+		browseRecord		= new MenuItem("Open browser");
+		browseProxy			= new MenuItem("Open login as another user");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
@@ -137,8 +140,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		createSOQL.setOnAction(e -> querySelected(new QueryFormatDecoration(), e.getSource()));
 		createWithSelect.setOnAction(e -> queryWithCondition(new QueryFormatDecoration(), e.getSource()));
 		exportExcelFormat.setOnAction(e -> exportExcelFormat(e.getSource()));
-		browseSetting.setOnAction(e -> browse(e.getSource()));
 		browseRecord.setOnAction(e -> browse(e.getSource()));
+		browseProxy.setOnAction(e -> browseProxyLogin(e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -254,11 +257,11 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		ContextMenu context = table.getContextMenu();
 		context.getItems().clear();
 		if(table == sObjectList) {
-			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead, browseSetting);
+			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead, browseRecord);
 		} else if(table == fieldList) {
 			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, exportExcelFormat);
 		} else {
-			context.getItems().addAll(createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, browseRecord);
+			context.getItems().addAll(createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, browseRecord, browseProxy);
 		}
 		context.show(table, 0, 0);
 
@@ -380,37 +383,67 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	}
 
 	private void browse(Object source) {
-		String startURL;
+		try {
+			if(source instanceof MenuItem) {
+				MenuItem item = (MenuItem) source;
+				TableView<?> table = (TableView<?>) item.getParentPopup().getUserData();
+				if(table == sObjectList) {
+					DescribeSObject object = sObjectList.getSelectionModel().getSelectedItem();
+					if("".equals(object.getKeyPrefix())) {
+						throw new IllegalArgumentException("please include key prefix with sObject");
+					}
+					openBrowser("/" + object.getKeyPrefix() + "/o");
+				} else if(table == resultTable) {
+					SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
+					Map<String, String> fieldMap = record.getRecord();
+					if(fieldMap.containsKey("Id")) {
+						openBrowser(fieldMap.get("Id"));
+					} else {
+						throw new IllegalArgumentException("please include id field with record");
+					}
+				} else {
+					throw new IllegalArgumentException("cannot cast to sObjectList/FieldList from " + source);
+				}
+			} else {
+				throw new IllegalArgumentException("cannot cast to TableView/MenuItem from " + source);
+			}
+		} catch(Exception e) {
+			Alert confirm = new Alert(AlertType.ERROR, e.getMessage());
+			confirm.showAndWait();
+		}
+	}
 
-		if(source instanceof MenuItem) {
-			MenuItem item = (MenuItem) source;
-			TableView<?> table = (TableView<?>) item.getParentPopup().getUserData();
-			if(table == sObjectList) {
-				DescribeSObject object = sObjectList.getSelectionModel().getSelectedItem();
-				if("".equals(object.getKeyPrefix())) {
-					throw new IllegalArgumentException("please include key prefix with sObject");
-				}
-				try {
-					startURL = URLEncoder.encode("/" + object.getKeyPrefix() + "/o","UTF-8");
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-					throw new IllegalArgumentException("please include key prefix with sObject");
-				}
-			} else if(table == resultTable) {
+	private void browseProxyLogin(Object source) {
+		try {
+			String userId = "";
+
+			if(source instanceof MenuItem) {
 				SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
 				Map<String, String> fieldMap = record.getRecord();
 				if(fieldMap.containsKey("Id")) {
-					startURL = fieldMap.get("Id");
+					userId = fieldMap.get("Id");
 				} else {
 					throw new IllegalArgumentException("please include id field with record");
 				}
 			} else {
 				throw new IllegalArgumentException("cannot cast to sObjectList/FieldList from " + source);
 			}
-		} else {
-			throw new IllegalArgumentException("cannot cast to TableView/MenuItem from " + source);
-		}
 
+			String orgId = connectService.getUserInfoMap().get("OrganizationId");
+			String targetURL = URLEncoder.encode("/home/home.jsp","UTF-8");
+			String retURL = URLEncoder.encode("/"+userId+"?noredirect=1&isUserEntityOverride=1","UTF-8");
+			String startURL = String.format("/servlet/servlet.su?oid=%s&suorgadminid=%s&retURL=%s&targetURL=%s", orgId, userId, retURL, targetURL);
+
+			// ブラウザで表示
+			openBrowser(startURL);
+
+		} catch (Exception e) {
+			Alert confirm = new Alert(AlertType.ERROR, e.getMessage());
+			confirm.showAndWait();
+		}
+	}
+
+	private void openBrowser(String startURL) {
 		ConnectionSetting setting = this.settingLogic.getConnectionSetting(settingLogic.getSelectedName(ConnectionSettingLogic.DEFAULT_NAME));
 		String username = setting.getUsername();
 		String password = setting.getPassword();
@@ -419,11 +452,13 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		// ブラウザで表示
 		Desktop desktop = Desktop.getDesktop();
 		try {
-			desktop.browse(URI.create(String.format("https://%s.salesforce.com/?un=%s&pw=%s&startURL=%s",env, username, password, "%2F"+startURL)));
+			String url = String.format("https://%s.salesforce.com/?un=%s&pw=%s&startURL=%s",env, username, password, URLEncoder.encode(startURL,"UTF-8"));
+			desktop.browse(URI.create(url));
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("cannot open a browser");
 		}
+
 	}
 
 	private String buildFormat(FormatDecoration decorator, Object source) {

@@ -30,7 +30,7 @@ public class ConnectOptionPartInitializer implements PartsInitializer<MainContro
 		// 接続情報を選択肢として追加
 		connectOption.getItems().clear();
 		if (option.isEmpty()) {
-			connectOption.getItems().add("--");
+			connectOption.getItems().add(ConnectionSettingLogic.DEFAULT_NAME);
 		} else {
 			connectOption.getItems().addAll(option);
 		}

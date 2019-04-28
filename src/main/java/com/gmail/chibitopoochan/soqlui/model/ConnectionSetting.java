@@ -3,6 +3,8 @@ package com.gmail.chibitopoochan.soqlui.model;
 public class ConnectionSetting {
 	public static final String ENV_PROD = "Prod";
 	public static final String ENV_TEST = "Test";
+	public static final String ENV_URL_PROD = "login";
+	public static final String ENV_URL_TEST = "test";
 
 	private String name;
 	private String username;
@@ -101,6 +103,10 @@ public class ConnectionSetting {
 	 */
 	public boolean isSandbox(){
 		return ENV_TEST.equals(environment);
+	}
+
+	public String getEnvironmentOfURL() {
+		return isSandbox() ? ENV_URL_TEST : ENV_URL_PROD;
 	}
 
 }

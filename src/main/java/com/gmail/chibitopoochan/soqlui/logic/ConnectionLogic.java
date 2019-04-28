@@ -41,7 +41,7 @@ public class ConnectionLogic {
 	}
 
 	private void connect(ConnectionSetting selectedSetting) throws Exception {
-		String env = selectedSetting.isSandbox() ? "test" : "login";
+		String env = selectedSetting.getEnvironmentOfURL();
 		String api = selectedSetting.getApiVersion();
 
 		connector = Optional.of(Connector.login(

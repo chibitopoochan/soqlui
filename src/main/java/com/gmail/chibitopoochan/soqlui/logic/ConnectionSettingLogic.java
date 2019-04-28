@@ -23,6 +23,8 @@ public class ConnectionSettingLogic {
 	// クラス共通の参照
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionSettingLogic.class);
 
+	public static final String DEFAULT_NAME = "--";
+
 	private ConnectionSettingSet settings;
 	private Map<String, ConnectionSetting> cachedSettings = new HashMap<>();
 

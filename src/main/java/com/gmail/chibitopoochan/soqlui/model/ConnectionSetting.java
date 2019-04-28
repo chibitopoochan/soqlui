@@ -1,12 +1,16 @@
 package com.gmail.chibitopoochan.soqlui.model;
 
 public class ConnectionSetting {
+	public static final String ENV_PROD = "Prod";
+	public static final String ENV_TEST = "Test";
+
 	private String name;
 	private String username;
 	private String password;
 	private String token;
-	private String authEndPoint;
 	private boolean selected;
+	private String environment;
+	private String apiVersion;
 
 	/**
 	 * @return username
@@ -45,18 +49,6 @@ public class ConnectionSetting {
 		this.token = token;
 	}
 	/**
-	 * @return authEndPoint
-	 */
-	public String getAuthEndPoint() {
-		return authEndPoint;
-	}
-	/**
-	 * @param authEndPoint セットする authEndPoint
-	 */
-	public void setAuthEndPoint(String authEndPoint) {
-		this.authEndPoint = authEndPoint;
-	}
-	/**
 	 * @return name
 	 */
 	public String getName() {
@@ -79,6 +71,36 @@ public class ConnectionSetting {
 	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+	/**
+	 * @return environment
+	 */
+	public String getEnvironment() {
+		return environment;
+	}
+	/**
+	 * @param environment セットする environment
+	 */
+	public void setEnvironment(String environment) {
+		this.environment = environment;
+	}
+	/**
+	 * @return apiVersion
+	 */
+	public String getApiVersion() {
+		return apiVersion;
+	}
+	/**
+	 * @param apiVersion セットする apiVersion
+	 */
+	public void setApiVersion(String apiVersion) {
+		this.apiVersion = apiVersion;
+	}
+	/**
+	 * @return is sandbox
+	 */
+	public boolean isSandbox(){
+		return ENV_TEST.equals(environment);
 	}
 
 }

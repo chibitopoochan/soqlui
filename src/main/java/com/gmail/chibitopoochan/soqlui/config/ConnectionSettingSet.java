@@ -31,7 +31,8 @@ import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 public class ConnectionSettingSet {
 	public static final String CONNECTIONS_ELEMENT = "connections";
 	public static final String CONNECTION_ELEMENT = "connection";
-	public static final String AUTH_END_POINT = "authEndPoint";
+	public static final String ENVIRONMENT = "environment";
+	public static final String API_VERSION = "api";
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 	public static final String TOKEN = "token";
@@ -194,9 +195,14 @@ public class ConnectionSettingSet {
 		writer.writeCharacters(setting.getToken());
 		writer.writeEndElement();
 
-		// Auth End Point
-		writer.writeStartElement("", AUTH_END_POINT, "");
-		writer.writeCharacters(setting.getAuthEndPoint());
+		// 環境
+		writer.writeStartElement("", ENVIRONMENT, "");
+		writer.writeCharacters(setting.getEnvironment());
+		writer.writeEndElement();
+
+		// API
+		writer.writeStartElement("", API_VERSION, "");
+		writer.writeCharacters(setting.getApiVersion());
 		writer.writeEndElement();
 
 		// 選択済み
@@ -266,8 +272,12 @@ public class ConnectionSettingSet {
 				setting.setToken(reader.getElementText());
 				break;
 
-			case AUTH_END_POINT:
-				setting.setAuthEndPoint(reader.getElementText());
+			case ENVIRONMENT:
+				setting.setEnvironment(reader.getElementText());
+				break;
+
+			case API_VERSION:
+				setting.setApiVersion(reader.getElementText());
 				break;
 
 			case SELECTED:

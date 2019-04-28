@@ -14,6 +14,7 @@ import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 import com.sforce.ws.ConnectionException;
 
 public class ConnectionLogic {
+	private static final String SERVER_URL = "https://%s.salesforce.com/services/Soap/u/%s";
 	private Optional<Connector> connector = Optional.empty();
 
 	/**
@@ -40,10 +41,13 @@ public class ConnectionLogic {
 	}
 
 	private void connect(ConnectionSetting selectedSetting) throws Exception {
+		String env = selectedSetting.isSandbox() ? "test" : "login";
+		String api = selectedSetting.getApiVersion();
+
 		connector = Optional.of(Connector.login(
 				selectedSetting.getUsername(),
 				selectedSetting.getPassword() + selectedSetting.getToken(),
-				selectedSetting.getAuthEndPoint()));
+				String.format(SERVER_URL, env, api)));
 	}
 
 	/**

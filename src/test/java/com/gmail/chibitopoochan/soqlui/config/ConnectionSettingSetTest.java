@@ -53,7 +53,8 @@ public class ConnectionSettingSetTest {
 			assertThat(setting.getUsername(), is("username"));
 			assertThat(setting.getPassword(), is("password"));
 			assertThat(setting.getToken(), is("token"));
-			assertThat(setting.getAuthEndPoint(), is("authEndPoint"));
+			assertThat(setting.getApiVersion(), is("39.0"));
+			assertThat(setting.getEnvironment(), is("Test"));
 		}
 
 
@@ -81,7 +82,8 @@ public class ConnectionSettingSetTest {
 		setting1.setName("name1");
 		setting1.setUsername("username1");
 		setting1.setPassword("password");
-		setting1.setAuthEndPoint("authEndPoint");
+		setting1.setEnvironment(ConnectionSetting.ENV_PROD);
+		setting1.setApiVersion("39.0");
 		setting1.setToken("token");
 		list.add(setting1);
 
@@ -90,7 +92,8 @@ public class ConnectionSettingSetTest {
 		setting2.setUsername("username");
 		setting2.setPassword("password");
 		setting2.setToken("token");
-		setting2.setAuthEndPoint("authEndPoint");
+		setting2.setEnvironment(ConnectionSetting.ENV_PROD);
+		setting2.setApiVersion("39.0");
 		list.add(setting2);
 
 		settings.setConnectionSetting(list);

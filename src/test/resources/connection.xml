@@ -3,12 +3,14 @@
 		<username>username</username>
 		<password>password</password>
 		<token>token</token>
-		<authEndPoint>authEndPoint</authEndPoint>
+		<api>39.0</api>
+		<environment>Test</environment>
 	</connection>
 	<connection name="name">
 		<username>username</username>
 		<password>password</password>
 		<token>token</token>
-		<authEndPoint>authEndPoint</authEndPoint>
+		<api>39.0</api>
+		<environment>Test</environment>
 	</connection>
 </connections>

@@ -10,6 +10,7 @@ import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -31,7 +32,10 @@ public class ConnectionSettingController implements Initializable, Controller {
 	private TextField tokenField;
 
 	@FXML
-	private TextField authEndPointField;
+	private TextField apiVersionField;
+
+	@FXML
+	private ComboBox<String> environmentField;
 
 	private ConnectionSettingLogic settingLogic;
 
@@ -58,7 +62,10 @@ public class ConnectionSettingController implements Initializable, Controller {
 			usernameField.setText(setting.getUsername());
 			passwordField.setText(setting.getPassword());
 			tokenField.setText(setting.getToken());
-			authEndPointField.setText(setting.getAuthEndPoint());
+			environmentField.getItems().clear();
+			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
+			environmentField.getSelectionModel().select(setting.isSandbox() ? 0 : 1);
+			apiVersionField.setText(setting.getApiVersion());
 			edit = true;
 		}
 
@@ -78,7 +85,7 @@ public class ConnectionSettingController implements Initializable, Controller {
 			requiredCheck(nameField.getText(), "Required name field");
 			requiredCheck(usernameField.getText(), "Required username field");
 			requiredCheck(passwordField.getText(), "Required password field");
-			requiredCheck(authEndPointField.getText(), "Required Auth End Point field");
+			requiredCheck(apiVersionField.getText(), "Required API version field");
 		} catch (Exception e1) {
 			errorMessage.setText(e1.getMessage());
 			errorMessage.setVisible(true);
@@ -100,7 +107,8 @@ public class ConnectionSettingController implements Initializable, Controller {
 		setting.setUsername(usernameField.getText());
 		setting.setPassword(passwordField.getText());
 		setting.setToken(tokenField.getText());
-		setting.setAuthEndPoint(authEndPointField.getText());
+		setting.setEnvironment(environmentField.getSelectionModel().getSelectedItem());
+		setting.setApiVersion(apiVersionField.getText());
 
 		// 接続設定を登録
 		settingLogic.upsert(setting);

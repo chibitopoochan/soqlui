@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
@@ -13,6 +14,7 @@ import javafx.event.Event;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -21,13 +23,17 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 
-
 public class SOQLAreaPartInitializer implements PartsInitializer<MainController> {
+	public static final int TAB_COUNT = ApplicationSettingSet.getInstance().getSetting().getTabCount();
+	public static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
+	public static final int RECORD_COUNT = ApplicationSettingSet.getInstance().getSetting().getRecordSize();
+
 	private TextArea soqlArea;
 	private WebView soqlWebArea;
 	private SOQLExecuteService executor;
 	private ConnectService service;
 	private TabPane tabArea;
+	private TextField batchSize;
 
 	@Override
 	public void setController(MainController controller) {
@@ -36,10 +42,32 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		this.service = controller.getConnectService();
 		this.tabArea = controller.getQueryTabArea();
 		this.soqlWebArea = controller.getSoqlWebArea();
+		this.batchSize = controller.getBatchSize();
 	}
 
 	@Override
 	public void initialize() {
+		if(USE_EDITOR) {
+			loadEditor();
+		} else {
+			soqlWebArea.setDisable(true);
+			soqlWebArea.setVisible(false);
+			soqlArea.setDisable(false);
+			soqlArea.setVisible(true);
+			soqlArea.setOnKeyPressed(this::keyPressed);
+		}
+
+		for(int i=0; i<TAB_COUNT; i++) {
+			Tab queryTab = new Tab("Query "+i);
+			queryTab.setOnSelectionChanged(this::queryTabChanged);
+			tabArea.getTabs().add(queryTab);
+		}
+
+		batchSize.setText(String.valueOf(RECORD_COUNT));
+
+	}
+
+	private void loadEditor() {
 		// HTML読み込み
 		StringBuilder builder = new StringBuilder();
 		try(BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/html/editor.html")))){
@@ -71,12 +99,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 				soqlWebArea.setVisible(true);
 			}
 		});
-
-		for(int i=0; i<5; i++) {
-			Tab queryTab = new Tab("Query "+i);
-			queryTab.setOnSelectionChanged(this::queryTabChanged);
-			tabArea.getTabs().add(queryTab);
-		}
 
 	}
 

@@ -17,11 +17,11 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 public class ProxySettingSet {
@@ -34,7 +34,7 @@ public class ProxySettingSet {
 	public static final String PROXY_PORT = "port";
 
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(SOQLHistorySet.class);
+	private static final Logger logger = LogUtils.getLogger(ProxySettingSet.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 
 	// Singletonのインスタンス

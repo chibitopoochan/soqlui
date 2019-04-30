@@ -37,6 +37,7 @@
 	                  <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
 	                  <MenuItem fx:id="menuFileProxy" mnemonicParsing="false" onAction="#openProxySetting" text="Proxy" />
 	                  <MenuItem mnemonicParsing="false" onAction="#onSave" text="Save" />
+                     <MenuItem mnemonicParsing="false" onAction="#openApplicationSetting" text="Setting" />
 	              <MenuItem mnemonicParsing="false" onAction="#onClose" text="Close" />
 	            </items>
 	          </Menu>
@@ -50,9 +51,9 @@
          <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="23.0" prefWidth="534.0" text="SOQL UI" />
          <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" prefHeight="25.0" prefWidth="546.0" HBox.hgrow="ALWAYS">
             <children>
-               <Button mnemonicParsing="false" onAction="#minimam" styleClass="titlebar" text="＿" />
-               <Button mnemonicParsing="false" onAction="#onChangeSize" styleClass="titlebar" text="□" />
-               <Button mnemonicParsing="false" onAction="#onClose" styleClass="titlebar" text="X" />
+               <Button fx:id="minimam" mnemonicParsing="false" onAction="#minimam" styleClass="titlebar" text="＿" />
+               <Button fx:id="maximam" mnemonicParsing="false" onAction="#onChangeSize" styleClass="titlebar" text="□" />
+               <Button fx:id="close" mnemonicParsing="false" onAction="#onClose" styleClass="titlebar" text="X" />
             </children>
             <HBox.margin>
                <Insets />
@@ -69,7 +70,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
                      <children>
                         <WebView fx:id="soqlWebArea" layoutX="-124.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <TextArea fx:id="soqlArea" visible="false" />
+                        <TextArea fx:id="soqlArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="249.0" prefWidth="489.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="30.0">

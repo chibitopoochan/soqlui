@@ -19,16 +19,16 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 public class FavoriteSet {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(FavoriteSet.class);
+	private static final Logger logger = LogUtils.getLogger(FavoriteSet.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 
 	// XMLの要素定義

@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
 
 import javafx.beans.property.BooleanProperty;
@@ -27,7 +27,7 @@ import javafx.concurrent.Task;
 
 public class ExportService extends Service<Void> {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(SOQLExecuteService.class);
+	private static final Logger logger = LogUtils.getLogger(SOQLExecuteService.class);
 
 	public static final int DEFAULT_BATCH_SIZE = 1000;
 	public static final int MAX_BATCH_SIZE = 2000;

@@ -29,6 +29,7 @@ import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellUtil;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.Format;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
@@ -72,6 +73,14 @@ import javafx.stage.DirectoryChooser;
  * @author mamet
  */
 public class ContextPartInitializer implements PartsInitializer<MainController> {
+	private static final String URL_ENCODE = "UTF-8";
+	private static final String RECORD_ID = "Id";
+	public static final String LOGIN_URL = ApplicationSettingSet.getInstance().getSetting().getLoginURL();
+	public static final String PROXY_URL = ApplicationSettingSet.getInstance().getSetting().getProxyLoginURL();
+	public static final String PROXY_BACK_URL = ApplicationSettingSet.getInstance().getSetting().getProxyBackURL();
+	public static final String PROXY_TARGET_URL = ApplicationSettingSet.getInstance().getSetting().getProxyTargetURL();
+	public static final List<String> FORMAT_COLUMNS = ApplicationSettingSet.getInstance().getSetting().getFormatColumns();
+
 	private TableView<SObjectRecord> resultTable;
 	private TableView<DescribeSObject> sObjectList;
 	private TableView<DescribeField> fieldList;
@@ -178,7 +187,9 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		// 項目のメタ情報を加工
 		Set<String> keySet = new HashSet<>();
 		for(String key : list.get(0).getMetaInfo().keySet()) {
-			keySet.add("$"+key);
+			if(FORMAT_COLUMNS.contains(key)) {
+				keySet.add("$"+key);
+			}
 		}
 
 		Workbook book = null;
@@ -396,8 +407,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 				} else if(table == resultTable) {
 					SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
 					Map<String, String> fieldMap = record.getRecord();
-					if(fieldMap.containsKey("Id")) {
-						openBrowser(fieldMap.get("Id"));
+					if(fieldMap.containsKey(RECORD_ID)) {
+						openBrowser(fieldMap.get(RECORD_ID));
 					} else {
 						throw new IllegalArgumentException("please include id field with record");
 					}
@@ -420,8 +431,8 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			if(source instanceof MenuItem) {
 				SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
 				Map<String, String> fieldMap = record.getRecord();
-				if(fieldMap.containsKey("Id")) {
-					userId = fieldMap.get("Id");
+				if(fieldMap.containsKey(RECORD_ID)) {
+					userId = fieldMap.get(RECORD_ID);
 				} else {
 					throw new IllegalArgumentException("please include id field with record");
 				}
@@ -430,9 +441,9 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			}
 
 			String orgId = connectService.getUserInfoMap().get("OrganizationId");
-			String targetURL = URLEncoder.encode("/home/home.jsp","UTF-8");
-			String retURL = URLEncoder.encode("/"+userId+"?noredirect=1&isUserEntityOverride=1","UTF-8");
-			String startURL = String.format("/servlet/servlet.su?oid=%s&suorgadminid=%s&retURL=%s&targetURL=%s", orgId, userId, retURL, targetURL);
+			String targetURL = URLEncoder.encode(PROXY_TARGET_URL,URL_ENCODE);
+			String retURL = URLEncoder.encode(String.format(PROXY_BACK_URL, userId),URL_ENCODE);
+			String startURL = String.format(PROXY_URL, orgId, userId, retURL, targetURL);
 
 			// ブラウザで表示
 			openBrowser(startURL);
@@ -452,7 +463,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		// ブラウザで表示
 		Desktop desktop = Desktop.getDesktop();
 		try {
-			String url = String.format("https://%s.salesforce.com/?un=%s&pw=%s&startURL=%s",env, username, password, URLEncoder.encode(startURL,"UTF-8"));
+			String url = String.format(LOGIN_URL,env, username, password, URLEncoder.encode(startURL,URL_ENCODE));
 			desktop.browse(URI.create(url));
 		} catch (IOException e) {
 			e.printStackTrace();

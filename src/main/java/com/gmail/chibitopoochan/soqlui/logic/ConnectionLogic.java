@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.gmail.chibitopoochan.soqlexec.api.Connector;
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
@@ -15,7 +16,7 @@ import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 import com.sforce.ws.ConnectionException;
 
 public class ConnectionLogic {
-	private static final String SERVER_URL = "https://%s.salesforce.com/services/Soap/u/%s";
+	private static final String SERVER_URL = ApplicationSettingSet.getInstance().getSetting().getConnectionURL();
 	private Optional<Connector> connector = Optional.empty();
 
 	/**

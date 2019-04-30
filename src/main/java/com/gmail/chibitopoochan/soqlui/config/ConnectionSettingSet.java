@@ -18,11 +18,11 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 /**
@@ -40,7 +40,7 @@ public class ConnectionSettingSet {
 	public static final String SELECTED = "selected";
 
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ConnectionSettingSet.class);
+	private static final Logger logger = LogUtils.getLogger(ConnectionSettingSet.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 
 	// Singletonのインスタンス

@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.initializer.MainControllerInitializer;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
@@ -31,6 +31,7 @@ import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -62,7 +63,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class MainController implements Initializable, Controller {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+	private static final Logger logger = LogUtils.getLogger(MainController.class);
+	private static final boolean USE_DECORATOR = ApplicationSettingSet.getInstance().getSetting().isUseDecorator();
 
 	// 画面上のコンポーネント
 	// メニュー
@@ -70,6 +72,9 @@ public class MainController implements Initializable, Controller {
 	@FXML private MenuItem menuFileProxy;
 	@FXML private MenuItem menuFileConnection;
 	@FXML private Label titleLabel;
+	@FXML private Button minimam;
+	@FXML private Button maximam;
+	@FXML private Button close;
 
 	// 左側上段
 	@FXML private ComboBox<String> connectOption;
@@ -151,13 +156,22 @@ public class MainController implements Initializable, Controller {
 			loadSOQLFile(parameters);
 		}
 
-		// ウィンドウの移動を設定
-		titleLabel.setOnMousePressed(event -> {
-			manager.saveLocation(event.getScreenX(),event.getScreenY());
-		});
-		titleLabel.setOnMouseDragged(event -> {
-			manager.moveLocation(event.getScreenX(), event.getScreenY());
-		});
+		// デコレーション無しの場合
+		if(USE_DECORATOR) {
+			titleLabel.setVisible(false);
+			minimam.setVisible(false);
+			maximam.setVisible(false);
+			close.setVisible(false);
+
+		} else {
+			// ウィンドウの移動を設定
+			titleLabel.setOnMousePressed(event -> {
+				manager.saveLocation(event.getScreenX(),event.getScreenY());
+			});
+			titleLabel.setOnMouseDragged(event -> {
+				manager.moveLocation(event.getScreenX(), event.getScreenY());
+			});
+		}
 	}
 
 	private void loadSOQLFile(Map<String, String> parameters) {
@@ -196,6 +210,18 @@ public class MainController implements Initializable, Controller {
 
 		logger.debug(fileName);
 
+	}
+
+	/**
+	 * アプリケーション設定画面の表示
+	 */
+	public void openApplicationSetting() {
+		try {
+			logger.debug("Open Window [Application Setting]");
+			manager.sceneOpen(Configuration.VIEW_SU05, Configuration.TITLE_SU05);
+		} catch (IOException e) {
+			logger.error("Open window error", e);
+		}
 	}
 
 	/**

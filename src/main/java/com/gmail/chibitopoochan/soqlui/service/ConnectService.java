@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
@@ -25,7 +25,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ConnectService extends Service<Void> {
-	private static final Logger logger = LoggerFactory.getLogger(ConnectService.class);
+	private static final Logger logger = LogUtils.getLogger(ConnectService.class);
 
 	/**
 	 * メタ情報のプロパティ

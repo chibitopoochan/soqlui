@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +19,7 @@ import javafx.concurrent.Task;
 
 public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(SOQLExecuteService.class);
+	private static final Logger logger = LogUtils.getLogger(SOQLExecuteService.class);
 
 	public static final int DEFAULT_BATCH_SIZE = 1000;
 	public static final int MAX_BATCH_SIZE = 2000;

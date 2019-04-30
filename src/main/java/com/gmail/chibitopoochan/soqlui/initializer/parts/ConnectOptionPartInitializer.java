@@ -3,16 +3,16 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.scene.control.ComboBox;
 
 public class ConnectOptionPartInitializer implements PartsInitializer<MainController>{
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ConnectOptionPartInitializer.class);
+	private static final Logger logger = LogUtils.getLogger(ConnectOptionPartInitializer.class);
 
 	private ConnectionSettingLogic setting;
 	private ComboBox<String> connectOption;

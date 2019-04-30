@@ -7,14 +7,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
@@ -29,7 +30,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ConnectButtonPartsInitializer implements PartsInitializer<MainController>{
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ConnectButtonPartsInitializer.class);
+	private static final boolean USE_ADVANCE_SOQL = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
+	private static final Logger logger = LogUtils.getLogger(ConnectButtonPartsInitializer.class);
 	private static final Pattern bindPattern = Pattern.compile(":[a-zA-Z]+");
 
 	private ConnectionSettingLogic setting;
@@ -123,8 +125,22 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	 * 拡張SOQLを実際のSOQLに変換
 	 */
 	private void convertToActualSOQL() {
-		// SOQLからバインド変数を抽出
 		String soql = soqlArea.getText();
+		if(USE_ADVANCE_SOQL) {
+			Optional<String> workSOQL = bindVariable(soql);
+			if(workSOQL.isPresent()) {
+				actualSOQL.set(workSOQL.get());
+			} else {
+				actualSOQL.set(soql);
+			}
+		} else {
+			actualSOQL.set(soql);
+		}
+
+	}
+
+	private Optional<String> bindVariable(String soql) {
+		// SOQLからバインド変数を抽出
 		Matcher bindMatcher = bindPattern.matcher(soql);
 
 		// SOQLを再構築
@@ -141,13 +157,13 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 			if(result.isPresent()) {
 				bindMatcher.appendReplacement(workSOQL, String.format("'%s'", result.get()));
 			} else {
-				return;
+				return Optional.empty();
 			}
 
 		}
 		bindMatcher.appendTail(workSOQL);
-		actualSOQL.set(workSOQL.toString());
 
+		return Optional.of(workSOQL.toString());
 	}
 
 	/**

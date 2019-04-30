@@ -3,10 +3,10 @@ package com.gmail.chibitopoochan.soqlui.service;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -20,7 +20,7 @@ import javafx.concurrent.Task;
 
 public class FieldProvideService extends Service<Void> {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(FieldProvideService.class);
+	private static final Logger logger = LogUtils.getLogger(FieldProvideService.class);
 
 	/**
 	 * 接続ロジックのプロパティ.

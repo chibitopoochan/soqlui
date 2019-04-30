@@ -4,11 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +19,7 @@ import javafx.scene.control.TextField;
 
 public class ProxySettingController implements Initializable, Controller {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ProxySettingController.class);
+	private static final Logger logger = LogUtils.getLogger(ProxySettingController.class);
 
 	// 画面上のコンポーネント
 	@FXML private CheckBox useProxy;

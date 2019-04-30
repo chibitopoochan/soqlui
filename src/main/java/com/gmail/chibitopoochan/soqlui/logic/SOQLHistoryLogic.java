@@ -2,25 +2,23 @@ package com.gmail.chibitopoochan.soqlui.logic;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.SOQLHistorySet;
 import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
-import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 /**
  * SOQL履歴のロジック.
  */
 public class SOQLHistoryLogic {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(SOQLHistoryLogic.class);
-	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
-	private static final int HISTORY_SIZE = Integer.parseInt(config.getString(Configuration.HISTORY_SIZE));
+	private static final Logger logger = LogUtils.getLogger(SOQLHistoryLogic.class);
+	private static final int HISTORY_SIZE = ApplicationSettingSet.getInstance().getSetting().getHistorySize();
 
 	private SOQLHistorySet historySet;
 	private List<SOQLHistory> cachedList;
@@ -45,6 +43,10 @@ public class SOQLHistoryLogic {
 		historySet = SOQLHistorySet.getInstance();
 
 		cachedList = historySet.getHistoryList();
+		if(cachedList.size() > HISTORY_SIZE) {
+			cachedList = cachedList.subList(cachedList.size()-HISTORY_SIZE, cachedList.size());
+		}
+
 	}
 
 	public List<SOQLHistory> getHistoryList() {

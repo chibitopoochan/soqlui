@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.config.ConnectionSettingSet;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 /**
  * 接続設定のロジック.
@@ -21,7 +21,7 @@ import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
  */
 public class ConnectionSettingLogic {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ConnectionSettingLogic.class);
+	private static final Logger logger = LogUtils.getLogger(ConnectionSettingLogic.class);
 
 	public static final String DEFAULT_NAME = "--";
 

@@ -6,11 +6,11 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.config.FavoriteSet;
 import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 /**
@@ -20,7 +20,7 @@ import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
  */
 public class FavoriteLogic {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(FavoriteLogic.class);
+	private static final Logger logger = LogUtils.getLogger(FavoriteLogic.class);
 
 	private FavoriteSet favoriteSet;
 	private List<SOQLFavorite> cachedList;

@@ -9,10 +9,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.Controller;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.wrapper.FXMLLoaderWrapper;
 import com.gmail.chibitopoochan.soqlui.wrapper.StageWrapper;
 
@@ -27,8 +28,10 @@ import javafx.stage.StageStyle;
  */
 public class SceneManager {
 	// クラス共通の変数
-	private static final Logger logger = LoggerFactory.getLogger(SceneManager.class);
+	private static final Logger logger = LogUtils.getLogger(SceneManager.class);
 	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
+	private static final boolean USE_DECORATOR = ApplicationSettingSet.getInstance().getSetting().isUseDecorator();
+	private static final boolean USE_CSS = ApplicationSettingSet.getInstance().getSetting().isUseCSS();
 
 	// インスタンス（Singleton）
 	private static SceneManager instance;
@@ -172,13 +175,19 @@ public class SceneManager {
 	 * @throws IOException リソース取得時のエラー
 	 */
 	public void sceneInit(String resource, String title) throws IOException {
+
 		// 画面構成のロード
 		logger.debug(String.format("FXML loading... [%s][%s]", resource, config.getString(resource)));
 		loader.recreate();
 		loader.setLocation(getClass().getResource(config.getString(resource)));
 
 		// 画面の設定
-		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.UNDECORATED);
+		StageWrapper currentStage;
+		if(USE_DECORATOR) {
+			currentStage = StageWrapper.newInstance(StageStyle.DECORATED);
+		} else {
+			currentStage = StageWrapper.newInstance(StageStyle.UNDECORATED);
+		}
 		currentStage.setScene(loader.load().getScene());
 		currentStage.setTitle(config.getString(title));
 		logger.debug(String.format("Change to new stage[%s]", title));
@@ -188,7 +197,9 @@ public class SceneManager {
 		if(style != null) {
 			style.clear();
 		}
-		style.addAll("/view/css/main.css");
+		if(USE_CSS) {
+			style.addAll("/view/css/main.css");
+		}
 
 		// アイコンの設定
 		Arrays.stream(config.getString(Configuration.ICON).split(";")).forEach(icon -> {

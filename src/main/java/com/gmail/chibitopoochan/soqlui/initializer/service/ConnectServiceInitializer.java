@@ -1,13 +1,13 @@
 package com.gmail.chibitopoochan.soqlui.initializer.service;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
 import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Message;
+import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 
 import javafx.application.Platform;
@@ -26,7 +26,7 @@ import javafx.scene.control.TextField;
 
 public class ConnectServiceInitializer implements ServiceInitializer<MainController> {
 	// クラス共通の参照
-	private static final Logger logger = LoggerFactory.getLogger(ConnectServiceInitializer.class);
+	private static final Logger logger = LogUtils.getLogger(ConnectServiceInitializer.class);
 
 	private BooleanProperty withExecute = new SimpleBooleanProperty();
 

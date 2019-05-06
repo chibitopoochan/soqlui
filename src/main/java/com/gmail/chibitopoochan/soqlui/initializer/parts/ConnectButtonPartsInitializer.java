@@ -2,20 +2,29 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.model.DescribeField;
+import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
+import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
+import com.sforce.ws.ConnectionException;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
@@ -23,6 +32,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
@@ -51,6 +61,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private StringProperty actualSOQL;
 
 	private Optional<File> exportHistory = Optional.empty();
+	private TableView<DescribeSObject> objectList;
+	private ConnectionLogic logic;
 
 	@Override
 	public void setController(MainController controller) {
@@ -69,6 +81,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.cancel = controller.getCancel();
 		this.soqlArea = controller.getSoqlArea();
 		this.actualSOQL = controller.actualSOQL();
+		this.objectList = controller.getsObjectList();
+		this.logic = controller.getConnectService().getConnectionLogic();
 	}
 
 	public void initialize() {
@@ -127,6 +141,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private void convertToActualSOQL() {
 		String soql = soqlArea.getText();
 		if(USE_ADVANCE_SOQL) {
+			soql = converToSOQL(soql);
 			Optional<String> workSOQL = bindVariable(soql);
 			if(workSOQL.isPresent()) {
 				actualSOQL.set(workSOQL.get());
@@ -137,6 +152,47 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 			actualSOQL.set(soql);
 		}
 
+	}
+
+	private String converToSOQL(String soql) {
+		// 対象とならない場合、処理を終了
+		if(soql.toLowerCase().contains("select") || soql.length() < 3) {
+			return soql;
+		}
+
+		// KeyPrefixからオブジェクトを特定
+		String keyPrefix = soql.substring(0,3);
+		Optional<DescribeSObject> result = objectList.getItems().stream().filter(o -> keyPrefix.equals(o.getKeyPrefix())).findFirst();
+
+		if(!result.isPresent()) {
+			return soql;
+		}
+
+		// SOQLを構築
+		try {
+			QueryFormatDecoration decoration = new QueryFormatDecoration();
+			DescribeSObject obj = result.get();
+			decoration.setTableAfter(obj.getName());
+
+			String id = soql;
+			List<DescribeField> fieldList = logic.getFieldList(obj.getName());
+
+			soql = FormatUtils.format(decoration, () ->
+				fieldList.stream().map(f -> {
+					List<String> list = new ArrayList<>();
+					list.add(f.getName());
+					return list;
+				}).collect(Collectors.toList())
+			);
+
+			soql = String.format("%s where id = '%s'",soql, id.trim());
+
+		} catch (ConnectionException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+		return soql;
 	}
 
 	private Optional<String> bindVariable(String soql) {

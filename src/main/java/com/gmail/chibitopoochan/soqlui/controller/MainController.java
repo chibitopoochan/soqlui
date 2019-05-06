@@ -1,9 +1,11 @@
 package com.gmail.chibitopoochan.soqlui.controller;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Map;
@@ -30,8 +32,10 @@ import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.util.Constants;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
+import com.gmail.chibitopoochan.soqlui.util.ResourceUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -64,6 +68,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class MainController implements Initializable, Controller {
 	// クラス共通の参照
 	private static final Logger logger = LogUtils.getLogger(MainController.class);
+	private static final ResourceBundle config = ResourceBundle.getBundle(Configuration.RESOURCE);
 	private static final boolean USE_DECORATOR = ApplicationSettingSet.getInstance().getSetting().isUseDecorator();
 
 	// 画面上のコンポーネント
@@ -264,6 +269,7 @@ public class MainController implements Initializable, Controller {
 		if(saveFile == null) return;
 
 		// ファイルの保存
+		logger.debug("Save to " + saveFile.getAbsolutePath());
 		try(FileWriter writer = new FileWriter(saveFile)) {
 			writer.write(soqlArea.getText());
 			Alert resultDialog = new Alert(AlertType.INFORMATION);
@@ -276,10 +282,34 @@ public class MainController implements Initializable, Controller {
 
 	}
 
+	/**
+	 * ヘルプの表示
+	 */
+	public void onHelp() {
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			String resource = config.getString(Constants.Configuration.HELP_PATH);
+			String path = ResourceUtils.getURL(this, resource);
+
+			logger.debug("Open help page " + path);
+			desktop.browse(URI.create(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("cannot open a browser");
+		}
+
+	}
+
+	/**
+	 * Windowの最小化
+	 */
 	public void minimam() {
 		manager.minimized();
 	}
 
+	/**
+	 * Windowの最大化
+	 */
 	public void onChangeSize() {
 		manager.sizeChange();
 	}

@@ -42,6 +42,8 @@ public interface Constants {
 
 		String SETTING_PATH = "SETTING_PATH";
 
+		String HELP_PATH = "HELP_PATH";
+
 		String VIEW_SU01 = "VIEW_SU01";
 		String VIEW_SU02 = "VIEW_SU02";
 		String VIEW_SU03 = "VIEW_SU03";

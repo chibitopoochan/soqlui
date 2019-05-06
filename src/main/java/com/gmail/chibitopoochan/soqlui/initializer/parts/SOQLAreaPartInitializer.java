@@ -8,6 +8,7 @@ import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.util.ResourceUtils;
 
 import javafx.concurrent.Worker.State;
 import javafx.event.Event;
@@ -79,12 +80,7 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		}
 
 		// JS読み込み
-		String jsUrl = this.getClass().getResource("/js/ace/src-noconflict/ace.js").getPath();
-		if(jsUrl.startsWith("file:/")) {
-			jsUrl = "jar:" + jsUrl;
-		} else {
-			jsUrl = "file://" + jsUrl;
-		}
+		String jsUrl = ResourceUtils.getURL(this, "/js/ace/src-noconflict/ace.js");
 		String htmlText = builder.toString().replace("{js.url}", jsUrl);
 
 		WebEngine engine = soqlWebArea.getEngine();

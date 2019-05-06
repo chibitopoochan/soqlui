@@ -53,6 +53,7 @@ public class ConnectionSettingController implements Initializable, Controller {
 		// 接続情報を取得
 		settingLogic = new ConnectionSettingLogic();
 
+
 		// 接続設定の指定があれば取得
 		if(parameter.containsKey("configuration")) {
 			String name = parameter.get("configuration");
@@ -67,6 +68,11 @@ public class ConnectionSettingController implements Initializable, Controller {
 			environmentField.getSelectionModel().select(setting.isSandbox() ? 0 : 1);
 			apiVersionField.setText(setting.getApiVersion());
 			edit = true;
+		} else {
+			environmentField.getItems().clear();
+			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
+			environmentField.getSelectionModel().select(0);
+			edit = false;
 		}
 
 	}

@@ -5,7 +5,8 @@
 All notable changes to this tool will be documented in this file.
 
 ## [Ver1.0]
-56 ヘルプの作成
+
+56 ヘルプの作成 - ヘルプを作成
 
 55 IDによる検索
 
@@ -16,4 +17,4 @@ All notable changes to this tool will be documented in this file.
 35 項目一覧の取得項目拡大
 
 [Ver1.0]:
-https://github.com/mametochoko/soqlui/compare/v0.1.0...HEAD
+<https://github.com/mametochoko/soqlui/compare/v0.1.0...HEAD>

@@ -139,7 +139,7 @@
 		<copy todir="project">
 			<fileset dir="C:\Users\mamet\Documents\workspace\SOQLUI">
 				<include name="README.md"/>
-				<include name="LICENSE"/>
+				<include name="CHANGELOG.md"/>
 				<include name="LICENSE.rtf"/>
 			</fileset>
 		</copy>
@@ -244,7 +244,7 @@
 		<copy todir="dist">
 			<fileset dir="project">
 				<include name="README.md"/>
-				<include name="LICENSE"/>
+				<include name="CHANGELOG.md"/>
 				<include name="LICENSE.rtf"/>
 			</fileset>
 		</copy>
@@ -259,6 +259,7 @@
 			<fx:fileset dir="dist" includes="libs/*"/>
 			<fx:fileset dir="dist" includes="config/*" />
 			<fx:fileset dir="dist" includes="README.md" />
+			<fx:fileset dir="dist" includes="CHANGELOG.md" />
 			<fx:fileset dir="dist" type="license" includes="LICENSE.rtf" />
 		</fx:resources>
 

@@ -35,6 +35,10 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -59,6 +63,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private Button cancel;
 	private TextArea soqlArea;
 	private StringProperty actualSOQL;
+	private WebView soqlWebArea;
 
 	private Optional<File> exportHistory = Optional.empty();
 	private TableView<DescribeSObject> objectList;
@@ -83,6 +88,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.actualSOQL = controller.actualSOQL();
 		this.objectList = controller.getsObjectList();
 		this.logic = controller.getConnectService().getConnectionLogic();
+		this.soqlWebArea = controller.getSoqlWebArea();
 	}
 
 	public void initialize() {
@@ -104,6 +110,9 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		execute.setOnAction(e -> doExecute());
 		export.setOnAction(e -> doExport());
 		cancel.setOnAction(e -> doCancel());
+
+		soqlArea.setOnKeyPressed(this::keyPressed);
+		soqlWebArea.setOnKeyPressed(this::keyPressed);
 
 	}
 
@@ -239,6 +248,22 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		export.setDisable(true);
 		execute.setDisable(true);
 		executor.start();
+
+	}
+
+	/**
+	 * ショートカットキー
+	 * @param e キーイベント
+	 */
+	private void keyPressed(KeyEvent e) {
+		if(connector.isClosing()) {
+			return;
+		}
+
+		KeyCodeCombination executeKey = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.CONTROL_DOWN);
+		if(executeKey.match(e)) {
+			doExecute();
+		}
 
 	}
 

@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.service.ConnectService;
-import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.util.ResourceUtils;
 
 import javafx.concurrent.Worker.State;
@@ -16,9 +14,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
@@ -31,16 +26,12 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 
 	private TextArea soqlArea;
 	private WebView soqlWebArea;
-	private SOQLExecuteService executor;
-	private ConnectService service;
 	private TabPane tabArea;
 	private TextField batchSize;
 
 	@Override
 	public void setController(MainController controller) {
-		this.executor = controller.getExecutionService();
 		this.soqlArea = controller.getSoqlArea();
-		this.service = controller.getConnectService();
 		this.tabArea = controller.getQueryTabArea();
 		this.soqlWebArea = controller.getSoqlWebArea();
 		this.batchSize = controller.getBatchSize();
@@ -55,7 +46,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 			soqlWebArea.setVisible(false);
 			soqlArea.setDisable(false);
 			soqlArea.setVisible(true);
-			soqlArea.setOnKeyPressed(this::keyPressed);
 		}
 
 		for(int i=0; i<TAB_COUNT; i++) {
@@ -88,7 +78,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		engine.loadContent(htmlText);
 		engine.getLoadWorker().stateProperty().addListener((ov, os, ns) -> {
 			if(State.SUCCEEDED.equals(ns)) {
-				soqlWebArea.setOnKeyPressed(this::keyPressed);
 				soqlWebArea.setOnMouseExited(this::applyToText);
 				soqlArea.textProperty().addListener((e,o,n) -> applyToWeb());
 				applyToWeb();
@@ -130,18 +119,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 			soqlArea.setText((String)queryTab.getUserData());
 		} else {
 			queryTab.setUserData(soql);
-		}
-
-	}
-
-	private void keyPressed(KeyEvent e) {
-		if(service.isClosing()) {
-			return;
-		}
-
-		KeyCodeCombination executeKey = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.CONTROL_DOWN);
-		if(executeKey.match(e)) {
-			executor.start();
 		}
 
 	}

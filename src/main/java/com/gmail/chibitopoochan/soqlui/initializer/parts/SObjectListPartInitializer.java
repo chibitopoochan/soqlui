@@ -85,7 +85,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 		column.setCellFactory(param -> new DragSelectableTableCell<>());
 		column.setResizable(true);
 		column.setSortable(true);
-		column.setMinWidth(width);
+		column.setPrefWidth(width);
 
 		return column;
 	}

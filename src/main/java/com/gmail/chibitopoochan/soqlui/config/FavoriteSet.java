@@ -108,7 +108,7 @@ public class FavoriteSet {
 		// 出力はtry-with-resoucesを使用
 		// ※XMLStreamReaderはAutoClosable未実装
 		try(OutputStream os = Files.newOutputStream(Paths.get(filePath.orElseThrow(IllegalStateException::new)))) {
-			XMLStreamWriter writer = factory.createXMLStreamWriter(os);
+			XMLStreamWriter writer = factory.createXMLStreamWriter(os,"UTF-8");
 
 			writer.writeStartElement(FAVORITES_ELEMENT);
 			for(SOQLFavorite setting : favoriteList) {

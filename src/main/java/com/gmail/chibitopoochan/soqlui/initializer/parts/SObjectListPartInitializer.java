@@ -67,7 +67,7 @@ public class SObjectListPartInitializer implements PartsInitializer<MainControll
 		objectSearch.textProperty().addListener(
 			(v, o, n) -> sObjectList.setItems(
 				objectMasterList.filtered(
-					t -> t.getName().toLowerCase().indexOf(n) > -1
+					t -> t.getName().toLowerCase().indexOf(n.toLowerCase()) > -1
 					|| n.length() == 0)
 			)
 		);

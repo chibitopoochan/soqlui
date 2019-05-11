@@ -54,7 +54,7 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 			(v, o, n) -> list.setItems(
 					FXCollections.observableArrayList(logic.getFavoriteList()).
 					filtered(
-						t -> t.getName().toLowerCase().indexOf(n) > -1
+						t -> t.getName().toLowerCase().indexOf(n.toLowerCase()) > -1
 						|| n.length() == 0)
 			)
 		);

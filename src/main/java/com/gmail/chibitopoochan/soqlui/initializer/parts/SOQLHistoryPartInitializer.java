@@ -51,7 +51,7 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 				FXCollections.observableArrayList(logic.getHistoryList()).
 				sorted((i, j) -> -i.getCreatedDate().compareTo(j.getCreatedDate())).
 				filtered(
-					t -> t.getQuery().toLowerCase().indexOf(n) > -1
+					t -> t.getQuery().toLowerCase().indexOf(n.toLowerCase()) > -1
 					|| n.length() == 0)
 			)
 		);

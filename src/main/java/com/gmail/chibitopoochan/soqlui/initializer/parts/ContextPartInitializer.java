@@ -32,6 +32,7 @@ import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.Format;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.initializer.service.FieldServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
@@ -55,6 +56,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -98,11 +100,14 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private MenuItem exportExcelFormat;
 	private MenuItem browseRecord;
 	private MenuItem browseProxy;
+	private MenuItem openFieldList;
 
 	private GenerateSOQLServiceInitializer initService;
+	private FieldServiceInitializer initFieldService;
 	private FieldProvideService service;
 	private ConnectionSettingLogic settingLogic;
 	private ConnectService connectService;
+	private ProgressIndicator progress;
 
 	private SceneManager manager;
 
@@ -118,10 +123,13 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		this.initService = new GenerateSOQLServiceInitializer();
 		initService.setController(controller);
+		this.initFieldService = new FieldServiceInitializer();
+		initFieldService.setController(controller);
 
 		this.manager = controller.getManager();
 		this.settingLogic = controller.getSetting();
 		this.connectService = controller.getConnectService();
+		this.progress = controller.getFieldProgressIndicator();
 
 	}
 
@@ -138,6 +146,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		exportExcelFormat	= new MenuItem("Export to Excel Format");
 		browseRecord		= new MenuItem("Open browser");
 		browseProxy			= new MenuItem("Open login as another user");
+		openFieldList		= new MenuItem("Open field list");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));
@@ -151,6 +160,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		exportExcelFormat.setOnAction(e -> exportExcelFormat(e.getSource()));
 		browseRecord.setOnAction(e -> browse(e.getSource()));
 		browseProxy.setOnAction(e -> browseProxyLogin(e.getSource()));
+		openFieldList.setOnAction(e -> openFieldList());
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -167,6 +177,19 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		resultTable.setOnMouseClicked(this::showContextMenu);
 		sObjectList.addEventHandler(MouseEvent.MOUSE_CLICKED, this::showContextMenu);
 		fieldList.addEventHandler(MouseEvent.MOUSE_CLICKED, this::showContextMenu);
+
+	}
+
+	private void openFieldList() {
+		// 変数をバインド
+		progress.progressProperty().unbind();
+		progress.visibleProperty().unbind();
+		progress.progressProperty().bind(service.progressProperty());
+		progress.visibleProperty().bind(service.runningProperty());
+
+		initFieldService.initialize();
+		service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
+		service.start();
 
 	}
 
@@ -268,7 +291,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		ContextMenu context = table.getContextMenu();
 		context.getItems().clear();
 		if(table == sObjectList) {
-			context.getItems().addAll(selectRecordCount, selectAllColumns, copyNormal, copyNoHead, browseRecord);
+			context.getItems().addAll(openFieldList, selectRecordCount, selectAllColumns, copyNormal, copyNoHead, browseRecord);
 		} else if(table == fieldList) {
 			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, exportExcelFormat);
 		} else {

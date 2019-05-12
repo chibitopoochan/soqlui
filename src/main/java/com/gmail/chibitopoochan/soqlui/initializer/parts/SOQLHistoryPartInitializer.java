@@ -7,12 +7,16 @@ import com.gmail.chibitopoochan.soqlui.model.SOQLHistory;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class SOQLHistoryPartInitializer implements PartsInitializer<MainController> {
 	private ListView<SOQLHistory> historyList;
 	private SOQLHistoryLogic logic;
+	private TextArea soqlArea;
 	private TextField historySearch;
 
 	@Override
@@ -20,6 +24,7 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 		this.historyList = controller.getHistoryList();
 		this.logic = controller.getHistory();
 		this.historySearch = controller.getHistorySearch();
+		this.soqlArea = controller.getSoqlArea();
 	}
 
 	@Override
@@ -55,6 +60,16 @@ public class SOQLHistoryPartInitializer implements PartsInitializer<MainControll
 					|| n.length() == 0)
 			)
 		);
+
+		// 履歴のクリックイベント
+		historyList.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+				SOQLHistory history = historyList.getSelectionModel().getSelectedItem();
+				if(history != null) {
+					soqlArea.setText(history.getQuery());
+				}
+			}
+		});
 
 	}
 

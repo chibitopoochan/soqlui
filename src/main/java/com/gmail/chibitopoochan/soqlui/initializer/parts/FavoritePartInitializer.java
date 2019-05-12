@@ -7,12 +7,16 @@ import com.gmail.chibitopoochan.soqlui.model.SOQLFavorite;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class FavoritePartInitializer implements PartsInitializer<MainController> {
 	private ListView<SOQLFavorite> list;
 	private TextField search;
+	private TextArea soqlArea;
 
 	private FavoriteLogic logic;
 
@@ -21,6 +25,7 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 		this.list = controller.getFavoriteList();
 		this.search = controller.getFavoriteSearch();
 		this.logic = controller.getFavoriteLogic();
+		this.soqlArea = controller.getSoqlArea();
 
 	}
 
@@ -58,6 +63,16 @@ public class FavoritePartInitializer implements PartsInitializer<MainController>
 						|| n.length() == 0)
 			)
 		);
+
+		// お気に入りのクリックイベント
+		list.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if(e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2) {
+				SOQLFavorite favorite = list.getSelectionModel().getSelectedItem();
+				if(favorite != null) {
+					soqlArea.setText(favorite.getQuery());
+				}
+			}
+		});
 
 	}
 

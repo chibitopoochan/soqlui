@@ -5,9 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -35,7 +35,6 @@ import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.util.Constants;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
-import com.gmail.chibitopoochan.soqlui.util.ResourceUtils;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -289,10 +288,10 @@ public class MainController implements Initializable, Controller {
 		Desktop desktop = Desktop.getDesktop();
 		try {
 			String resource = config.getString(Constants.Configuration.HELP_PATH);
-			String path = ResourceUtils.getURL(this, resource);
+			File help = Paths.get(resource).toFile();
 
-			logger.debug("Open help page " + path);
-			desktop.browse(URI.create(path));
+			logger.debug("Open help page " + help.getAbsolutePath());
+			desktop.open(help);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException("cannot open a browser");

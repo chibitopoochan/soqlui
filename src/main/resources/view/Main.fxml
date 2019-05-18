@@ -158,7 +158,7 @@
                <children>
                   <Label text="Connection" />
                   <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" />
-                  <HBox prefHeight="27.0" prefWidth="200.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" text="Connect" />
                         <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" text="Disconnect">
@@ -166,18 +166,19 @@
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
                         </Button>
-                        <ProgressIndicator fx:id="progressIndicator" visible="false" />
+                        <CheckBox fx:id="useTooling" mnemonicParsing="false" text="Tooling" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </HBox>
                   <Separator prefWidth="200.0" />
-                  <Label text="Objects">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Objects" />
+                        <ProgressIndicator fx:id="progressIndicator" visible="false" />
+                     </children>
+                  </HBox>
                   <TextField fx:id="objectSearch" promptText="Serach...">
                      <VBox.margin>
                         <Insets bottom="5.0" />

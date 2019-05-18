@@ -60,6 +60,22 @@ public class ConnectService extends Service<Void> {
 	}
 
 	/**
+	 * ツールAPIの使用有無
+	 */
+	private BooleanProperty useTooling = new SimpleBooleanProperty(false);
+	public void setUseTooling(boolean use) {
+		useTooling.set(use);
+	}
+
+	public boolean isUseTooling() {
+		return useTooling.get();
+	}
+
+	public BooleanProperty useTooling() {
+		return useTooling;
+	}
+
+	/**
 	 * 接続切断状態のプロパティ
 	 */
 	private BooleanProperty closing = new SimpleBooleanProperty(true);
@@ -129,6 +145,7 @@ public class ConnectService extends Service<Void> {
 		final ConnectionLogic useLogic = getConnectionLogic();
 		final ProxySettingLogic useProxy = getProxyLogic();
 		final boolean closeOnly = isClosing();
+		final boolean useTooling = isUseTooling();
 
 		return new Task<Void>() {
 
@@ -147,10 +164,10 @@ public class ConnectService extends Service<Void> {
 					ProxySetting proxy = useProxy.getProxySetting();
 					if(Boolean.valueOf(proxy.getUseProxy())) {
 						// Proxyが有効ならProxy経由でSalesforceへ接続
-						useLogic.connect(useSetting, proxy);
+						useLogic.connect(useSetting, proxy, useTooling);
 					} else {
 						// Proxyが無効なら、そのまま接続
-						useLogic.connect(useSetting, true);
+						useLogic.connect(useSetting, true, useTooling);
 
 					}
 					logger.info(String.format("Connected to Salesforce [%s]", useSetting.getName()));

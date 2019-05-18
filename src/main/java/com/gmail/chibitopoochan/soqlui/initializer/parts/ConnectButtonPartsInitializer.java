@@ -28,6 +28,7 @@ import com.sforce.ws.ConnectionException;
 
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -64,6 +65,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private TextArea soqlArea;
 	private StringProperty actualSOQL;
 	private WebView soqlWebArea;
+	private CheckBox useTooling;
 
 	private Optional<File> exportHistory = Optional.empty();
 	private TableView<DescribeSObject> objectList;
@@ -89,6 +91,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.objectList = controller.getsObjectList();
 		this.logic = controller.getConnectService().getConnectionLogic();
 		this.soqlWebArea = controller.getSoqlWebArea();
+		this.useTooling = controller.getUseTooling();
 	}
 
 	public void initialize() {
@@ -326,6 +329,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		String selected = connectOption.getValue();
 		connector.setConnectionSetting(setting.getConnectionSetting(selected));
 		connector.setClosing(false);
+		connector.useTooling().bind(useTooling.selectedProperty());
 		connector.start();
 		connect.setDisable(true);
 

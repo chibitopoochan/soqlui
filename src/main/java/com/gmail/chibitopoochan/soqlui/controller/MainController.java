@@ -84,9 +84,10 @@ public class MainController implements Initializable, Controller {
 	@FXML private ComboBox<String> connectOption;
 	@FXML private Button connect;
 	@FXML private Button disconnect;
-	@FXML private ProgressIndicator progressIndicator;
+	@FXML private CheckBox useTooling;
 
 	// 左側中断
+	@FXML private ProgressIndicator progressIndicator;
 	@FXML private TableView<DescribeSObject> sObjectList;
 	@FXML private TableColumn<DescribeSObject, String> prefixColumn;
 	@FXML private TableColumn<DescribeSObject, String> sObjectColumn;
@@ -736,6 +737,20 @@ public class MainController implements Initializable, Controller {
 
 	public StringProperty actualSOQL() {
 		return actualSOQL;
+	}
+
+	/**
+	 * @return useTooling
+	 */
+	public CheckBox getUseTooling() {
+		return useTooling;
+	}
+
+	/**
+	 * @param useTooling セットする useTooling
+	 */
+	public void setUseTooling(CheckBox useTooling) {
+		this.useTooling = useTooling;
 	}
 
 }

@@ -6,9 +6,11 @@ package com.gmail.chibitopoochan.soqlui.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.gmail.chibitopoochan.soqlexec.model.FieldMetaInfo;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.model.ApplicationSetting;
@@ -68,7 +70,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		advanceSOQL.setSelected(setting.isAdvanceQuery());
 		debugMode.setSelected(setting.isDebugMode());
 
-		formatColumns.getItems().addAll(setting.getFormatColumns());
+		Stream.of(FieldMetaInfo.Type.values()).forEach(t -> formatColumns.getItems().add(t.name()));
 
 		connectionURL.setText(setting.getConnectionURL());
 		loginURL.setText(setting.getLoginURL());
@@ -91,8 +93,6 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setUseEditor(useEditor.isSelected());
 		setting.setAdvanceQuery(advanceSOQL.isSelected());
 		setting.setDebugMode(debugMode.isSelected());
-
-		setting.setFormatColumns(formatColumns.getItems());
 
 		setting.setConnectionURL(connectionURL.getText());
 		setting.setLoginURL(loginURL.getText());

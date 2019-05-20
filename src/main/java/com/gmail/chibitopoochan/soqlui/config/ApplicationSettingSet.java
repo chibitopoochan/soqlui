@@ -6,10 +6,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -47,7 +45,6 @@ public class ApplicationSettingSet {
 	private static final String SETTINGS_USER_BACK = "userBack";
 	private static final String SETTINGS_USER_TARGET = "userTarget";
 	private static final String SETTINGS_FORMAT = "format";
-	private static final String SETTINGS_COLUMNS = "columns";
 	private static final String SETTINGS_GENERAL = "general";
 	private static final String SETTINGS_CSS = "css";
 	private static final String SETTINGS_EDITOR = "editor";
@@ -214,9 +211,6 @@ public class ApplicationSettingSet {
 		writer.writeStartElement("", SETTINGS_FORMAT, "");
 
 		// 項目一覧
-		writer.writeStartElement("", SETTINGS_COLUMNS, "");
-		writer.writeCharacters(setting.getFormatColumns().stream().collect(Collectors.joining(",")));
-		writer.writeEndElement();
 
 		writer.writeEndElement();
 
@@ -334,10 +328,6 @@ public class ApplicationSettingSet {
 
 			case SETTINGS_USER_TARGET:
 				setting.setProxyTargetURL(reader.getElementText());
-				break;
-
-			case SETTINGS_COLUMNS:
-				setting.setFormatColumns(Arrays.asList(reader.getElementText().split(",")));
 				break;
 
 			case SETTINGS_CSS:

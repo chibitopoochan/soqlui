@@ -49,7 +49,7 @@ public class ConnectionLogic {
 		connector = Optional.of(Connector.login(
 				selectedSetting.getUsername(),
 				selectedSetting.getPassword() + selectedSetting.getToken(),
-				String.format(SERVER_URL, env, api),
+				String.format(SERVER_URL, env, useTooling ? "T" : "u" ,api),
 				useTooling));
 	}
 

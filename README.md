@@ -17,7 +17,7 @@ SOQLをローカルで実行するクライアントツール
 拡張子「soql」のデフォルトアプリケーションを設定して開きます。
 
 ### 操作方法 - Operation
-
+HELPを参照してください。
 
 ## Hints
 ### 拡張子 - Extention
@@ -27,7 +27,6 @@ SOQLを実行します。
 
 ### 制限事項 - Limitation
 複合項目には未対応のため、選択するとエラーになります。
-
 
 ### 操作例 - Examples Of Operation
 

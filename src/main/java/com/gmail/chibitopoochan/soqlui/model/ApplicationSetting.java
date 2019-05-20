@@ -1,7 +1,5 @@
 package com.gmail.chibitopoochan.soqlui.model;
 
-import java.util.List;
-
 public class ApplicationSetting {
 	private int tabCount;
 	private int historySize;
@@ -14,7 +12,6 @@ public class ApplicationSetting {
 	private String proxyLoginURL;
 	private String proxyBackURL;
 	private String proxyTargetURL;
-	private List<String> formatColumns;
 	private boolean useCSS;
 	private boolean useEditor;
 	private boolean useDecorator;
@@ -139,18 +136,6 @@ public class ApplicationSetting {
 	 */
 	public void setProxyTargetURL(String proxyTargetURL) {
 		this.proxyTargetURL = proxyTargetURL;
-	}
-	/**
-	 * @return formatColumns
-	 */
-	public List<String> getFormatColumns() {
-		return formatColumns;
-	}
-	/**
-	 * @param formatColumns セットする formatColumns
-	 */
-	public void setFormatColumns(List<String> formatColumns) {
-		this.formatColumns = formatColumns;
 	}
 	/**
 	 * @return useCSS

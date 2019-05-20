@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -28,6 +29,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellUtil;
 
+import com.gmail.chibitopoochan.soqlexec.model.FieldMetaInfo;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.Format;
@@ -81,7 +83,6 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	public static final String PROXY_URL = ApplicationSettingSet.getInstance().getSetting().getProxyLoginURL();
 	public static final String PROXY_BACK_URL = ApplicationSettingSet.getInstance().getSetting().getProxyBackURL();
 	public static final String PROXY_TARGET_URL = ApplicationSettingSet.getInstance().getSetting().getProxyTargetURL();
-	public static final List<String> FORMAT_COLUMNS = ApplicationSettingSet.getInstance().getSetting().getFormatColumns();
 
 	private TableView<SObjectRecord> resultTable;
 	private TableView<DescribeSObject> sObjectList;
@@ -209,11 +210,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		// 項目のメタ情報を加工
 		Set<String> keySet = new HashSet<>();
-		for(String key : list.get(0).getMetaInfo().keySet()) {
-			if(FORMAT_COLUMNS.contains(key)) {
-				keySet.add("$"+key);
-			}
-		}
+		Stream.of(FieldMetaInfo.Type.values()).forEach(t -> keySet.add("$"+t.name()));
 
 		Workbook book = null;
 		OutputStream out = null;

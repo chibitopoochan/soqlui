@@ -65,8 +65,18 @@
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
+			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\commons-collections\commons-collections\3.2.2\8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5">
+				<filename name="commons-collections-3.2.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
 			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\commons-codec\commons-codec\1.12\47a28ef1ed31eb182b44e15d49300dee5fadcf6a">
 				<filename name="commons-codec-1.12.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\commons-logging\commons-logging\1.2\4bfc12adfe4842bf07b657f0369c4cb522955686">
+				<filename name="commons-logging-1.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -82,6 +92,11 @@
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\org.apache.poi\poi-ooxml-schemas\4.1.0\6a2a0dfa19db33f4fba5b0a0261bb517a86cb56">
 				<filename name="poi-ooxml-schemas-4.1.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\commons-beanutils\commons-beanutils\1.9.3\c845703de334ddc6b4b3cd26835458cb1cba1f3d">
+				<filename name="commons-beanutils-1.9.3.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
@@ -102,6 +117,11 @@
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\mamet\.gradle\caches\modules-2\files-2.1\org.apache.xmlbeans\xmlbeans\3.1.0\6dac1f897dfb3e3f17fc79b18a3353b2e51c464e">
 				<filename name="xmlbeans-3.1.0.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\mamet\Documents\workspace\SOQLUI\lib">
+				<filename name="tooling.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">

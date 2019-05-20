@@ -38,6 +38,8 @@ dependencies {
     compile files('lib/tooling.jar')
     compile files('lib/SOQLExecutor.jar')
 
+	// https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 	compile group: 'org.apache.poi', name: 'poi', version: '4.1.0'
 	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.0'
 	compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '4.1.0'

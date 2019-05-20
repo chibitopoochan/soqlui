@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,8 +79,9 @@ import javafx.stage.DirectoryChooser;
  */
 public class ContextPartInitializer implements PartsInitializer<MainController> {
 	private static final String URL_ENCODE = "UTF-8";
-	private static final String RECORD_ID = "Id";
+	private static final String RECORD_ID = "id";
 	public static final String LOGIN_URL = ApplicationSettingSet.getInstance().getSetting().getLoginURL();
+	public static final String OBJECT_URL = ApplicationSettingSet.getInstance().getSetting().getObjectURL();
 	public static final String PROXY_URL = ApplicationSettingSet.getInstance().getSetting().getProxyLoginURL();
 	public static final String PROXY_BACK_URL = ApplicationSettingSet.getInstance().getSetting().getProxyBackURL();
 	public static final String PROXY_TARGET_URL = ApplicationSettingSet.getInstance().getSetting().getProxyTargetURL();
@@ -423,12 +425,15 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 					if("".equals(object.getKeyPrefix())) {
 						throw new IllegalArgumentException("please include key prefix with sObject");
 					}
-					openBrowser("/" + object.getKeyPrefix() + "/o");
+					openBrowser(String.format(OBJECT_URL, object.getKeyPrefix()));
 				} else if(table == resultTable) {
 					SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
 					Map<String, String> fieldMap = record.getRecord();
-					if(fieldMap.containsKey(RECORD_ID)) {
-						openBrowser(fieldMap.get(RECORD_ID));
+
+					Optional<String> fieldName = fieldMap.keySet().stream().filter(key -> key.toLowerCase().equals(RECORD_ID)).findFirst();
+
+					if(fieldName.isPresent()){
+						openBrowser(fieldMap.get(fieldName.get()));
 					} else {
 						throw new IllegalArgumentException("please include id field with record");
 					}
@@ -451,8 +456,9 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			if(source instanceof MenuItem) {
 				SObjectRecord record = resultTable.getSelectionModel().getSelectedItem();
 				Map<String, String> fieldMap = record.getRecord();
-				if(fieldMap.containsKey(RECORD_ID)) {
-					userId = fieldMap.get(RECORD_ID);
+				Optional<String> fieldName = fieldMap.keySet().stream().filter(key -> key.toLowerCase().equals(RECORD_ID)).findFirst();
+				if(fieldName.isPresent()){
+					userId = fieldMap.get(fieldName.get());
 				} else {
 					throw new IllegalArgumentException("please include id field with record");
 				}

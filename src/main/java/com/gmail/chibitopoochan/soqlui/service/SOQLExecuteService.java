@@ -109,6 +109,23 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 		return batchSize;
 	}
 
+	/**
+	 * サブクエリの取得方法
+	 * trueなら1列に表示
+	 */
+	private BooleanProperty join = new SimpleBooleanProperty(this, "join");
+	public void setJoin(boolean join) {
+		this.join.set(join);
+	}
+
+	public boolean isJoin() {
+		return this.join.get();
+	}
+
+	public BooleanProperty join() {
+		return join;
+	}
+
 	public int getIntBatchSize() {
 		int size = DEFAULT_BATCH_SIZE;
 
@@ -134,6 +151,7 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 		final String useSOQL = getActualSOQL();
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
+		final boolean useJoin = isJoin();
 
 		return new Task<List<Map<String, String>>>(){
 
@@ -141,7 +159,7 @@ public class SOQLExecuteService extends Service<List<Map<String, String>>> {
 			protected List<Map<String, String>> call() throws Exception {
 				updateMessage("SOQL Executing...");
 
-				List<Map<String, String>> list = useLogic.execute(useSOQL, useAll, useBatchSize);
+				List<Map<String, String>> list = useLogic.execute(useSOQL, useAll, useBatchSize, useJoin);
 				if(!list.isEmpty()) {
 					int toIndex = list.size() > useBatchSize ? useBatchSize : list.size();
 					list = list.subList(0, toIndex);

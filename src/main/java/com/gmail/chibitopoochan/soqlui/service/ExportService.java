@@ -116,6 +116,23 @@ public class ExportService extends Service<Void> {
 		return size;
 	}
 
+	/**
+	 * サブクエリの取得方法
+	 * trueなら1列に表示
+	 */
+	private BooleanProperty join = new SimpleBooleanProperty(this, "join");
+	public void setJoin(boolean join) {
+		this.join.set(join);
+	}
+
+	public boolean isJoin() {
+		return this.join.get();
+	}
+
+	public BooleanProperty join() {
+		return join;
+	}
+
 	private Path exportPath;
 
 	public void setExportPath(Path path) {
@@ -132,6 +149,7 @@ public class ExportService extends Service<Void> {
 		final String useSOQL = getSOQL();
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
+		final boolean useJoin = isJoin();
 
 		return new Task<Void>(){
 
@@ -141,7 +159,7 @@ public class ExportService extends Service<Void> {
 					List<List<String>> rowList = new LinkedList<>();
 
 					updateMessage("SOQL Executing...");
-					List<Map<String, String>> recordList = useLogic.execute(useSOQL, useAll, useBatchSize);
+					List<Map<String, String>> recordList = useLogic.execute(useSOQL, useAll, useBatchSize, useJoin);
 					int size = useLogic.getSize();
 					int done = 0;
 

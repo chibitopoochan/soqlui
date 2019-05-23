@@ -110,6 +110,7 @@ public class MainController implements Initializable, Controller {
 	@FXML private TabPane queryTabArea;
 	@FXML private TextField batchSize;
 	@FXML private CheckBox all;
+	@FXML private CheckBox join;
 	@FXML private TableView<SObjectRecord> resultTable;
 	@FXML private TextField resultSearch;
 	@FXML private TabPane tabArea;
@@ -499,6 +500,10 @@ public class MainController implements Initializable, Controller {
 	 */
 	public CheckBox getAll() {
 		return all;
+	}
+
+	public CheckBox getJoin() {
+		return join;
 	}
 
 	/**

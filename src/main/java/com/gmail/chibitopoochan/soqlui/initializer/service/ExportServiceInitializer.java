@@ -36,7 +36,7 @@ public class ExportServiceInitializer implements ServiceInitializer<MainControll
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
 		service.setBatchSize("200");
 		service.allProperty().bind(controller.getAll().selectedProperty());
-
+		service.join().bind(controller.getJoin().selectedProperty());
 	}
 
 	public void cancelled(WorkerStateEvent e) {

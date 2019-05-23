@@ -58,15 +58,16 @@ public class ConnectionLogic {
 	 * @param soql SOQL
 	 * @param all 削除レコードも取得するならtrue
 	 * @param batchSize 取得レコードサイズ
+	 * @param join サブクエリの取得方法
 	 * @return 実行結果
 	 * @throws ConnectionException 接続エラー
 	 */
-	public List<Map<String,String>> execute(String soql, boolean all, int batchSize) throws ConnectionException {
+	public List<Map<String,String>> execute(String soql, boolean all, int batchSize, boolean join) throws ConnectionException {
 		if(!connector.isPresent()) {
 			return new LinkedList<>();
 		}
 
-		return connector.get().execute(soql, all, batchSize);
+		return connector.get().execute(soql, all, batchSize, join);
 	}
 
 	/**

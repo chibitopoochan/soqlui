@@ -106,6 +106,12 @@
                                     <Insets bottom="5.0" right="5.0" top="5.0" />
                                  </FlowPane.margin>
                               </CheckBox>
+                              <Label text="JOIN:">
+                                 <FlowPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </FlowPane.margin>
+                              </Label>
+                              <CheckBox fx:id="join" mnemonicParsing="false" selected="true" />
                            </children>
                         </FlowPane>
                         <Separator orientation="VERTICAL" prefHeight="200.0">

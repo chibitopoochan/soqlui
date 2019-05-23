@@ -67,6 +67,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 		service.connectionLogicProperty().bind(controller.getConnectService().connectionLogicProperty());
 		service.batchSizeProperty().bind(controller.getBatchSize().textProperty());
 		service.allProperty().bind(controller.getAll().selectedProperty());
+		service.join().bind(controller.getJoin().selectedProperty());
 	}
 
 	@Override

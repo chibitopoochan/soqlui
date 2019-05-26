@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
+import com.gmail.chibitopoochan.soqlui.logic.ExtractFileLogic;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
@@ -47,6 +48,19 @@ public class ExportService extends Service<Void> {
 
 	public ObjectProperty<ConnectionLogic> connectionLogicProperty() {
 		return connectionLogic;
+	}
+
+	private ObjectProperty<ExtractFileLogic> extractLogic = new SimpleObjectProperty<>(this, "extractLogic");
+	public void setExtractLogic(ExtractFileLogic logic){
+		extractLogic.set(logic);
+	}
+
+	public ExtractFileLogic getExtractLogic() {
+		return extractLogic.get();
+	}
+
+	public ObjectProperty<ExtractFileLogic> extractLogicProperty() {
+		return extractLogic;
 	}
 
 	/**
@@ -146,6 +160,7 @@ public class ExportService extends Service<Void> {
 	@Override
 	protected Task<Void> createTask() {
 		final ConnectionLogic useLogic = connectionLogic.get();
+		final ExtractFileLogic useExtract = extractLogic.get();
 		final String useSOQL = getSOQL();
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
@@ -159,6 +174,7 @@ public class ExportService extends Service<Void> {
 					List<List<String>> rowList = new LinkedList<>();
 
 					updateMessage("SOQL Executing...");
+					logger.info("SOQL Executing...");
 					List<Map<String, String>> recordList = useLogic.execute(useSOQL, useAll, useBatchSize, useJoin);
 					int size = useLogic.getSize();
 					int done = 0;
@@ -167,27 +183,44 @@ public class ExportService extends Service<Void> {
 						rowList.add(recordList.get(0).keySet().stream().collect(Collectors.toList()));
 					}
 
+					logger.info("Extract init");
+					useExtract.init(exportPath, useSOQL);
+
 					while(!recordList.isEmpty()) {
+						// ファイルを抽出
+						if(useExtract.canExtract()) {
+							for(Map<String, String> record : recordList) {
+								useExtract.extract(record);
+							}
+						}
+
+						// 値の表を構築
 						recordList.forEach(record -> {
 							rowList.add(record.values().stream().collect(Collectors.toList()));
 						});
 
+						// CSV形式に変換
 						String csv = FormatUtils.format(new CSVFormatDecoration(), () -> rowList);
 						out.write(csv);
 
+						// 進捗を更新
 						done += recordList.size();
 
 						updateProgress(done, size);
 						updateMessage(String.format("%d / %d", done, size));
 
 						rowList.clear();
+
+						// 次のレコードを取得
 						recordList = useLogic.executeMore();
 					}
 
 					out.flush();
 					updateMessage("Exported " + size);
+					logger.info("Exported" + size);
 				} catch (Exception e) {
 					updateMessage("Cancelled");
+					logger.info("Cancelled");
 				}
 
 				return null;

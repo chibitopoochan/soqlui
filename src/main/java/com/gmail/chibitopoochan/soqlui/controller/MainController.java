@@ -21,6 +21,7 @@ import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.initializer.MainControllerInitializer;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
+import com.gmail.chibitopoochan.soqlui.logic.ExtractFileLogic;
 import com.gmail.chibitopoochan.soqlui.logic.FavoriteLogic;
 import com.gmail.chibitopoochan.soqlui.logic.SOQLHistoryLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
@@ -132,6 +133,7 @@ public class MainController implements Initializable, Controller {
 	private ConnectionSettingLogic setting = new ConnectionSettingLogic();
 	private SOQLHistoryLogic history = new SOQLHistoryLogic();
 	private FavoriteLogic favorite = new FavoriteLogic();
+	private ExtractFileLogic extract = new ExtractFileLogic();
 
 	// 非同期のサービス
 	private ConnectService connectService = new ConnectService();
@@ -756,6 +758,20 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setUseTooling(CheckBox useTooling) {
 		this.useTooling = useTooling;
+	}
+
+	/**
+	 * @return extract
+	 */
+	public ExtractFileLogic getExtract() {
+		return extract;
+	}
+
+	/**
+	 * @param extract セットする extract
+	 */
+	public void setExtract(ExtractFileLogic extract) {
+		this.extract = extract;
 	}
 
 }

@@ -246,7 +246,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 						Cell c = CellUtil.getCell(r, a.getColumn());
 
 						// 値を設定
-						c.setCellValue(field.getMetaInfo().get(key.substring(1)));
+						c.setCellValue(field.getMetaInfo().get(FieldMetaInfo.Type.valueOf(key.substring(1))));
 
 						// セルの位置を移動
 						cellMap.put(key, new CellAddress(a.getRow()+1, a.getColumn()));

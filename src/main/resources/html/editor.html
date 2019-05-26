@@ -9,9 +9,22 @@
 <div id="editor"></div>
 <script src="{js.url}" type="text/javascript" charset="utf-8"></script>
 <script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/sql");
+	var size = 15;
+	var editor = ace.edit("editor");
+	editor.setTheme("ace/theme/monokai");
+	editor.getSession().setMode("ace/mode/sql");
+	editor.setOptions({fontSize : size});
+
+	function zoomIn() {
+		size += 1;
+		editor.setOptions({fontSize : size});
+	}
+
+	function zoomOut() {
+		size -= 1;
+		editor.setOptions({fontSize : size});
+	}
+
 </script>
 </body>
 </html>

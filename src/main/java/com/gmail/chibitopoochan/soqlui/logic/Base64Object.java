@@ -11,11 +11,13 @@ public class Base64Object {
 	final String fileName;
 	final String extentionName;
 	final String bodyName;
+	final String idName;
 
 	/**
 	 * キー情報を持つインスタンスを作成
 	 */
 	private Base64Object(String obj, String name, String extention, String body) {
+		this.idName = "Id";
 		this.objectName = obj;
 		this.fileName = name;
 		this.extentionName = extention;
@@ -43,7 +45,8 @@ public class Base64Object {
 		return soql.toLowerCase().contains(objectName.toLowerCase())
 				&& soql.toLowerCase().contains(fileName.toLowerCase())
 				&& soql.toLowerCase().contains(extentionName.toLowerCase())
-				&& soql.toLowerCase().contains(bodyName.toLowerCase());
+				&& soql.toLowerCase().contains(bodyName.toLowerCase())
+				&& soql.toLowerCase().contains(idName.toLowerCase());
 	}
 
 	public boolean isSameFileName(String keyword) {
@@ -56,6 +59,10 @@ public class Base64Object {
 
 	public boolean isSameBodyName(String keyword) {
 		return keyword.toLowerCase().equals(bodyName.toLowerCase());
+	}
+
+	public boolean isSameIdName(String keyword) {
+		return keyword.toLowerCase().equals(idName.toLowerCase());
 	}
 
 }

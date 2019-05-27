@@ -21,6 +21,7 @@ public class ExtractFileLogic {
 	private String fileName;
 	private String extentionName;
 	private String bodyName;
+	private String idName;
 
 	/**
 	 * SOQLから抽出可能かを判定
@@ -60,14 +61,19 @@ public class ExtractFileLogic {
 				if(targetObject.get().isSameFileName(key)) fileName = key;
 				if(targetObject.get().isSameExtention(key)) extentionName = key;
 				if(targetObject.get().isSameBodyName(key)) bodyName = key;
+				if(targetObject.get().isSameIdName(key)) idName = key;
 			}
 			firstRecord = false;
 		}
 
+		// IDのフォルダを作成
+		File folder = new File(directory, record.get(idName));
+		folder.mkdir();
+
 		// 出力先を構築
 		String name = record.get(fileName);
 		String extention = record.get(extentionName);
-		File file = new File(directory, name + "." + extention);
+		File file = new File(folder, name + "." + extention);
 
 		// ファイルを出力
 		ExtractFileUtils.export(file, record.get(bodyName));

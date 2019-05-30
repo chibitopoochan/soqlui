@@ -54,8 +54,11 @@ __機能追加__
 
 35 項目一覧の取得項目拡大
 
-[Ver1.1]
+[Ver1.2]:
 <https://github.com/mametochoko/soqlui/compare/v1.1...HEAD>
+
+[Ver1.1]:
+<https://github.com/mametochoko/soqlui/compare/v1.0...HEAD>
 
 [Ver1.0]:
 <https://github.com/mametochoko/soqlui/compare/v0.1.0...HEAD>

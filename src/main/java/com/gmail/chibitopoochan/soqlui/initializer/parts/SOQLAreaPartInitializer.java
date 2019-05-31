@@ -14,10 +14,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSException;
@@ -27,8 +23,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 	public static final int TAB_COUNT = ApplicationSettingSet.getInstance().getSetting().getTabCount();
 	public static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
 	public static final int RECORD_COUNT = ApplicationSettingSet.getInstance().getSetting().getRecordSize();
-	private static final KeyCodeCombination ZOOM_IN = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.CONTROL_DOWN);
-	private static final KeyCodeCombination ZOOM_OUT = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
 
 	private TextArea soqlArea;
 	private WebView soqlWebArea;
@@ -52,7 +46,6 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 			soqlWebArea.setVisible(false);
 			soqlArea.setDisable(false);
 			soqlArea.setVisible(true);
-			soqlArea.setOnKeyPressed(this::zoom);
 		}
 
 		for(int i=0; i<TAB_COUNT; i++) {
@@ -86,30 +79,12 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		engine.getLoadWorker().stateProperty().addListener((ov, os, ns) -> {
 			if(State.SUCCEEDED.equals(ns)) {
 				soqlWebArea.setOnMouseExited(this::applyToText);
-				soqlWebArea.setOnKeyPressed(this::zoom);
 				soqlArea.textProperty().addListener((e,o,n) -> applyToWeb());
 				applyToWeb();
 				soqlWebArea.setVisible(true);
 			}
 		});
 
-	}
-
-	/**
-	 * WebViewのズーム
-	 * 「Ctrl + I」ズームイン
-	 * 「Ctrl + O」ズームアウト
-	 * @param e キーイベント
-	 */
-	private void zoom(KeyEvent e) {
-		if(USE_EDITOR) {
-			if(ZOOM_IN.match(e)) soqlWebArea.getEngine().executeScript("zoomIn()");
-			if(ZOOM_OUT.match(e)) soqlWebArea.getEngine().executeScript("zoomOut()");
-		} else {
-			Font font = soqlArea.getFont();
-			if(ZOOM_IN.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()+1));
-			if(ZOOM_OUT.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()-1));
-		}
 	}
 
 	/**

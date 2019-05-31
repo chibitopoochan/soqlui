@@ -39,6 +39,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -46,8 +47,13 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class ConnectButtonPartsInitializer implements PartsInitializer<MainController>{
 	// クラス共通の参照
 	private static final boolean USE_ADVANCE_SOQL = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
+	private static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
 	private static final Logger logger = LogUtils.getLogger(ConnectButtonPartsInitializer.class);
 	private static final Pattern bindPattern = Pattern.compile(":[a-zA-Z]+");
+
+	private static final KeyCodeCombination ZOOM_IN = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.CONTROL_DOWN);
+	private static final KeyCodeCombination ZOOM_OUT = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
+	private static final KeyCodeCombination EXECUTE = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.CONTROL_DOWN);
 
 	private ConnectionSettingLogic setting;
 	private Button connect;
@@ -259,14 +265,16 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	 * @param e キーイベント
 	 */
 	private void keyPressed(KeyEvent e) {
-		if(connector.isClosing()) {
-			return;
+		if(USE_EDITOR) {
+			if(ZOOM_IN.match(e)) soqlWebArea.getEngine().executeScript("zoomIn()");
+			if(ZOOM_OUT.match(e)) soqlWebArea.getEngine().executeScript("zoomOut()");
+		} else {
+			Font font = soqlArea.getFont();
+			if(ZOOM_IN.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()+1));
+			if(ZOOM_OUT.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()-1));
 		}
 
-		KeyCodeCombination executeKey = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.CONTROL_DOWN);
-		if(executeKey.match(e)) {
-			doExecute();
-		}
+		if(EXECUTE.match(e) && !connector.isClosing()) 	doExecute();
 
 	}
 

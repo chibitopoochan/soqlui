@@ -35,7 +35,7 @@ public class ResultTablePartInitializer implements PartsInitializer<MainControll
 					(ResultSet) tabArea.getSelectionModel().getSelectedItem().getUserData();
 			resultTable.setItems(
 				resultSet.getRecords().filtered(
-					t -> t.getRecord().values().stream().collect(Collectors.joining()).toLowerCase().indexOf(n) > -1
+					t -> t.getRecord().values().stream().collect(Collectors.joining()).toLowerCase().indexOf(n.toLowerCase()) > -1
 						|| n.length() == 0)
 			);
 		});

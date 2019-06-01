@@ -4,6 +4,16 @@
 
 All notable changes to this tool will be documented in this file.
 
+## [Ver1.3]
+
+__不具合修正__
+
+90 実行結果のフィルタ条件を修正
+
+__機能追加__
+
+86 バージョン表示を追加
+
 ## [Ver1.2]
 
 __不具合修正__

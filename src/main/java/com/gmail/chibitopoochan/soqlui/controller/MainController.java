@@ -303,6 +303,23 @@ public class MainController implements Initializable, Controller {
 
 	}
 
+	public void onAbout() {
+		StringBuilder about = new StringBuilder();
+		about
+		.append("SOQLUI  ")
+		.append(config.getString(Constants.Configuration.VERSION)).append(System.lineSeparator())
+		.append(System.lineSeparator())
+		.append("MIT License").append(System.lineSeparator())
+		.append("Copyright (c) 2017 chibitopoochan");
+
+		Alert resultDialog = new Alert(AlertType.INFORMATION);
+		resultDialog.setHeaderText(null);
+		resultDialog.setTitle("SOQLUIについて");
+		resultDialog.setContentText(about.toString());
+		resultDialog.showAndWait();
+
+	}
+
 	/**
 	 * Windowの最小化
 	 */

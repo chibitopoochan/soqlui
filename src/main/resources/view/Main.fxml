@@ -43,7 +43,8 @@
 	          </Menu>
 	          <Menu mnemonicParsing="false" text="Help">
 	            <items>
-	              <MenuItem mnemonicParsing="false" onAction="#onHelp" text="About" />
+	              <MenuItem mnemonicParsing="false" onAction="#onHelp" text="SOQLUI Help" />
+                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
 	            </items>
 	          </Menu>
 	        </menus>

@@ -30,19 +30,15 @@ public interface Constants {
 		String RESOURCE = "Configuration";
 
 		String FAVORITE_PATH = "FAVORITE_PATH";
-
 		String CONNECT_SETTING_PATH = "CONNECT_SETTING_PATH";
-
 		String HISTORY_PATH = "HISTORY_PATH";
-
 		String PROXY_PATH = "PROXY_PATH";
-		String ICON = "APPLICATION_ICON";
-
 		String FORMAT_PATH = "FORMAT_PATH";
-
 		String SETTING_PATH = "SETTING_PATH";
-
 		String HELP_PATH = "HELP_PATH";
+
+		String ICON = "APPLICATION_ICON";
+		String VERSION = "VERSION";
 
 		String VIEW_SU01 = "VIEW_SU01";
 		String VIEW_SU02 = "VIEW_SU02";
@@ -55,6 +51,7 @@ public interface Constants {
 		String TITLE_SU03 = "TITLE_SU03";
 		String TITLE_SU04 = "TITLE_SU04";
 		String TITLE_SU05 = "TITLE_SU05";
+
 
 	}
 

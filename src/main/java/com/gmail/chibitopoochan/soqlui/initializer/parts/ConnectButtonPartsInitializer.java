@@ -36,6 +36,8 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -54,6 +56,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private static final KeyCodeCombination ZOOM_IN = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.CONTROL_DOWN);
 	private static final KeyCodeCombination ZOOM_OUT = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
 	private static final KeyCodeCombination EXECUTE = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.CONTROL_DOWN);
+	private static final KeyCodeCombination IMAGE_COPY = new KeyCodeCombination(KeyCode.P, KeyCodeCombination.CONTROL_DOWN);
 
 	private ConnectionSettingLogic setting;
 	private Button connect;
@@ -268,10 +271,21 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		if(USE_EDITOR) {
 			if(ZOOM_IN.match(e)) soqlWebArea.getEngine().executeScript("zoomIn()");
 			if(ZOOM_OUT.match(e)) soqlWebArea.getEngine().executeScript("zoomOut()");
+			if(IMAGE_COPY.match(e)) {
+				ClipboardContent content = new ClipboardContent();
+				content.putImage(soqlWebArea.snapshot(null, null));
+				Clipboard.getSystemClipboard().setContent(content);
+			}
+
 		} else {
 			Font font = soqlArea.getFont();
 			if(ZOOM_IN.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()+1));
 			if(ZOOM_OUT.match(e)) soqlArea.setFont(Font.font(font.getFamily(), font.getSize()-1));
+			if(IMAGE_COPY.match(e)) {
+				ClipboardContent content = new ClipboardContent();
+				content.putImage(soqlArea.snapshot(null, null));
+				Clipboard.getSystemClipboard().setContent(content);
+			}
 		}
 
 		if(EXECUTE.match(e) && !connector.isClosing()) 	doExecute();

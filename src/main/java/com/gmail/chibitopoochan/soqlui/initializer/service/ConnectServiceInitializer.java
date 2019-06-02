@@ -89,7 +89,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		Platform.runLater(() -> {
 			if(service.isClosing()) {
 				// ボタン等を制御
-				connect.setText("Connect");
+				connect.setText("接続");
 				connect.setDisable(false);
 				disconnect.setDisable(true);
 				connectOption.setDisable(false);
@@ -112,7 +112,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 
 			} else {
 				// ボタン等を制御
-				connect.setText("Reconnect");
+				connect.setText("再接続");
 				connect.setDisable(false);
 				disconnect.setDisable(false);
 				connectOption.setDisable(true);

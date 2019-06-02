@@ -51,7 +51,10 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private static final boolean USE_ADVANCE_SOQL = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
 	private static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
 	private static final Logger logger = LogUtils.getLogger(ConnectButtonPartsInitializer.class);
-	private static final Pattern bindPattern = Pattern.compile(":[a-zA-Z]+");
+	private static final Pattern BIND_PATTERN = Pattern.compile(":[a-zA-Z]+");
+	private static final Pattern WILDCARD_PATTERN = Pattern.compile("select\\s+\\*\\s+from\\s+([_a-zA-Z0-9]+).*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
+	private static final Pattern WILDCARD_WHILE_PATTERN = Pattern.compile(".*\\s+from\\s+[_a-zA-Z0-9]+\\s+(.*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
+	private static final Pattern WILDCARD_IGNORE_PATTERN = Pattern.compile("select.*\\(.*\\).*from.*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
 
 	private static final KeyCodeCombination ZOOM_IN = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.CONTROL_DOWN);
 	private static final KeyCodeCombination ZOOM_OUT = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
@@ -162,7 +165,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private void convertToActualSOQL() {
 		String soql = soqlArea.getText();
 		if(USE_ADVANCE_SOQL) {
-			soql = converToSOQL(soql);
+			soql = convertByID(soql);
+			soql = convertByWildcard(soql);
 			Optional<String> workSOQL = bindVariable(soql);
 			if(workSOQL.isPresent()) {
 				actualSOQL.set(workSOQL.get());
@@ -175,7 +179,42 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 
 	}
 
-	private String converToSOQL(String soql) {
+	private String convertByWildcard(String soql) {
+		Matcher wildcardMatch = WILDCARD_PATTERN.matcher(soql);
+		Matcher ignoreMatch = WILDCARD_IGNORE_PATTERN.matcher(soql);
+		if(!wildcardMatch.matches() || ignoreMatch.matches()) {
+			return soql;
+		}
+
+		String objName = wildcardMatch.group(1);
+		String whileCondition = "";
+
+		Matcher whileMatch = WILDCARD_WHILE_PATTERN.matcher(soql);
+		if(whileMatch.matches()) {
+			whileCondition = whileMatch.group(1);
+		}
+
+		// SOQLを構築
+		try {
+			if(whileCondition.isEmpty()) {
+				soql = createSOQL(objName);
+			} else {
+				soql = String.format("%s %s",createSOQL(objName), whileCondition);
+			}
+		} catch (ConnectionException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+		return soql;
+	}
+
+	/**
+	 * IDからレコードを取得するSOQLを作成
+	 * @param soql ID
+	 * @return SOQL
+	 */
+	private String convertByID(String soql) {
 		// 対象とならない場合、処理を終了
 		if(soql.toLowerCase().contains("select") || soql.length() < 3) {
 			return soql;
@@ -191,23 +230,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 
 		// SOQLを構築
 		try {
-			QueryFormatDecoration decoration = new QueryFormatDecoration();
 			DescribeSObject obj = result.get();
-			decoration.setTableAfter(obj.getName());
-
-			String id = soql;
-			List<DescribeField> fieldList = logic.getFieldList(obj.getName());
-
-			soql = FormatUtils.format(decoration, () ->
-				fieldList.stream().map(f -> {
-					List<String> list = new ArrayList<>();
-					list.add(f.getName());
-					return list;
-				}).collect(Collectors.toList())
-			);
-
-			soql = String.format("%s where id = '%s'",soql, id.trim());
-
+			soql = String.format("%s where id = '%s'",createSOQL(obj.getName()), soql.trim());
 		} catch (ConnectionException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -216,9 +240,31 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		return soql;
 	}
 
+	/**
+	 * オブジェクト名から項目を取得し、SOQL形式に成形
+	 * @param objName オブジェクト名
+	 * @return SOQL
+	 * @throws ConnectionException 項目定義取得時のエラー
+	 */
+	private String createSOQL(String objName) throws ConnectionException {
+		QueryFormatDecoration decoration = new QueryFormatDecoration();
+		decoration.setTableAfter(objName);
+
+		List<DescribeField> fieldList = logic.getFieldList(objName);
+
+		return FormatUtils.format(decoration, () ->
+			fieldList.stream().map(f -> {
+				List<String> list = new ArrayList<>();
+				list.add(f.getName());
+				return list;
+			}).collect(Collectors.toList())
+		);
+
+	}
+
 	private Optional<String> bindVariable(String soql) {
 		// SOQLからバインド変数を抽出
-		Matcher bindMatcher = bindPattern.matcher(soql);
+		Matcher bindMatcher = BIND_PATTERN.matcher(soql);
 
 		// SOQLを再構築
 		StringBuffer workSOQL = new StringBuffer();

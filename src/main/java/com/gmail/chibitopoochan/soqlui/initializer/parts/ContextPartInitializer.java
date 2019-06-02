@@ -138,18 +138,18 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 	@Override
 	public void initialize() {
-		copyNormal			= new MenuItem("Copy select area");
-		copyWithExcel		= new MenuItem("Copy select area(Excel)");
-		copyWithCSV			= new MenuItem("Copy select area(CSV)");
-		copyNoHead			= new MenuItem("Copy select area(Excel No Head)");
-		selectRecordCount	= new MenuItem("Select record count");
-		selectAllColumns	= new MenuItem("Select all columns");
-		createSOQL			= new MenuItem("Create SOQL");
-		createWithSelect    = new MenuItem("Create SOQL with selected");
-		exportExcelFormat	= new MenuItem("Export to Excel Format");
-		browseRecord		= new MenuItem("Open browser");
-		browseProxy			= new MenuItem("Open login as another user");
-		openFieldList		= new MenuItem("Open field list");
+		copyNormal			= new MenuItem("選択領域のコピー");
+		copyWithExcel		= new MenuItem("選択領域のコピー（Excel用）");
+		copyWithCSV			= new MenuItem("選択領域のコピー（CSV用）");
+		copyNoHead			= new MenuItem("選択領域のコピー（Excel用ヘッダ無し）");
+		selectRecordCount	= new MenuItem("SOQL作成（件数）");
+		selectAllColumns	= new MenuItem("SOQL作成（全項目）");
+		createSOQL			= new MenuItem("SOQL作成（選択範囲）");
+		createWithSelect    = new MenuItem("SOQL作成（条件指定）");
+		exportExcelFormat	= new MenuItem("オブジェクト定義出力");
+		browseRecord		= new MenuItem("ブラウザで表示");
+		browseProxy			= new MenuItem("代理ログイン");
+		openFieldList		= new MenuItem("項目定義の表示");
 
 		// メニューのイベント設定
 		copyNormal.setOnAction(e -> copy(new SimpleFormatDecoration(), e.getSource()));

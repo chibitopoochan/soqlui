@@ -95,7 +95,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 				resultMasterList.addAll(result.stream().map(SObjectRecord::new).collect(Collectors.toList()));
 				resultSet.setRecords(resultMasterList);
 
-				Tab resultTab = new Tab("Result" + tabArea.getTabs().size());
+				Tab resultTab = new Tab("実行結果" + tabArea.getTabs().size());
 				resultTab.setUserData(resultSet);
 				resultTab.setOnSelectionChanged(this::tabChanged);
 				resultTab.setOnClosed(this::closedTab);

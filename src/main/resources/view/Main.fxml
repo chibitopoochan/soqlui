@@ -32,16 +32,16 @@
 	      <MenuBar minWidth="150.0" prefHeight="25.0" prefWidth="175.0" BorderPane.alignment="CENTER">
 	        <menus>
 	          <Menu fx:id="menuIcon" mnemonicParsing="false" style="-fx-background-image: url('/image/icon16x16.jpeg'); -fx-background-position: left; -fx-background-repeat: no-repeat;" text="_" />
-	          <Menu mnemonicParsing="false" text="File">
+	          <Menu mnemonicParsing="false" text="ファイル">
 	            <items>
-	                  <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="Connection" />
-	                  <MenuItem fx:id="menuFileProxy" mnemonicParsing="false" onAction="#openProxySetting" text="Proxy" />
-	                  <MenuItem mnemonicParsing="false" onAction="#onSave" text="Save" />
-                     <MenuItem mnemonicParsing="false" onAction="#openApplicationSetting" text="Setting" />
-	              <MenuItem mnemonicParsing="false" onAction="#onClose" text="Close" />
+	                  <MenuItem fx:id="menuFileConnection" mnemonicParsing="false" onAction="#openConnectSetting" text="接続設定" />
+	                  <MenuItem fx:id="menuFileProxy" mnemonicParsing="false" onAction="#openProxySetting" text="プロキシ設定" />
+	                  <MenuItem mnemonicParsing="false" onAction="#onSave" text="保存" />
+                     <MenuItem mnemonicParsing="false" onAction="#openApplicationSetting" text="設定" />
+	              <MenuItem mnemonicParsing="false" onAction="#onClose" text="閉じる" />
 	            </items>
 	          </Menu>
-	          <Menu mnemonicParsing="false" text="Help">
+	          <Menu mnemonicParsing="false" text="ヘルプ">
 	            <items>
 	              <MenuItem mnemonicParsing="false" onAction="#onHelp" text="SOQLUI Help" />
                      <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
@@ -78,7 +78,7 @@
                      <children>
                         <FlowPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label minHeight="25.0" text="Max Rows :">
+                              <Label minHeight="25.0" text="最大件数:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -91,7 +91,7 @@
                                     <Insets bottom="5.0" right="5.0" top="5.0" />
                                  </FlowPane.margin>
                               </TextField>
-                              <Label text="ALL :">
+                              <Label text="削除含む:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -107,7 +107,7 @@
                                     <Insets bottom="5.0" right="5.0" top="5.0" />
                                  </FlowPane.margin>
                               </CheckBox>
-                              <Label text="JOIN:">
+                              <Label text="入れ子:">
                                  <FlowPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </FlowPane.margin>
@@ -119,17 +119,17 @@
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin></Separator>
-                        <Button fx:id="execute" disable="true" mnemonicParsing="false" text="Execute">
+                        <Button fx:id="execute" disable="true" mnemonicParsing="false" text="実行">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="export" disable="true" mnemonicParsing="false" text="Export">
+                        <Button fx:id="export" disable="true" mnemonicParsing="false" text="エクスポート">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="cancel" disable="true" mnemonicParsing="false" text="Cancel">
+                        <Button fx:id="cancel" disable="true" mnemonicParsing="false" text="キャンセル">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
@@ -141,7 +141,7 @@
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <TabPane fx:id="tabArea" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" />
-                  <TextField fx:id="resultSearch" promptText="Search...">
+                  <TextField fx:id="resultSearch" promptText="検索...">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>
@@ -163,12 +163,12 @@
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Connection" />
+                  <Label text="接続先" />
                   <ComboBox fx:id="connectOption" maxWidth="1.7976931348623157E308" />
                   <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" text="Connect" />
-                        <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" text="Disconnect">
+                        <Button fx:id="connect" minWidth="80.0" mnemonicParsing="false" text="接続" />
+                        <Button fx:id="disconnect" disable="true" minWidth="80.0" mnemonicParsing="false" text="切断">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
@@ -182,11 +182,11 @@
                   <Separator prefWidth="200.0" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Objects" />
+                        <Label text="オブジェクト" />
                         <ProgressIndicator fx:id="progressIndicator" visible="false" />
                      </children>
                   </HBox>
-                  <TextField fx:id="objectSearch" promptText="Serach...">
+                  <TextField fx:id="objectSearch" promptText="検索...">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>
@@ -204,7 +204,7 @@
                   <TabPane fx:id="fieldTabArea" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label text="Fields">
+                        <Label text="項目">
                            <HBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </HBox.margin>
@@ -222,7 +222,7 @@
                         <ProgressIndicator fx:id="fieldProgressIndicator" visible="false" />
                      </children>
                   </HBox>
-                  <TextField fx:id="columnSearch" promptText="Search...">
+                  <TextField fx:id="columnSearch" promptText="検索...">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>
@@ -255,12 +255,12 @@
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="Favorit">
+                  <Label text="お気に入り">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="favoriteSearch" promptText="Search..." />
+                  <TextField fx:id="favoriteSearch" promptText="検索..." />
                   <ListView fx:id="favoriteList" minWidth="240.0" prefHeight="200.0" prefWidth="240.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
@@ -270,12 +270,12 @@
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label text="History">
+                  <Label text="実行履歴">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="historySearch" promptText="Search..." />
+                  <TextField fx:id="historySearch" promptText="検索..." />
                   <ListView fx:id="historyList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />

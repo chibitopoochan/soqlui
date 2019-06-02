@@ -38,10 +38,10 @@ public class HistoryContextPartInitializer implements PartsInitializer<MainContr
 	@Override
 	public void initialize() {
 		// メニュー作成
-		MenuItem copyArea = new MenuItem("Copy SOQL Area");
-		MenuItem copyClip = new MenuItem("Copy Clipboard");
-		MenuItem removeHistory = new MenuItem("Remove History");
-		MenuItem addFavorite = new MenuItem("Add favorite");
+		MenuItem copyArea = new MenuItem("SOQLに反映");
+		MenuItem copyClip = new MenuItem("コピー");
+		MenuItem removeHistory = new MenuItem("削除");
+		MenuItem addFavorite = new MenuItem("お気に入りに追加");
 
 		// メニューのイベント設定
 		copyArea.setOnAction(this::copyArea);

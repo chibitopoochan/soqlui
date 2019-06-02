@@ -32,9 +32,9 @@ public class FavoriteContextPartInitializer implements PartsInitializer<MainCont
 	@Override
 	public void initialize() {
 		// メニュー作成
-		MenuItem copyArea = new MenuItem("Copy SOQL Area");
-		MenuItem rename = new MenuItem("Rename Favorite");
-		MenuItem remove = new MenuItem("Remove Favorite");
+		MenuItem copyArea = new MenuItem("SOQLを反映");
+		MenuItem rename = new MenuItem("名称変更");
+		MenuItem remove = new MenuItem("削除");
 
 		// イベントの割り当て
 		copyArea.setOnAction(this::copySOQLArea);

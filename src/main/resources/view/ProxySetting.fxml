@@ -29,22 +29,22 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Host" GridPane.rowIndex="1">
+            <Label text="ホスト" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Port" GridPane.rowIndex="2">
+            <Label text="ポート" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Username" GridPane.rowIndex="3">
+            <Label text="ユーザ名" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Password" GridPane.rowIndex="4">
+            <Label text="パスワード" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -69,7 +69,7 @@
                   <Insets right="10.0" />
                </GridPane.margin>
             </PasswordField>
-            <CheckBox fx:id="useProxy" mnemonicParsing="false" text="Use Proxy">
+            <CheckBox fx:id="useProxy" mnemonicParsing="false" text="有効">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
@@ -84,12 +84,12 @@
             <Separator prefWidth="200.0" />
             <HBox alignment="BOTTOM_RIGHT" prefWidth="407.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#save" text="Save">
+                  <Button mnemonicParsing="false" onAction="#save" text="保存">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#cancel" text="Cancel">
+                  <Button mnemonicParsing="false" onAction="#cancel" text="キャンセル">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

@@ -49,7 +49,7 @@ public class SOQLAreaPartInitializer implements PartsInitializer<MainController>
 		}
 
 		for(int i=0; i<TAB_COUNT; i++) {
-			Tab queryTab = new Tab("Query "+i);
+			Tab queryTab = new Tab("クエリ "+i);
 			queryTab.setOnSelectionChanged(this::queryTabChanged);
 			tabArea.getTabs().add(queryTab);
 		}

@@ -26,9 +26,9 @@ public class TabContextPartInitializer implements PartsInitializer<MainControlle
 
 	private void setMenuItems(TabPane tabPane) {
 		// メニュー作成
-		MenuItem close = new MenuItem("Close");
-		MenuItem closeOther = new MenuItem("Close Other");
-		MenuItem closeAll = new MenuItem("Close All");
+		MenuItem close = new MenuItem("閉じる");
+		MenuItem closeOther = new MenuItem("他を閉じる");
+		MenuItem closeAll = new MenuItem("全て閉じる");
 
 		// メニューのイベント設定
 		close.setOnAction(e -> close(tabPane));

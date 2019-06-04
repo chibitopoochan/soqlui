@@ -27,13 +27,13 @@ import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
 import com.sforce.ws.ConnectionException;
 
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
@@ -80,7 +80,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private CheckBox useTooling;
 
 	private Optional<File> exportHistory = Optional.empty();
-	private TableView<DescribeSObject> objectList;
+	private ObservableList<DescribeSObject> objectList;
 	private ConnectionLogic logic;
 
 	@Override
@@ -100,7 +100,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.cancel = controller.getCancel();
 		this.soqlArea = controller.getSoqlArea();
 		this.actualSOQL = controller.actualSOQL();
-		this.objectList = controller.getsObjectList();
+		this.objectList = controller.getObjectMasterList();
 		this.logic = controller.getConnectService().getConnectionLogic();
 		this.soqlWebArea = controller.getSoqlWebArea();
 		this.useTooling = controller.getUseTooling();
@@ -222,7 +222,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 
 		// KeyPrefixからオブジェクトを特定
 		String keyPrefix = soql.substring(0,3);
-		Optional<DescribeSObject> result = objectList.getItems().stream().filter(o -> keyPrefix.equals(o.getKeyPrefix())).findFirst();
+		Optional<DescribeSObject> result = objectList.stream().filter(o -> keyPrefix.equals(o.getKeyPrefix())).findFirst();
 
 		if(!result.isPresent()) {
 			return soql;

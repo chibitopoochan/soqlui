@@ -322,6 +322,10 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 				content.putImage(soqlWebArea.snapshot(null, null));
 				Clipboard.getSystemClipboard().setContent(content);
 			}
+			if(EXECUTE.match(e) && !connector.isClosing()) 	{
+				soqlWebArea.getOnMouseExited().handle(null);
+				doExecute();
+			}
 
 		} else {
 			Font font = soqlArea.getFont();
@@ -332,9 +336,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 				content.putImage(soqlArea.snapshot(null, null));
 				Clipboard.getSystemClipboard().setContent(content);
 			}
+			if(EXECUTE.match(e) && !connector.isClosing()) 	doExecute();
 		}
-
-		if(EXECUTE.match(e) && !connector.isClosing()) 	doExecute();
 
 	}
 

@@ -103,6 +103,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Label text="代理ログイン" GridPane.rowIndex="4">
@@ -165,6 +166,12 @@
                            </padding>
                         </Label>
                         <TextField fx:id="connectionURL" GridPane.columnIndex="1" />
+                        <Label text="ローカライズ" GridPane.rowIndex="7">
+                           <GridPane.margin>
+                              <Insets left="15.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <TextField fx:id="local" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>
                   <Label text="SOQL">

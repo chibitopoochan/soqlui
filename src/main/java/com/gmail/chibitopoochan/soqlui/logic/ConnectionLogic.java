@@ -24,11 +24,11 @@ public class ConnectionLogic {
 	 * @param selected 使用する接続情報
 	 * @throws Exception ログイン時の例外
 	 */
-	public void connect(ConnectionSetting selectedSetting, boolean reset, boolean useTooling) throws Exception {
+	public void connect(ConnectionSetting selectedSetting, boolean reset, boolean useTooling, String local) throws Exception {
 		if(reset) {
 			Connector.resetProxySetting();
 		}
-		connect(selectedSetting, useTooling);
+		connect(selectedSetting, useTooling, local);
 	}
 
 	/**
@@ -37,12 +37,12 @@ public class ConnectionLogic {
 	 * @param proxy プロキシ接続
 	 * @throws Exception ログイン時の例外
 	 */
-	public void connect(ConnectionSetting selectedSetting, ProxySetting proxy, boolean useTooling) throws Exception {
+	public void connect(ConnectionSetting selectedSetting, ProxySetting proxy, boolean useTooling, String local) throws Exception {
 		Connector.setProxySetting(proxy.getHost(), proxy.getPortNumber(), proxy.getUsername(), proxy.getPassword());
-		connect(selectedSetting, useTooling);
+		connect(selectedSetting, useTooling, local);
 	}
 
-	private void connect(ConnectionSetting selectedSetting, boolean useTooling) throws Exception {
+	private void connect(ConnectionSetting selectedSetting, boolean useTooling, String local) throws Exception {
 		String env = selectedSetting.getEnvironmentOfURL();
 		String api = selectedSetting.getApiVersion();
 
@@ -50,7 +50,7 @@ public class ConnectionLogic {
 				selectedSetting.getUsername(),
 				selectedSetting.getPassword() + selectedSetting.getToken(),
 				String.format(SERVER_URL, env, useTooling ? "T" : "u" ,api),
-				useTooling));
+				useTooling,local));
 	}
 
 	/**

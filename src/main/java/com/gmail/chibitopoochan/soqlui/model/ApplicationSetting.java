@@ -12,6 +12,7 @@ public class ApplicationSetting {
 	private String proxyLoginURL;
 	private String proxyBackURL;
 	private String proxyTargetURL;
+	private String local;
 	private boolean useCSS;
 	private boolean useEditor;
 	private boolean useDecorator;
@@ -196,6 +197,13 @@ public class ApplicationSetting {
 	 */
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+	public void setLocal(String text) {
+		this.local = text;
 	}
 
 }

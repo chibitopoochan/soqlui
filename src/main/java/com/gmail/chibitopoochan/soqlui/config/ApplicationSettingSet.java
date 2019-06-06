@@ -50,6 +50,7 @@ public class ApplicationSettingSet {
 	private static final String SETTINGS_EDITOR = "editor";
 	private static final String SETTINGS_DECORATION = "decolation";
 	private static final String SETTINGS_DEBUG_MODE = "debugMode";
+	private static final String SETTINGS_LOCAL = "local";
 
 	// Singletonのインスタンス
 	private static ApplicationSettingSet instance;
@@ -205,6 +206,11 @@ public class ApplicationSettingSet {
 		writer.writeCharacters(setting.getProxyBackURL());
 		writer.writeEndElement();
 
+		// ローカライズ
+		writer.writeStartElement("", SETTINGS_LOCAL, "");
+		writer.writeCharacters(setting.getLocal());
+		writer.writeEndElement();
+
 		writer.writeEndElement();
 
 		/** フォーマット関連 */
@@ -342,6 +348,9 @@ public class ApplicationSettingSet {
 				setting.setUseDecorator(Boolean.valueOf(reader.getElementText()));
 				break;
 
+			case SETTINGS_LOCAL:
+				setting.setLocal(reader.getElementText());
+				break;
 
 			}
 			break;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.ConnectionSetting;
@@ -26,6 +27,7 @@ import javafx.concurrent.Task;
 
 public class ConnectService extends Service<Void> {
 	private static final Logger logger = LogUtils.getLogger(ConnectService.class);
+	private static final String LOCAL_NAME = ApplicationSettingSet.getInstance().getSetting().getLocal();
 
 	/**
 	 * メタ情報のプロパティ
@@ -164,10 +166,10 @@ public class ConnectService extends Service<Void> {
 					ProxySetting proxy = useProxy.getProxySetting();
 					if(Boolean.valueOf(proxy.getUseProxy())) {
 						// Proxyが有効ならProxy経由でSalesforceへ接続
-						useLogic.connect(useSetting, proxy, useTooling);
+						useLogic.connect(useSetting, proxy, useTooling, LOCAL_NAME);
 					} else {
 						// Proxyが無効なら、そのまま接続
-						useLogic.connect(useSetting, true, useTooling);
+						useLogic.connect(useSetting, true, useTooling, LOCAL_NAME);
 
 					}
 					logger.info(String.format("Connected to Salesforce [%s]", useSetting.getName()));

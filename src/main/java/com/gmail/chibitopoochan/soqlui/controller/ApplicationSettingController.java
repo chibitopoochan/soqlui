@@ -49,6 +49,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 	@FXML private TextField proxyURL;
 	@FXML private TextField proxyBackURL;
 	@FXML private TextField proxyTargetURL;
+	@FXML private TextField local;
 
 	// SOQL
 	@FXML private Slider tabCount;
@@ -79,6 +80,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		proxyURL.setText(setting.getProxyLoginURL());
 		proxyBackURL.setText(setting.getProxyBackURL());
 		proxyTargetURL.setText(setting.getProxyTargetURL());
+		local.setText(setting.getLocal());
 
 		tabCount.setValue(setting.getTabCount());
 		historySize.setValue(setting.getHistorySize());
@@ -101,6 +103,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setProxyLoginURL(proxyURL.getText());
 		setting.setProxyBackURL(proxyBackURL.getText());
 		setting.setProxyTargetURL(proxyTargetURL.getText());
+		setting.setLocal(local.getText());
 
 		setting.setTabCount((int) tabCount.getValue());
 		setting.setHistorySize((int) historySize.getValue());

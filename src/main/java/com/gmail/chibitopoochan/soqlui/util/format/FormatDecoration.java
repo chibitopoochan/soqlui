@@ -16,6 +16,10 @@ public abstract class FormatDecoration {
 	private boolean madatoryLastRowDecoration = true;
 	private boolean showHeader = true;
 
+	public String convertItem(String value) {
+		return value;
+	}
+
 	/**
 	 * @return tableBefore
 	 */

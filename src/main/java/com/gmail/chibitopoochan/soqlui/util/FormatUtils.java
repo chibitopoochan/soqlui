@@ -20,7 +20,7 @@ public class FormatUtils {
 						tempText.append(decorator.getValueBetween());
 					}
 					tempText.append(decorator.getHeaderValueBefore());
-					tempText.append(value);
+					tempText.append(decorator.convertItem(value));
 					tempText.append(decorator.getHeaderValueAfter());
 
 				});
@@ -33,7 +33,7 @@ public class FormatUtils {
 				columnList.subList(1, columnList.size()).forEach(value -> {
 					tempText.append(decorator.getValueBetween());
 					tempText.append(decorator.getValueBefore());
-					tempText.append(value == null ? "" : value);
+					tempText.append(decorator.convertItem(value == null ? "" : value));
 					tempText.append(decorator.getValueAfter());
 				});
 				tempText.append(decorator.getRowAfter());

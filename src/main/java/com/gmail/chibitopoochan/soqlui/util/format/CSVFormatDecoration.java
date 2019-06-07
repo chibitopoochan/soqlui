@@ -11,4 +11,12 @@ public class CSVFormatDecoration extends FormatDecoration {
 		setValueBetween(",");
 	}
 
+	/**
+	 * ダブルクォーテーションのエスケープ
+	 */
+	@Override
+	public String convertItem(String value) {
+		return value.replaceAll("\"", "\"\"");
+	}
+
 }

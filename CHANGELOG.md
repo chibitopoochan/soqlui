@@ -8,6 +8,8 @@ All notable changes to this tool will be documented in this file.
 
 __不具合修正__
 
+100 ダブルクォーテーションのエスケープを追加
+
 85 ID検索の不具合を修正
 
 90 実行結果のフィルタ条件を修正

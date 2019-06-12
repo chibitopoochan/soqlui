@@ -37,6 +37,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 	@FXML private CheckBox useEditor;
 	@FXML private CheckBox advanceSOQL;
 	@FXML private CheckBox debugMode;
+	@FXML private CheckBox base64;
 
 	// フォーマット
 	@FXML private ListView<String> formatColumns;
@@ -50,6 +51,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 	@FXML private TextField proxyBackURL;
 	@FXML private TextField proxyTargetURL;
 	@FXML private TextField local;
+	@FXML private TextField restBlobURL;
 
 	// SOQL
 	@FXML private Slider tabCount;
@@ -70,6 +72,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		useEditor.setSelected(setting.isUseEditor());
 		advanceSOQL.setSelected(setting.isAdvanceQuery());
 		debugMode.setSelected(setting.isDebugMode());
+		base64.setSelected(setting.isUseBase64());
 
 		Stream.of(FieldMetaInfo.Type.values()).forEach(t -> formatColumns.getItems().add(t.name()));
 
@@ -81,6 +84,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		proxyBackURL.setText(setting.getProxyBackURL());
 		proxyTargetURL.setText(setting.getProxyTargetURL());
 		local.setText(setting.getLocal());
+		restBlobURL.setText(setting.getRestBlobURL());
 
 		tabCount.setValue(setting.getTabCount());
 		historySize.setValue(setting.getHistorySize());
@@ -95,6 +99,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setUseEditor(useEditor.isSelected());
 		setting.setAdvanceQuery(advanceSOQL.isSelected());
 		setting.setDebugMode(debugMode.isSelected());
+		setting.setUseBase64(base64.isSelected());
 
 		setting.setConnectionURL(connectionURL.getText());
 		setting.setLoginURL(loginURL.getText());
@@ -104,6 +109,7 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setProxyBackURL(proxyBackURL.getText());
 		setting.setProxyTargetURL(proxyTargetURL.getText());
 		setting.setLocal(local.getText());
+		setting.setRestBlobURL(restBlobURL.getText());
 
 		setting.setTabCount((int) tabCount.getValue());
 		setting.setHistorySize((int) historySize.getValue());

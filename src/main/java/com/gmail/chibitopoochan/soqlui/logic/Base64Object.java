@@ -4,14 +4,15 @@ import java.util.Optional;
 
 public class Base64Object {
 	private static final Base64Object CONTENT_VERSION = new Base64Object("ContentVersion","Title", "FileExtension", "VersionData");
-	private static final Base64Object DOCUMENT = new Base64Object("Document","Name", "ContentType", "Body");
-	private static final Base64Object ATTACHMENT = new Base64Object("Attachment","Name", "ContentType", "Body");
+	private static final Base64Object DOCUMENT = new Base64Object("Document","Name", "Type", "Body");
+	private static final Base64Object ATTACHMENT = new Base64Object("Attachment","Name", "", "Body");
 
 	final String objectName;
 	final String fileName;
 	final String extentionName;
 	final String bodyName;
 	final String idName;
+	private boolean undecode;
 
 	/**
 	 * キー情報を持つインスタンスを作成
@@ -29,24 +30,30 @@ public class Base64Object {
 	 * @param soql 実行するSOQL
 	 * @return 該当するインスタンス
 	 */
-	public static Optional<Base64Object> get(String soql) {
-		if(CONTENT_VERSION.findExtractKeywords(soql)) return Optional.of(CONTENT_VERSION);
-		if(DOCUMENT.findExtractKeywords(soql)) return Optional.of(DOCUMENT);
-		if(ATTACHMENT.findExtractKeywords(soql)) return Optional.of(ATTACHMENT);
+	public static Optional<Base64Object> get(String soql, boolean undecode) {
+		if(CONTENT_VERSION.findExtractKeywords(soql, undecode)) return Optional.of(CONTENT_VERSION);
+		if(DOCUMENT.findExtractKeywords(soql, undecode)) return Optional.of(DOCUMENT);
+		if(ATTACHMENT.findExtractKeywords(soql, undecode)) return Optional.of(ATTACHMENT);
 		return Optional.empty();
 	}
 
 	/**
-	 *
-	 * @param soql
-	 * @return
+	 * エクスポートの可否判定
+	 * @param soql 実行したSOQL
+	 * @param undecode Base64のデコード不要
+	 * @return エクスポート可能ならtrue
 	 */
-	public boolean findExtractKeywords(String soql) {
+	public boolean findExtractKeywords(String soql, boolean undecode) {
+		this.undecode = undecode;
 		return soql.toLowerCase().contains(objectName.toLowerCase())
 				&& soql.toLowerCase().contains(fileName.toLowerCase())
 				&& soql.toLowerCase().contains(extentionName.toLowerCase())
-				&& soql.toLowerCase().contains(bodyName.toLowerCase())
+				&& (undecode || soql.toLowerCase().contains(bodyName.toLowerCase()))
 				&& soql.toLowerCase().contains(idName.toLowerCase());
+	}
+
+	public boolean isUndecode() {
+		return undecode;
 	}
 
 	public boolean isSameFileName(String keyword) {

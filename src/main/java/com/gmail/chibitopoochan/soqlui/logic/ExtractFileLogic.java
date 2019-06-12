@@ -2,17 +2,20 @@ package com.gmail.chibitopoochan.soqlui.logic;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.util.ExtractFileUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 public class ExtractFileLogic {
 	private static final Logger logger = LogUtils.getLogger(ExtractFileLogic.class);
+	private static final String REST_URL = ApplicationSettingSet.getInstance().getSetting().getRestBlobURL();
 
 	private Optional<Base64Object> targetObject;
 	private boolean canExtract;
@@ -22,6 +25,8 @@ public class ExtractFileLogic {
 	private String extentionName;
 	private String bodyName;
 	private String idName;
+	private String instanceName;
+	private String sessionKey;
 
 	/**
 	 * SOQLから抽出可能かを判定
@@ -29,7 +34,25 @@ public class ExtractFileLogic {
 	 * @param soql 実行するSOQL
 	 */
 	public void init(Path directory, String soql) {
-		targetObject = Base64Object.get(soql);
+		init(directory, soql, true);
+	}
+
+	/**
+	 * SOQLから抽出可能かを判定
+	 * @param directory CSVファイルの出力先
+	 * @param soql 実行するSOQL
+	 * @param instanceName インスタンスURL
+	 * @param sessionKey セッションID
+	 */
+	public void init(Path directory, String soql, String instanceName, String sessionKey) {
+		this.instanceName = instanceName;
+		this.sessionKey = sessionKey;
+		init(directory, soql, false);
+
+	}
+
+	private void init(Path directory, String soql, boolean base64) {
+		targetObject = Base64Object.get(soql, !base64);
 		firstRecord = true;
 
 		if(targetObject.isPresent()) {
@@ -72,14 +95,20 @@ public class ExtractFileLogic {
 
 		// 出力先を構築
 		String name = record.get(fileName);
-		String extention = record.get(extentionName);
-		File file = new File(folder, name + "." + extention);
+		if(record.containsKey(extentionName)){
+			name += "." + record.get(extentionName);
+		}
+		File file = new File(folder, name);
 
 		// ファイルを出力
-		ExtractFileUtils.export(file, record.get(bodyName));
-
-		// 元の項目は空にする
-		record.put(bodyName, "");
+		if(targetObject.get().isUndecode()) {
+			URL url = new URL(String.format(REST_URL, instanceName, targetObject.get().objectName, record.get(idName), targetObject.get().bodyName));
+			ExtractFileUtils.export(file, url, sessionKey);
+		} else {
+			ExtractFileUtils.export(file, record.get(bodyName));
+			// 元の項目は空にする
+			record.put(bodyName, "");
+		}
 
 	}
 

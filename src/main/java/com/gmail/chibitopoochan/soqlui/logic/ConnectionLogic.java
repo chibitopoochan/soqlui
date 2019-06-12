@@ -156,4 +156,22 @@ public class ConnectionLogic {
 		return size;
 	}
 
+	public String getServerURL() {
+		String url = "";
+		if(connector.isPresent()) {
+			url = connector.get().getServerURL();
+			url = url.substring(0, url.indexOf("/services"));
+			url = url.replace("https://", "");
+		}
+		return url;
+	}
+
+	public String getSessionId() {
+		String sessionId = "";
+		if(connector.isPresent()) {
+			sessionId = connector.get().getSessionId();
+		}
+		return sessionId;
+	}
+
 }

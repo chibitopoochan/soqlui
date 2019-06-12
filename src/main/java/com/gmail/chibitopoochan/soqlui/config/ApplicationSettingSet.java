@@ -51,6 +51,8 @@ public class ApplicationSettingSet {
 	private static final String SETTINGS_DECORATION = "decolation";
 	private static final String SETTINGS_DEBUG_MODE = "debugMode";
 	private static final String SETTINGS_LOCAL = "local";
+	private static final String SETTINGS_BASE64 = "base64";
+	private static final String SETTINGS_REST_URL = "restBlobURL";
 
 	// Singletonのインスタンス
 	private static ApplicationSettingSet instance;
@@ -243,6 +245,15 @@ public class ApplicationSettingSet {
 		writer.writeCharacters(String.valueOf(setting.isDebugMode()));
 		writer.writeEndElement();
 
+		// ダウンロード方法
+		writer.writeStartElement("", SETTINGS_BASE64, "");
+		writer.writeCharacters(String.valueOf(setting.isUseBase64()));
+		writer.writeEndElement();
+
+		writer.writeStartElement("", SETTINGS_REST_URL, "");
+		writer.writeCharacters(String.valueOf(setting.getRestBlobURL()));
+		writer.writeEndElement();
+
 		writer.writeEndElement();
 
 	}
@@ -350,6 +361,14 @@ public class ApplicationSettingSet {
 
 			case SETTINGS_LOCAL:
 				setting.setLocal(reader.getElementText());
+				break;
+
+			case SETTINGS_BASE64:
+				setting.setUseBase64(Boolean.valueOf(reader.getElementText()));
+				break;
+
+			case SETTINGS_REST_URL:
+				setting.setRestBlobURL(reader.getElementText());
 				break;
 
 			}

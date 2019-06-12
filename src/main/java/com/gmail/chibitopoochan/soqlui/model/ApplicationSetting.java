@@ -12,11 +12,13 @@ public class ApplicationSetting {
 	private String proxyLoginURL;
 	private String proxyBackURL;
 	private String proxyTargetURL;
+	private String restBlobURL;
 	private String local;
 	private boolean useCSS;
 	private boolean useEditor;
 	private boolean useDecorator;
 	private boolean debugMode;
+	private boolean useBase64;
 
 	/**
 	 * @return tabCount
@@ -204,6 +206,30 @@ public class ApplicationSetting {
 	}
 	public void setLocal(String text) {
 		this.local = text;
+	}
+	/**
+	 * @return useBase64
+	 */
+	public boolean isUseBase64() {
+		return useBase64;
+	}
+	/**
+	 * @param useBase64 セットする useBase64
+	 */
+	public void setUseBase64(boolean useBase64) {
+		this.useBase64 = useBase64;
+	}
+	/**
+	 * @return restBlobURL
+	 */
+	public String getRestBlobURL() {
+		return restBlobURL;
+	}
+	/**
+	 * @param restBlobURL セットする restBlobURL
+	 */
+	public void setRestBlobURL(String restBlobURL) {
+		this.restBlobURL = restBlobURL;
 	}
 
 }

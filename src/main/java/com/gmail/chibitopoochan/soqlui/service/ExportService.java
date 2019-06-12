@@ -147,6 +147,20 @@ public class ExportService extends Service<Void> {
 		return join;
 	}
 
+	private BooleanProperty base64 = new SimpleBooleanProperty(this, "base64");
+
+	public void setUseBase64(boolean use) {
+		base64.set(use);
+	}
+
+	public boolean isUseBase64() {
+		return base64.get();
+	}
+
+	public BooleanProperty useBase64() {
+		return base64;
+	}
+
 	private Path exportPath;
 
 	public void setExportPath(Path path) {
@@ -165,6 +179,7 @@ public class ExportService extends Service<Void> {
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
 		final boolean useJoin = isJoin();
+		final boolean useBase64 = isUseBase64();
 
 		return new Task<Void>(){
 
@@ -184,7 +199,11 @@ public class ExportService extends Service<Void> {
 					}
 
 					logger.info("Extract init");
-					useExtract.init(exportPath, useSOQL);
+					if(useBase64) {
+						useExtract.init(exportPath, useSOQL);
+					} else {
+						useExtract.init(exportPath, useSOQL, connectionLogic.get().getServerURL(), connectionLogic.get().getSessionId());
+					}
 
 					while(!recordList.isEmpty()) {
 						// ファイルを抽出

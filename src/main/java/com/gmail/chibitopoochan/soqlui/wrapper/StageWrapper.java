@@ -120,6 +120,10 @@ public class StageWrapper {
 		stage.show();
 	}
 
+	public void showAndWait() {
+		stage.showAndWait();
+	}
+
 	/**
 	 * {@link javafx.stage.Stage#getIcons()}をラップ
 	 * @param Image一覧

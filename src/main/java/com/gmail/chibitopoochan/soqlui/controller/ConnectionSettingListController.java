@@ -53,7 +53,7 @@ public class ConnectionSettingListController implements Initializable, Controlle
 	 */
 	public void newConfiguration() {
 		try {
-			manager.sceneOpen(Configuration.VIEW_SU03, Configuration.TITLE_SU03);
+			manager.sceneOpen(Configuration.VIEW_SU03, Configuration.TITLE_SU03, false);
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class ConnectionSettingListController implements Initializable, Controlle
 	public void editConfiguration() {
 		try {
 			manager.putParameter("configuration", settingList.getSelectionModel().selectedItemProperty().get());
-			manager.sceneOpen(Configuration.VIEW_SU03, Configuration.TITLE_SU03);
+			manager.sceneOpen(Configuration.VIEW_SU03, Configuration.TITLE_SU03, true);
 		} catch (IOException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();

@@ -142,7 +142,7 @@ public class SceneManager {
 	 * @param title 画面タイトルのリソース名
 	 * @throws IOException リソース取得時のエラー
 	 */
-	public void sceneOpen(String resource, String title) throws IOException {
+	public void sceneOpen(String resource, String title, boolean wait) throws IOException {
 		// 画面構成のロード
 		logger.debug(String.format("FXML loading... [%s]", resource));
 		loader.recreate();
@@ -164,7 +164,11 @@ public class SceneManager {
 
 		// 子画面の表示
 		logger.debug("Show window");
-		currentStage.show();
+		if(wait) {
+			currentStage.showAndWait();
+		} else {
+			currentStage.show();
+		}
 
 	}
 

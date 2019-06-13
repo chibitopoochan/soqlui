@@ -22,6 +22,7 @@ public interface Constants {
 			String MSG_001 = "MSG.001";
 			String MSG_002 = "MSG.002";
 			String MSG_003 = "MSG.003";
+			String MSG_004 = "MSG.004";
 		}
 
 	}
@@ -45,13 +46,14 @@ public interface Constants {
 		String VIEW_SU03 = "VIEW_SU03";
 		String VIEW_SU04 = "VIEW_SU04";
 		String VIEW_SU05 = "VIEW_SU05";
+		String VIEW_SU06 = "VIEW_SU06";
 
 		String TITLE_SU01 = "TITLE_SU01";
 		String TITLE_SU02 = "TITLE_SU02";
 		String TITLE_SU03 = "TITLE_SU03";
 		String TITLE_SU04 = "TITLE_SU04";
 		String TITLE_SU05 = "TITLE_SU05";
-
+		String TITLE_SU06 = "TITLE_SU06";
 
 	}
 

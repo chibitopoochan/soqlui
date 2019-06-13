@@ -226,7 +226,7 @@ public class MainController implements Initializable, Controller {
 	public void openApplicationSetting() {
 		try {
 			logger.debug("Open Window [Application Setting]");
-			manager.sceneOpen(Configuration.VIEW_SU05, Configuration.TITLE_SU05);
+			manager.sceneOpen(Configuration.VIEW_SU05, Configuration.TITLE_SU05, false);
 		} catch (IOException e) {
 			logger.error("Open window error", e);
 		}
@@ -238,7 +238,7 @@ public class MainController implements Initializable, Controller {
 	public void openConnectSetting() {
 		try {
 			logger.debug("Open Window [Connection Setting]");
-			manager.sceneOpen(Configuration.VIEW_SU02, Configuration.TITLE_SU02);
+			manager.sceneOpen(Configuration.VIEW_SU02, Configuration.TITLE_SU02, false);
 		} catch (IOException e) {
 			logger.error("Open window error", e);
 		}
@@ -250,7 +250,7 @@ public class MainController implements Initializable, Controller {
 	public void openProxySetting() {
 		try {
 			logger.debug("Open Window [Proxy Setting]");
-			manager.sceneOpen(Configuration.VIEW_SU04, Configuration.TITLE_SU04);
+			manager.sceneOpen(Configuration.VIEW_SU04, Configuration.TITLE_SU04, false);
 		} catch (IOException e) {
 			logger.error("Open window error", e);
 		}

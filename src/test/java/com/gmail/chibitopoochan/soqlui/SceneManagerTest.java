@@ -84,7 +84,7 @@ public class SceneManagerTest {
 	 */
 	@Test public void testSceneOpen() throws IOException {
 		// 実行
-		manager.sceneOpen(Configuration.VIEW_SU01, title);
+		manager.sceneOpen(Configuration.VIEW_SU01, title, false);
 
 		// 画面構成のロード
 		assertThat(loader.getLocation(), is(location));

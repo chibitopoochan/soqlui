@@ -3,6 +3,7 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
+import com.gmail.chibitopoochan.soqlui.controller.MultiLineDialogController;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
@@ -21,8 +23,11 @@ import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
+import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
+import com.gmail.chibitopoochan.soqlui.util.Constants.Message.Information;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
+import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
 import com.sforce.ws.ConnectionException;
 
@@ -35,7 +40,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -51,6 +55,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private static final boolean USE_ADVANCE_SOQL = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
 	private static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
 	private static final Logger logger = LogUtils.getLogger(ConnectButtonPartsInitializer.class);
+
 	private static final Pattern BIND_PATTERN = Pattern.compile(":[a-zA-Z]+");
 	private static final Pattern WILDCARD_PATTERN = Pattern.compile("select\\s+\\*\\s+from\\s+([_a-zA-Z0-9]+).*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
 	private static final Pattern WILDCARD_WHILE_PATTERN = Pattern.compile(".*\\s+from\\s+[_a-zA-Z0-9]+\\s+(.*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
@@ -82,6 +87,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private Optional<File> exportHistory = Optional.empty();
 	private ObservableList<DescribeSObject> objectList;
 	private ConnectionLogic logic;
+	private SceneManager manager;
 
 	@Override
 	public void setController(MainController controller) {
@@ -104,6 +110,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.logic = controller.getConnectService().getConnectionLogic();
 		this.soqlWebArea = controller.getSoqlWebArea();
 		this.useTooling = controller.getUseTooling();
+		this.manager = controller.getManager();
 	}
 
 	public void initialize() {
@@ -269,16 +276,23 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		// SOQLを再構築
 		StringBuffer workSOQL = new StringBuffer();
 		while(bindMatcher.find()) {
+			try {
+				logger.debug("Open Window [Connection Setting]");
+				manager.putParameter(MultiLineDialogController.MESSAGE, MessageHelper.getMessage(Information.MSG_004, bindMatcher.group()));
+				manager.sceneOpen(Configuration.VIEW_SU06, Configuration.TITLE_SU06, true);
+			} catch (IOException e) {
+				logger.error("Open window error", e);
+			}
+
 			// バインド変数の入力
-			TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("バインド変数");
-			dialog.setHeaderText("バインド変数に代入する値を入力してください");
-			dialog.setContentText("変数"+bindMatcher.group());
-			Optional<String> result = dialog.showAndWait();
+			Optional<String> result = Optional.ofNullable(manager.getParameters().get(MultiLineDialogController.RESULT));
 
 			// SOQLの組み換え
 			if(result.isPresent()) {
-				bindMatcher.appendReplacement(workSOQL, String.format("'%s'", result.get()));
+				List<String> varList = Arrays.asList(result.get().split("\n"));
+				String replaceText = varList.stream().map(v -> String.format("'%s'",v )).collect(Collectors.joining(","));
+				replaceText = varList.size() > 1 ? String.format("(%s)", replaceText) : replaceText;
+				bindMatcher.appendReplacement(workSOQL, replaceText);
 			} else {
 				return Optional.empty();
 			}

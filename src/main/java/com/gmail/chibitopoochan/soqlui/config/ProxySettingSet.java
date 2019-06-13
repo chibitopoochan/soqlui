@@ -104,7 +104,7 @@ public class ProxySettingSet {
 
 			// 利用有無
 			writer.writeStartElement("", PROXY_USING, "");
-			writer.writeCharacters(proxy.getUseProxy());
+			writer.writeCharacters(Boolean.toString(proxy.useProxy()));
 			writer.writeEndElement();
 
 			// ユーザ名
@@ -183,7 +183,7 @@ public class ProxySettingSet {
 		case XMLStreamConstants.START_ELEMENT:
 			switch(reader.getLocalName()) {
 			case PROXY_USING:
-				proxy.setUseProxy(reader.getElementText());
+				proxy.setUseProxy(Boolean.getBoolean(reader.getElementText()));
 				break;
 
 			case PROXY_USERNAME:

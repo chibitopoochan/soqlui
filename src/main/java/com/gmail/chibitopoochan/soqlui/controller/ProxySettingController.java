@@ -47,7 +47,7 @@ public class ProxySettingController implements Initializable, Controller {
 		// Proxy情報を設定
 		logic = new ProxySettingLogic();
 		ProxySetting setting = logic.getProxySetting();
-		useProxy.setSelected(Boolean.valueOf(setting.getUseProxy()));
+		useProxy.setSelected(setting.useProxy());
 		host.setText(setting.getHost());
 		port.setText(setting.getPort());
 		username.setText(setting.getUsername());
@@ -78,7 +78,7 @@ public class ProxySettingController implements Initializable, Controller {
 
 		// 保存
 		ProxySetting setting = new ProxySetting();
-		setting.setUseProxy(Boolean.toString(useProxy.isSelected()));
+		setting.setUseProxy(useProxy.isSelected());
 		setting.setHost(host.getText());
 		setting.setPort(port.getText());
 		setting.setUsername(username.getText());

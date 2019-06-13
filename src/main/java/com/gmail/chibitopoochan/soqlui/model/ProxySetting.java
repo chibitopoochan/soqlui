@@ -6,7 +6,7 @@ public class ProxySetting {
 	private String password;
 	private String host;
 	private int port;
-	private String useProxy;
+	private boolean useProxy;
 
 	/**
 	 * @return username
@@ -75,14 +75,14 @@ public class ProxySetting {
 	/**
 	 * @return useProxy
 	 */
-	public String getUseProxy() {
+	public boolean useProxy() {
 		return useProxy;
 	}
 
 	/**
 	 * @param useProxy セットする useProxy
 	 */
-	public void setUseProxy(String useProxy) {
+	public void setUseProxy(boolean useProxy) {
 		this.useProxy = useProxy;
 	}
 

@@ -2,6 +2,9 @@ package com.gmail.chibitopoochan.soqlui.logic;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
@@ -27,6 +30,7 @@ public class ExtractFileLogic {
 	private String idName;
 	private String instanceName;
 	private String sessionKey;
+	private Proxy proxy = Proxy.NO_PROXY;
 
 	/**
 	 * SOQLから抽出可能かを判定
@@ -47,6 +51,21 @@ public class ExtractFileLogic {
 	public void init(Path directory, String soql, String instanceName, String sessionKey) {
 		this.instanceName = instanceName;
 		this.sessionKey = sessionKey;
+		init(directory, soql, false);
+
+	}
+
+	/**
+	 * SOQLから抽出可能かを判定
+	 * @param directory CSVファイルの出力先
+	 * @param soql 実行するSOQL
+	 * @param instanceName インスタンスURL
+	 * @param sessionKey セッションID
+	 */
+	public void init(Path directory, String soql, String instanceName, String sessionKey, String host, int port) {
+		this.instanceName = instanceName;
+		this.sessionKey = sessionKey;
+		this.proxy  = new Proxy(Type.HTTP, new InetSocketAddress(host, port));
 		init(directory, soql, false);
 
 	}
@@ -103,7 +122,7 @@ public class ExtractFileLogic {
 		// ファイルを出力
 		if(targetObject.get().isUndecode()) {
 			URL url = new URL(String.format(REST_URL, instanceName, targetObject.get().objectName, record.get(idName), targetObject.get().bodyName));
-			ExtractFileUtils.export(file, url, sessionKey);
+			ExtractFileUtils.export(file, url, sessionKey, proxy);
 		} else {
 			ExtractFileUtils.export(file, record.get(bodyName));
 			// 元の項目は空にする

@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ExtractFileLogic;
+import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
+import com.gmail.chibitopoochan.soqlui.model.ProxySetting;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
@@ -171,15 +173,32 @@ public class ExportService extends Service<Void> {
 		return exportPath;
 	}
 
+	/**
+	 * プロキシ情報のプロパティ
+	 */
+	private ObjectProperty<ProxySettingLogic> proxyLogic = new SimpleObjectProperty<ProxySettingLogic>(this, "proxyLogic",new ProxySettingLogic());
+	public void setProxyLogic(ProxySettingLogic logic) {
+		proxyLogic.set(logic);
+	}
+
+	public ProxySettingLogic getProxyLogic() {
+		return proxyLogic.get();
+	}
+
+	public ObjectProperty<ProxySettingLogic> proxyLogicProperty() {
+		return proxyLogic;
+	}
+
 	@Override
 	protected Task<Void> createTask() {
-		final ConnectionLogic useLogic = connectionLogic.get();
-		final ExtractFileLogic useExtract = extractLogic.get();
+		final ConnectionLogic useLogic = getConnectionLogic();
+		final ExtractFileLogic useExtract = getExtractLogic();
 		final String useSOQL = getSOQL();
 		final boolean useAll = isAll();
 		final int useBatchSize = getIntBatchSize();
 		final boolean useJoin = isJoin();
 		final boolean useBase64 = isUseBase64();
+		final ProxySettingLogic useProxy = getProxyLogic();
 
 		return new Task<Void>(){
 
@@ -202,7 +221,19 @@ public class ExportService extends Service<Void> {
 					if(useBase64) {
 						useExtract.init(exportPath, useSOQL);
 					} else {
-						useExtract.init(exportPath, useSOQL, connectionLogic.get().getServerURL(), connectionLogic.get().getSessionId());
+						ProxySetting proxy = useProxy.getProxySetting();
+						if(proxy.useProxy()) {
+							useExtract.init(
+									 exportPath, useSOQL
+									,connectionLogic.get().getServerURL()
+									,connectionLogic.get().getSessionId()
+									,proxy.getHost(), proxy.getPortNumber());
+						} else {
+							useExtract.init(
+									 exportPath, useSOQL
+									,connectionLogic.get().getServerURL()
+									,connectionLogic.get().getSessionId());
+						}
 					}
 
 					while(!recordList.isEmpty()) {

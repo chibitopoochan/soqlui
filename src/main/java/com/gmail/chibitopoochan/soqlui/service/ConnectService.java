@@ -164,7 +164,7 @@ public class ConnectService extends Service<Void> {
 					logger.info("Connection Disconnect");
 
 					ProxySetting proxy = useProxy.getProxySetting();
-					if(Boolean.valueOf(proxy.getUseProxy())) {
+					if(proxy.useProxy()) {
 						// Proxyが有効ならProxy経由でSalesforceへ接続
 						useLogic.connect(useSetting, proxy, useTooling, LOCAL_NAME);
 					} else {

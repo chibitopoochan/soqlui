@@ -43,8 +43,10 @@
 	          </Menu>
 	          <Menu mnemonicParsing="false" text="ヘルプ">
 	            <items>
-	              <MenuItem mnemonicParsing="false" onAction="#onHelp" text="SOQLUI Help" />
-                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
+	              <MenuItem mnemonicParsing="false" onAction="#onHelp" text="ヘルプの表示" />
+                     <MenuItem mnemonicParsing="false" onAction="#onChangeLog" text="変更履歴" />
+                     <MenuItem mnemonicParsing="false" onAction="#onLicense" text="ライセンス" />
+                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="SOQLUIについて" />
 	            </items>
 	          </Menu>
 	        </menus>

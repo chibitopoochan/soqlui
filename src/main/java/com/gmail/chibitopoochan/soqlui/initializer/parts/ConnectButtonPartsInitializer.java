@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.controller.MultiLineDialogController;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionSettingLogic;
 import com.gmail.chibitopoochan.soqlui.model.DescribeField;
@@ -23,11 +22,9 @@ import com.gmail.chibitopoochan.soqlui.model.DescribeSObject;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
-import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
-import com.gmail.chibitopoochan.soqlui.util.Constants.Message.Information;
+import com.gmail.chibitopoochan.soqlui.util.DialogUtils;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
-import com.gmail.chibitopoochan.soqlui.util.MessageHelper;
 import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
 import com.sforce.ws.ConnectionException;
 
@@ -87,7 +84,6 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private Optional<File> exportHistory = Optional.empty();
 	private ObservableList<DescribeSObject> objectList;
 	private ConnectionLogic logic;
-	private SceneManager manager;
 
 	@Override
 	public void setController(MainController controller) {
@@ -110,7 +106,6 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.logic = controller.getConnectService().getConnectionLogic();
 		this.soqlWebArea = controller.getSoqlWebArea();
 		this.useTooling = controller.getUseTooling();
-		this.manager = controller.getManager();
 	}
 
 	public void initialize() {
@@ -276,16 +271,8 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		// SOQLを再構築
 		StringBuffer workSOQL = new StringBuffer();
 		while(bindMatcher.find()) {
-			try {
-				logger.debug("Open Window [Connection Setting]");
-				manager.putParameter(MultiLineDialogController.MESSAGE, MessageHelper.getMessage(Information.MSG_004, bindMatcher.group()));
-				manager.sceneOpen(Configuration.VIEW_SU06, Configuration.TITLE_SU06, true);
-			} catch (IOException e) {
-				logger.error("Open window error", e);
-			}
-
 			// バインド変数の入力
-			Optional<String> result = Optional.ofNullable(manager.getParameters().get(MultiLineDialogController.RESULT));
+			Optional<String> result = DialogUtils.showMultiLineDialog(bindMatcher.group());
 
 			// SOQLの組み換え
 			if(result.isPresent()) {

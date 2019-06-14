@@ -31,7 +31,6 @@ import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellUtil;
 
 import com.gmail.chibitopoochan.soqlexec.model.FieldMetaInfo;
-import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.Format;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
@@ -45,6 +44,7 @@ import com.gmail.chibitopoochan.soqlui.model.ResultSet;
 import com.gmail.chibitopoochan.soqlui.model.SObjectRecord;
 import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
+import com.gmail.chibitopoochan.soqlui.util.DialogUtils;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
 import com.gmail.chibitopoochan.soqlui.util.format.ExcelFormatDecoration;
@@ -71,7 +71,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.DirectoryChooser;
 
 /**
  * コンテキストメニューの初期設定
@@ -112,8 +111,6 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 	private ConnectService connectService;
 	private ProgressIndicator progress;
 
-	private SceneManager manager;
-
 	@Override
 	public void setController(MainController controller) {
 		this.resultTable = controller.getResultTable();
@@ -129,7 +126,6 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		this.initFieldService = new FieldServiceInitializer();
 		initFieldService.setController(controller);
 
-		this.manager = controller.getManager();
 		this.settingLogic = controller.getSetting();
 		this.connectService = controller.getConnectService();
 		this.progress = controller.getFieldProgressIndicator();
@@ -204,9 +200,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		Format format = Format.getInstance();
 
 		// ダイアログの生成
-		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("フォルダへの保存");
-		File dir = chooser.showDialog(manager.getStageStack().peek().unwrap());
+		File dir = DialogUtils.showDirectoryChooser();
 
 		if(dir == null) return;
 

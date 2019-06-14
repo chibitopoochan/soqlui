@@ -36,10 +36,8 @@ public interface Constants {
 		String PROXY_PATH = "PROXY_PATH";
 		String FORMAT_PATH = "FORMAT_PATH";
 		String SETTING_PATH = "SETTING_PATH";
-		String HELP_PATH = "HELP_PATH";
 
 		String ICON = "APPLICATION_ICON";
-		String VERSION = "VERSION";
 
 		String VIEW_SU01 = "VIEW_SU01";
 		String VIEW_SU02 = "VIEW_SU02";
@@ -47,6 +45,7 @@ public interface Constants {
 		String VIEW_SU04 = "VIEW_SU04";
 		String VIEW_SU05 = "VIEW_SU05";
 		String VIEW_SU06 = "VIEW_SU06";
+		String VIEW_SU07 = "VIEW_SU07";
 
 		String TITLE_SU01 = "TITLE_SU01";
 		String TITLE_SU02 = "TITLE_SU02";
@@ -54,6 +53,12 @@ public interface Constants {
 		String TITLE_SU04 = "TITLE_SU04";
 		String TITLE_SU05 = "TITLE_SU05";
 		String TITLE_SU06 = "TITLE_SU06";
+		String TITLE_SU07 = "TITLE_SU07";
+
+		String URL_ABOUT = "URL_ABOUT";
+		String URL_HELP = "URL_HELP";
+		String URL_LICENSE = "URL_LICENSE";
+		String URL_CHANGELOG = "URL_CHANGELOG";
 
 	}
 

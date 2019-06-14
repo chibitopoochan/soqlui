@@ -151,6 +151,11 @@ public class SceneManager {
 		// 子画面の設定
 		StageWrapper parentStage = stageStack.peek();
 		StageWrapper currentStage = StageWrapper.newInstance(StageStyle.DECORATED);
+		if(USE_DECORATOR) {
+			currentStage = StageWrapper.newInstance(StageStyle.DECORATED);
+		} else {
+			currentStage = StageWrapper.newInstance(StageStyle.UNDECORATED);
+		}
 		currentStage.setScene(loader.load().getScene());
 		currentStage.initOwner(parentStage.getScene().getWindow());
 		currentStage.initModality(Modality.WINDOW_MODAL);
@@ -158,6 +163,20 @@ public class SceneManager {
 		currentStage.setTitle(config.getString(title));
 		stageStack.push(currentStage);
 		logger.debug(String.format("New stage[%s]",title));
+
+		// 子画面のスタイルを設定
+		final ObservableList<String> style = currentStage.getScene().getStylesheets();
+		if(style != null) {
+			style.clear();
+		}
+		if(USE_CSS) {
+			style.addAll("/view/css/main.css");
+		}
+
+		// アイコンの設定
+		for(String icon : config.getString(Configuration.ICON).split(";")) {
+			currentStage.getIcons().add(new Image(icon));
+		}
 
 		// コントローラを設定
 		controllerStack.push(loader.getController());

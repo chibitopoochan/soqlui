@@ -4,6 +4,26 @@
 
 All notable changes to this tool will be documented in this file.
 
+## [Ver1.4]
+
+__不具合修正__
+
+108 REST APIのプロキシ対応
+
+105 Type項目の取得を修正
+
+99 20MB以上のエクスポートに対応（REST API）
+
+__機能追加__
+
+101 エクスポート時にrequest.txtを作成
+
+98 実行結果からの項目定義取得
+
+103 プレビュー画面の追加
+
+102 バインド変数の複数行対応
+
 ## [Ver1.3]
 
 __不具合修正__
@@ -76,11 +96,17 @@ __機能追加__
 
 35 項目一覧の取得項目拡大
 
+[Ver1.4]:
+<https://github.com/mametochoko/soqlui/compare/v1.3...HEAD>
+
+[Ver1.3]:
+<https://github.com/mametochoko/soqlui/compare/v1.2...v1.3>
+
 [Ver1.2]:
-<https://github.com/mametochoko/soqlui/compare/v1.1...HEAD>
+<https://github.com/mametochoko/soqlui/compare/v1.1...v1.2>
 
 [Ver1.1]:
-<https://github.com/mametochoko/soqlui/compare/v1.0...HEAD>
+<https://github.com/mametochoko/soqlui/compare/v1.0...v.1.1>
 
 [Ver1.0]:
-<https://github.com/mametochoko/soqlui/compare/v0.1.0...HEAD>
+<https://github.com/mametochoko/soqlui/compare/v0.1.0...v1.0>

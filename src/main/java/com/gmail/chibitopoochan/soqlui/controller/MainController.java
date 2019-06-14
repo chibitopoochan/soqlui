@@ -1,13 +1,11 @@
 package com.gmail.chibitopoochan.soqlui.controller;
 
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -33,8 +31,8 @@ import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
-import com.gmail.chibitopoochan.soqlui.util.Constants;
 import com.gmail.chibitopoochan.soqlui.util.Constants.Configuration;
+import com.gmail.chibitopoochan.soqlui.util.DialogUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 
 import javafx.beans.property.BooleanProperty;
@@ -45,8 +43,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -62,7 +58,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class MainController implements Initializable, Controller {
@@ -261,24 +256,17 @@ public class MainController implements Initializable, Controller {
 	 * ファイルへの保存
 	 */
 	public void onSave() {
-		// ダイアログの生成
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("ファイルへの保存");
-		chooser.setSelectedExtensionFilter(new ExtensionFilter("soql file", "soql"));
-		chooser.setInitialFileName("untitled."+connectOption.getSelectionModel().getSelectedItem()+".soql");
-
 		// 保存先の取得
-		File saveFile = chooser.showSaveDialog(manager.getStageStack().peek().unwrap());
+		File saveFile = DialogUtils.showSaveDialog(
+				 "untitled."+connectOption.getSelectionModel().getSelectedItem()+".soql"
+				,new ExtensionFilter("soql file", "soql"));
 		if(saveFile == null) return;
 
 		// ファイルの保存
 		logger.debug("Save to " + saveFile.getAbsolutePath());
 		try(FileWriter writer = new FileWriter(saveFile)) {
 			writer.write(soqlArea.getText());
-			Alert resultDialog = new Alert(AlertType.INFORMATION);
-			resultDialog.setContentText("ファイルを保存しました。");
-			resultDialog.setTitle("確認");
-			resultDialog.showAndWait();
+			DialogUtils.showAlertDialog("ファイルを保存しました。");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -289,35 +277,28 @@ public class MainController implements Initializable, Controller {
 	 * ヘルプの表示
 	 */
 	public void onHelp() {
-		Desktop desktop = Desktop.getDesktop();
-		try {
-			String resource = config.getString(Constants.Configuration.HELP_PATH);
-			File help = Paths.get(resource).toFile();
-
-			logger.debug("Open help page " + help.getAbsolutePath());
-			desktop.open(help);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException("cannot open a browser");
-		}
-
+		DialogUtils.showWebDialog(config.getString(Configuration.URL_HELP));
 	}
 
+	/**
+	 * 概要の表示
+	 */
 	public void onAbout() {
-		StringBuilder about = new StringBuilder();
-		about
-		.append("SOQLUI  ")
-		.append(config.getString(Constants.Configuration.VERSION)).append(System.lineSeparator())
-		.append(System.lineSeparator())
-		.append("MIT License").append(System.lineSeparator())
-		.append("Copyright (c) 2017 chibitopoochan");
+		DialogUtils.showWebDialog(config.getString(Configuration.URL_ABOUT));
+	}
 
-		Alert resultDialog = new Alert(AlertType.INFORMATION);
-		resultDialog.setHeaderText(null);
-		resultDialog.setTitle("SOQLUIについて");
-		resultDialog.setContentText(about.toString());
-		resultDialog.showAndWait();
+	/**
+	 * 変更履歴の表示
+	 */
+	public void onChangeLog() {
+		DialogUtils.showWebDialog(config.getString(Configuration.URL_CHANGELOG));
+	}
 
+	/**
+	 * ライセンスの表示
+	 */
+	public void onLicense() {
+		DialogUtils.showWebDialog(config.getString(Configuration.URL_LICENSE));
 	}
 
 	/**
@@ -339,10 +320,6 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void onClose() {
 		manager.sceneClose();
-	}
-
-	public SceneManager getManager() {
-		return manager;
 	}
 
 	/**

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,6 +33,7 @@ import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellUtil;
 
 import com.gmail.chibitopoochan.soqlexec.model.FieldMetaInfo;
+import com.gmail.chibitopoochan.soqlexec.util.Constants;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.config.Format;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
@@ -79,6 +82,7 @@ import javafx.scene.input.MouseEvent;
 public class ContextPartInitializer implements PartsInitializer<MainController> {
 	private static final String URL_ENCODE = "UTF-8";
 	private static final String RECORD_ID = "id";
+	private Pattern fromPattern = Pattern.compile(Constants.SOQL.Pattern.FROM_FIELD, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
 	public static final String LOGIN_URL = ApplicationSettingSet.getInstance().getSetting().getLoginURL();
 	public static final String OBJECT_URL = ApplicationSettingSet.getInstance().getSetting().getObjectURL();
 	public static final String PROXY_URL = ApplicationSettingSet.getInstance().getSetting().getProxyLoginURL();
@@ -159,7 +163,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		exportExcelFormat.setOnAction(e -> exportExcelFormat(e.getSource()));
 		browseRecord.setOnAction(e -> browse(e.getSource()));
 		browseProxy.setOnAction(e -> browseProxyLogin(e.getSource()));
-		openFieldList.setOnAction(e -> openFieldList());
+		openFieldList.setOnAction(e -> openFieldList(e.getSource()));
 
 		// コンテキストメニューの登録
 		ContextMenu contextMenu = new ContextMenu();
@@ -179,7 +183,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 	}
 
-	private void openFieldList() {
+	private void openFieldList(Object source) {
 		// 変数をバインド
 		progress.progressProperty().unbind();
 		progress.visibleProperty().unbind();
@@ -187,8 +191,24 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		progress.visibleProperty().bind(service.runningProperty());
 
 		initFieldService.initialize();
-		service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
-		service.start();
+
+		MenuItem item = (MenuItem) source;
+		TableView<?> table = (TableView<?>) item.getParentPopup().getUserData();
+		if(table == sObjectList) {
+			service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
+		} else if(table == resultTable){
+			ResultSet resultSet = (ResultSet) resultTable.getUserData();
+			Matcher match = fromPattern.matcher(resultSet.getSOQL());
+			if(match.find()){
+				service.setSObject(match.group(1));
+			}
+		}
+
+		if(service.getSObject() == null) {
+			DialogUtils.showAlertDialog("オブジェクトが見つかりません。");
+		} else {
+			service.start();
+		}
 
 	}
 
@@ -288,7 +308,7 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 		} else if(table == fieldList) {
 			context.getItems().addAll(createSOQL, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, exportExcelFormat);
 		} else {
-			context.getItems().addAll(createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, browseRecord, browseProxy);
+			context.getItems().addAll(openFieldList, createWithSelect, copyNormal, copyWithCSV, copyWithExcel, copyNoHead, browseRecord, browseProxy);
 		}
 		context.show(table, 0, 0);
 

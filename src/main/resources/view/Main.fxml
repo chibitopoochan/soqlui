@@ -65,11 +65,11 @@
       </HBox>
    </top>
    <center>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="753.0" prefWidth="523.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.500780031201248" orientation="VERTICAL" prefHeight="753.0" prefWidth="523.0" BorderPane.alignment="CENTER">
         <items>
             <VBox>
                <children>
-                  <TabPane fx:id="queryTabArea" prefHeight="35.0" prefWidth="490.0" tabClosingPolicy="UNAVAILABLE" />
+                  <TabPane fx:id="queryTabArea" maxHeight="30.0" minHeight="30.0" tabClosingPolicy="UNAVAILABLE" />
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" VBox.vgrow="ALWAYS">
                      <children>
                         <WebView fx:id="soqlWebArea" layoutX="-124.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -140,15 +140,15 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefWidth="100.0">
                <children>
-                  <TabPane fx:id="tabArea" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" />
+                  <TabPane fx:id="tabArea" minHeight="30.0" tabClosingPolicy="ALL_TABS" />
                   <TextField fx:id="resultSearch" promptText="検索...">
                      <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </VBox.margin>
                   </TextField>
-                  <TableView fx:id="resultTable" />
+                  <TableView fx:id="resultTable" VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets bottom="5.0" top="5.0" />
@@ -161,7 +161,7 @@
       </SplitPane>
    </center>
    <left>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.49765990639625585" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
          <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
@@ -201,35 +201,37 @@
                   </TableView>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox>
                <children>
-                  <TabPane fx:id="fieldTabArea" prefHeight="150.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <TabPane fx:id="fieldTabArea" minHeight="30.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></TabPane>
+                  <HBox minHeight="25.0">
                      <children>
                         <Label text="項目">
                            <HBox.margin>
-                              <Insets bottom="5.0" top="5.0" />
+                              <Insets />
                            </HBox.margin>
                         </Label>
                         <Label text="sObject :">
                            <HBox.margin>
-                              <Insets left="5.0" right="5.0" top="5.0" />
+                              <Insets left="5.0" right="5.0" />
                            </HBox.margin>
                         </Label>
-                        <Label fx:id="objectName" text="None">
-                           <padding>
-                              <Insets bottom="5.0" top="5.0" />
-                           </padding>
-                        </Label>
+                        <Label fx:id="objectName" text="None" />
                         <ProgressIndicator fx:id="fieldProgressIndicator" visible="false" />
                      </children>
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding>
                   </HBox>
                   <TextField fx:id="columnSearch" promptText="検索...">
                      <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets />
                      </VBox.margin>
                   </TextField>
-                  <TableView fx:id="fieldList" />
+                  <TableView fx:id="fieldList" maxHeight="1.7976931348623157E308" />
                </children>
             </VBox>
          </items>

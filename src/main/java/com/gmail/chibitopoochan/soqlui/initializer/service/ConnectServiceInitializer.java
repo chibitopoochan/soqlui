@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -58,6 +59,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 
 	private Label objectName;
 
+	private TabPane tabArea;
+
 	@Override
 	public void setController(MainController controller) {
 		this.service = controller.getConnectService();
@@ -75,6 +78,7 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 		this.export = controller.getExport();
 		this.cancel = controller.getCancel();
 		this.withExecute.bind(controller.withExecuteProperty());
+		this.tabArea = controller.getFieldTabArea();
 	}
 
 	@Override
@@ -109,6 +113,8 @@ public class ConnectServiceInitializer implements ServiceInitializer<MainControl
 				fieldList.getItems().clear();
 				objectName.setText("None");
 				columnSearch.setDisable(true);
+
+				tabArea.getTabs().clear();
 
 			} else {
 				// ボタン等を制御

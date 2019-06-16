@@ -8,6 +8,10 @@ All notable changes to this tool will be documented in this file.
 
 __不具合修正__
 
+104 切断時のタブ制御を修正
+
+106 画面サイズ変更時のレイアウトを修正
+
 108 REST APIのプロキシ対応
 
 105 Type項目の取得を修正
@@ -15,8 +19,6 @@ __不具合修正__
 99 20MB以上のエクスポートに対応（REST API）
 
 __機能追加__
-
-101 エクスポート時にrequest.txtを作成
 
 98 実行結果からの項目定義取得
 

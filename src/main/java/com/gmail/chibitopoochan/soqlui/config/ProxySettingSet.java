@@ -183,7 +183,7 @@ public class ProxySettingSet {
 		case XMLStreamConstants.START_ELEMENT:
 			switch(reader.getLocalName()) {
 			case PROXY_USING:
-				proxy.setUseProxy(Boolean.getBoolean(reader.getElementText()));
+				proxy.setUseProxy(Boolean.parseBoolean(reader.getElementText()));
 				break;
 
 			case PROXY_USERNAME:

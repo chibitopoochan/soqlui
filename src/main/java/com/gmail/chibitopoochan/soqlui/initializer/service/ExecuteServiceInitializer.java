@@ -89,7 +89,7 @@ public class ExecuteServiceInitializer implements ServiceInitializer<MainControl
 				});
 
 				resultSet.setSearchText("");
-				resultSet.setSOQL(service.getSOQL());
+				resultSet.setSOQL(service.getActualSOQL());
 
 				ObservableList<SObjectRecord> resultMasterList = FXCollections.observableArrayList();
 				resultMasterList.addAll(result.stream().map(SObjectRecord::new).collect(Collectors.toList()));

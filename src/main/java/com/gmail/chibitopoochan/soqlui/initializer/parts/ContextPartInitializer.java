@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -558,8 +559,10 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 			rowList.add(new ArrayList<>(columnList));
 			columnList.clear();
 		}
+
+		Optional<Integer> leftColumnNumber = positionList.stream().map(p -> p.getColumn()).min(Comparator.naturalOrder());
 		positionList.forEach(position -> {
-			if(position.getColumn() == 0 && !columnList.isEmpty()) {
+			if(position.getColumn() == leftColumnNumber.orElse(0) && !columnList.isEmpty()) {
 				rowList.add(new ArrayList<>(columnList));
 				columnList.clear();
 			}

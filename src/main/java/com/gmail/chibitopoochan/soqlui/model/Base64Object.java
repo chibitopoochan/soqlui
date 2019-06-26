@@ -1,4 +1,4 @@
-package com.gmail.chibitopoochan.soqlui.logic;
+package com.gmail.chibitopoochan.soqlui.model;
 
 import java.util.Optional;
 
@@ -7,11 +7,11 @@ public class Base64Object {
 	private static final Base64Object DOCUMENT = new Base64Object("Document","Name", "Type", "Body");
 	private static final Base64Object ATTACHMENT = new Base64Object("Attachment","Name", "", "Body");
 
-	final String objectName;
-	final String fileName;
-	final String extentionName;
-	final String bodyName;
-	final String idName;
+	public final String objectName;
+	public final String fileName;
+	public final String extentionName;
+	public final String bodyName;
+	public final String idName;
 	private boolean undecode;
 
 	/**

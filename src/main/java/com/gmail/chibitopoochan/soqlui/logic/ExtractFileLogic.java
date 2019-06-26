@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
+import com.gmail.chibitopoochan.soqlui.model.Base64Object;
 import com.gmail.chibitopoochan.soqlui.util.ExtractFileUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 

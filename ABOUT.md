@@ -1,6 +1,6 @@
 **SOQLUI**
 
-Version Number : 1.4
+Version Number : 1.4.1
 
 MIT License
 

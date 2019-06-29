@@ -14,6 +14,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 
 public class ConnectionSettingController implements Initializable, Controller {
 	@FXML
@@ -29,6 +30,9 @@ public class ConnectionSettingController implements Initializable, Controller {
 	private PasswordField passwordField;
 
 	@FXML
+	private TextField passwordViewField;
+
+	@FXML
 	private TextField tokenField;
 
 	@FXML
@@ -36,6 +40,9 @@ public class ConnectionSettingController implements Initializable, Controller {
 
 	@FXML
 	private ComboBox<String> environmentField;
+
+	@FXML
+	private ToggleButton passwordVisible;
 
 	private ConnectionSettingLogic settingLogic;
 
@@ -61,7 +68,8 @@ public class ConnectionSettingController implements Initializable, Controller {
 			nameField.setText(setting.getName());
 			nameField.setDisable(true);
 			usernameField.setText(setting.getUsername());
-			passwordField.setText(setting.getPassword());
+			passwordViewField.textProperty().set(setting.getPassword());
+			passwordField.textProperty().bind(passwordViewField.textProperty());
 			tokenField.setText(setting.getToken());
 			environmentField.getItems().clear();
 			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
@@ -69,6 +77,7 @@ public class ConnectionSettingController implements Initializable, Controller {
 			apiVersionField.setText(setting.getApiVersion());
 			edit = true;
 		} else {
+			passwordField.textProperty().bind(passwordViewField.textProperty());
 			environmentField.getItems().clear();
 			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
 			environmentField.getSelectionModel().select(0);
@@ -80,6 +89,16 @@ public class ConnectionSettingController implements Initializable, Controller {
 	private void requiredCheck(String value, String errMsg) throws Exception {
 		if("".equals(value)) {
 			throw new Exception(errMsg);
+		}
+	}
+
+	public void onChangePasswordVisible() {
+		if(passwordVisible.isSelected()) {
+			passwordViewField.setVisible(true);
+			passwordField.setVisible(false);
+		} else {
+			passwordViewField.setVisible(false);
+			passwordField.setVisible(true);
 		}
 	}
 

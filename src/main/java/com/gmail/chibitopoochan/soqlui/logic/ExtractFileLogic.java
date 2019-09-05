@@ -20,6 +20,7 @@ import com.gmail.chibitopoochan.soqlui.util.LogUtils;
 public class ExtractFileLogic {
 	private static final Logger logger = LogUtils.getLogger(ExtractFileLogic.class);
 	private static final String REST_URL = ApplicationSettingSet.getInstance().getSetting().getRestBlobURL();
+	private static final boolean ADVANCE_QUERY = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
 
 	private Optional<Base64Object> targetObject;
 	private boolean canExtract;
@@ -87,7 +88,7 @@ public class ExtractFileLogic {
 	}
 
 	public boolean canExtract() {
-		return canExtract;
+		return canExtract && ADVANCE_QUERY;
 	}
 
 	public void extract(Map<String, String> record) throws IOException {

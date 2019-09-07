@@ -140,6 +140,8 @@ public class MainController implements Initializable, Controller {
 	private ObservableList<DescribeSObject> objectMasterList = FXCollections.observableArrayList();
 	private ObservableList<DescribeField> fieldMasterList = FXCollections.observableArrayList();
 	private BooleanProperty withExecute = new SimpleBooleanProperty(false);
+	private ObservableList<String> execSoqlList = FXCollections.observableArrayList();
+	private StringProperty execSoqlBaseName = new SimpleStringProperty();
 
 	// 初期化
 	private MainControllerInitializer init;
@@ -766,6 +768,34 @@ public class MainController implements Initializable, Controller {
 	 */
 	public void setExtract(ExtractFileLogic extract) {
 		this.extract = extract;
+	}
+
+	/**
+	 * @return execSoqlList
+	 */
+	public ObservableList<String> getExecSoqlList() {
+		return execSoqlList;
+	}
+
+	/**
+	 * @param execSoqlList セットする execSoqlList
+	 */
+	public void setExecSoqlList(ObservableList<String> execSoqlList) {
+		this.execSoqlList = execSoqlList;
+	}
+
+	/**
+	 * @return execSoqlBaseName
+	 */
+	public StringProperty getExecSoqlBaseName() {
+		return execSoqlBaseName;
+	}
+
+	/**
+	 * @param execSoqlBaseName セットする execSoqlBaseName
+	 */
+	public void setExecSoqlBaseName(StringProperty execSoqlBaseName) {
+		this.execSoqlBaseName = execSoqlBaseName;
 	}
 
 }

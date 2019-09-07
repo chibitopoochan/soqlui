@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
-import com.gmail.chibitopoochan.soqlui.initializer.parts.ConnectButtonPartsInitializer;
+import com.gmail.chibitopoochan.soqlui.initializer.parts.ButtonPartsInitializer;
 import com.gmail.chibitopoochan.soqlui.initializer.parts.ConnectOptionPartInitializer;
 import com.gmail.chibitopoochan.soqlui.initializer.parts.ContextPartInitializer;
 import com.gmail.chibitopoochan.soqlui.initializer.parts.FavoriteContextPartInitializer;
@@ -37,7 +37,7 @@ public class MainControllerInitializer implements Initializer<MainController> {
 		List<Initializer<MainController>> initList = new LinkedList<>();
 
 		// UI部品の初期化
-		mainButtonsInit = new ConnectButtonPartsInitializer();
+		mainButtonsInit = new ButtonPartsInitializer();
 		connectOptionInit = new ConnectOptionPartInitializer();
 
 		initList.addAll(Arrays.asList(

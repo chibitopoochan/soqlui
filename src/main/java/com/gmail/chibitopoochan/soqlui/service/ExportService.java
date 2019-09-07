@@ -226,12 +226,14 @@ public class ExportService extends Service<Void> {
 							useExtract.init(
 									 exportPath, useSOQL
 									,connectionLogic.get().getServerURL()
+									,connectionLogic.get().getApiVersion()
 									,connectionLogic.get().getSessionId()
 									,proxy.getHost(), proxy.getPortNumber());
 						} else {
 							useExtract.init(
 									 exportPath, useSOQL
 									,connectionLogic.get().getServerURL()
+									,connectionLogic.get().getApiVersion()
 									,connectionLogic.get().getSessionId());
 						}
 					}

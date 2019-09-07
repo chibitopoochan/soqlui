@@ -18,6 +18,7 @@ import com.sforce.ws.ConnectionException;
 public class ConnectionLogic {
 	private static final String SERVER_URL = ApplicationSettingSet.getInstance().getSetting().getConnectionURL();
 	private Optional<Connector> connector = Optional.empty();
+	private Optional<String> apiVersion = Optional.empty();
 
 	/**
 	 * Salesforceへの接続
@@ -51,6 +52,8 @@ public class ConnectionLogic {
 				selectedSetting.getPassword() + selectedSetting.getToken(),
 				String.format(SERVER_URL, env, useTooling ? "T" : "u" ,api),
 				useTooling,local));
+
+		apiVersion = Optional.of(api);
 	}
 
 	/**
@@ -89,6 +92,7 @@ public class ConnectionLogic {
 	public void disconnect() {
 		connector.ifPresent(c -> c.logout());
 		connector = Optional.empty();
+		apiVersion = Optional.empty();
 	}
 
 	/**
@@ -164,6 +168,10 @@ public class ConnectionLogic {
 			url = url.replace("https://", "");
 		}
 		return url;
+	}
+
+	public String getApiVersion(){
+		return apiVersion.orElse("");
 	}
 
 	public String getSessionId() {

@@ -11,10 +11,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ExtractFileUtils {
-	private static final Logger logger = LoggerFactory.getLogger(ExtractFileUtils.class);
+	private static final Logger logger = LogUtils.getLogger(ExtractFileUtils.class);
 
 	public static void export(File file, String body) throws IOException {
 		logger.debug("Extract to " + file.getPath());
@@ -27,7 +26,9 @@ public class ExtractFileUtils {
 	}
 
 	public static void export(File file, URL url, String sessionKey, Proxy proxy) {
-		logger.debug("Extract to " + file.getPath());
+		logger.debug(String.format("Download by [%s]", url));
+		logger.debug(String.format("Authorization is [%s]", sessionKey));
+		logger.debug(String.format("Extract to [%s]", file.getPath()));
 
 		try(FileOutputStream stream = new FileOutputStream(file)){
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection(proxy);
@@ -53,7 +54,7 @@ public class ExtractFileUtils {
 
 		      downloadStream.close();
 			} else {
-				logger.debug("failed by response code : " + code);
+				logger.debug(String.format("failed by response code : [%s]", code));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -32,6 +32,7 @@ public class ExtractFileLogic {
 	private String idName;
 	private String instanceName;
 	private String sessionKey;
+	private String apiVersion;
 	private Proxy proxy = Proxy.NO_PROXY;
 
 	/**
@@ -50,9 +51,10 @@ public class ExtractFileLogic {
 	 * @param instanceName インスタンスURL
 	 * @param sessionKey セッションID
 	 */
-	public void init(Path directory, String soql, String instanceName, String sessionKey) {
+	public void init(Path directory, String soql, String instanceName, String apiVersion, String sessionKey) {
 		this.instanceName = instanceName;
 		this.sessionKey = sessionKey;
+		this.apiVersion = apiVersion;
 		init(directory, soql, false);
 
 	}
@@ -64,9 +66,10 @@ public class ExtractFileLogic {
 	 * @param instanceName インスタンスURL
 	 * @param sessionKey セッションID
 	 */
-	public void init(Path directory, String soql, String instanceName, String sessionKey, String host, int port) {
+	public void init(Path directory, String soql, String instanceName, String apiVersion, String sessionKey, String host, int port) {
 		this.instanceName = instanceName;
 		this.sessionKey = sessionKey;
+		this.apiVersion = apiVersion;
 		this.proxy  = new Proxy(Type.HTTP, new InetSocketAddress(host, port));
 		init(directory, soql, false);
 
@@ -123,7 +126,7 @@ public class ExtractFileLogic {
 
 		// ファイルを出力
 		if(targetObject.get().isUndecode()) {
-			URL url = new URL(String.format(REST_URL, instanceName, targetObject.get().objectName, record.get(idName), targetObject.get().bodyName));
+			URL url = new URL(String.format(REST_URL, instanceName, apiVersion,targetObject.get().objectName, record.get(idName), targetObject.get().bodyName));
 			ExtractFileUtils.export(file, url, sessionKey, proxy);
 		} else {
 			ExtractFileUtils.export(file, record.get(bodyName));

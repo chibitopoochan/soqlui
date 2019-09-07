@@ -2,8 +2,10 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -47,11 +49,11 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class ConnectButtonPartsInitializer implements PartsInitializer<MainController>{
+public class ButtonPartsInitializer implements PartsInitializer<MainController>{
 	// クラス共通の参照
 	private static final boolean USE_ADVANCE_SOQL = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
 	private static final boolean USE_EDITOR = ApplicationSettingSet.getInstance().getSetting().isUseEditor();
-	private static final Logger logger = LogUtils.getLogger(ConnectButtonPartsInitializer.class);
+	private static final Logger logger = LogUtils.getLogger(ButtonPartsInitializer.class);
 
 	private static final Pattern BIND_PATTERN = Pattern.compile(":[a-zA-Z]+");
 	private static final Pattern WILDCARD_PATTERN = Pattern.compile("select\\s+\\*\\s+from\\s+([_a-zA-Z0-9]+).*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
@@ -80,9 +82,11 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	private StringProperty actualSOQL;
 	private WebView soqlWebArea;
 	private CheckBox useTooling;
+	private StringProperty baseFileName;
 
 	private Optional<File> exportHistory = Optional.empty();
 	private ObservableList<DescribeSObject> objectList;
+	private ObservableList<String> soqlList;
 	private ConnectionLogic logic;
 
 	@Override
@@ -103,9 +107,11 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		this.soqlArea = controller.getSoqlArea();
 		this.actualSOQL = controller.actualSOQL();
 		this.objectList = controller.getObjectMasterList();
+		this.soqlList = controller.getExecSoqlList();
 		this.logic = controller.getConnectService().getConnectionLogic();
 		this.soqlWebArea = controller.getSoqlWebArea();
 		this.useTooling = controller.getUseTooling();
+		this.baseFileName = controller.getExecSoqlBaseName();
 	}
 
 	public void initialize() {
@@ -343,6 +349,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 	}
 
 	public void doExport() {
+		// HTML形式からテキスト形式に変換
 		convertToActualSOQL();
 
 		// 変数をバインド
@@ -353,10 +360,12 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		progressBar.visibleProperty().bind(exportor.runningProperty());
 		progressText.textProperty().bind(exportor.messageProperty());
 
+		// ボタンを制御
 		cancel.setDisable(false);
 		export.setDisable(true);
 		execute.setDisable(true);
 
+		// ダイアログの準備
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Data Export");
 		chooser.getExtensionFilters().add(new ExtensionFilter("CSV Format", "csv"));
@@ -365,6 +374,7 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 			chooser.setInitialFileName(value.getName());
 		});
 
+		// ファイルの取得（キャンセルなら終了）
 		File saveFile = chooser.showSaveDialog(SceneManager.getInstance().getStageStack().peek().unwrap());
 		exportHistory = Optional.ofNullable(saveFile);
 		if(!exportHistory.isPresent()) {
@@ -374,9 +384,15 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 			return;
 		}
 
+		// 既存ファイル削除
 		if(saveFile.exists()) {
 			saveFile.delete();
 		}
+
+		// 連続実行の前処理
+		saveFile = splitExportSOQL(saveFile);
+
+		// エクスポートの開始
 		try {
 			saveFile.createNewFile();
 			exportor.setExportPath(saveFile.toPath());
@@ -385,6 +401,36 @@ public class ConnectButtonPartsInitializer implements PartsInitializer<MainContr
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 連続実行の前処理
+	 */
+	private File splitExportSOQL(File saveFile) {
+		File newSaveFile = saveFile;
+		if(USE_ADVANCE_SOQL) {
+			// SOQLの分割
+			String soql = actualSOQL.getValue();
+			String[] list = soql.split("\n/\n");
+			soqlList.clear();
+			soqlList.addAll(list);
+			soql = soqlList.remove(0);
+			actualSOQL.setValue(soql);
+
+			// ファイル名の修正
+			if(!soqlList.isEmpty()){
+				Path path = saveFile.toPath();
+				String fileName = path.getFileName().toString();
+				if(fileName.endsWith(".csv")) {
+					fileName = fileName.substring(0, fileName.length()-".csv".length());
+				}
+				baseFileName.setValue(fileName);
+				fileName = String.format("%s-%2$tY%2$tm%2$td%2$tH%2$tM%2$tS.csv",fileName, Calendar.getInstance().getTime());
+				newSaveFile = path.resolveSibling(fileName).toFile();
+			}
+		}
+
+		return newSaveFile;
 	}
 
 	/**

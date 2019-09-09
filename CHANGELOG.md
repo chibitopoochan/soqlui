@@ -4,6 +4,20 @@
 
 All notable changes to this tool will be documented in this file.
 
+## [Ver1.5.0]
+
+__不具合修正__
+
+- #127 GCRM\_Attachment__Feedでファイル抽出が実行されてしまう
+
+- #129 ファイル名に使用できない文字のエスケープ
+
+__機能追加__
+
+- #115 パスワードの表示切替
+
+- #89 Exportの連続実行
+
 ## [Ver1.4.1]
 
 __不具合修正__

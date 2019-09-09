@@ -69,7 +69,7 @@ public class ConnectionSettingController implements Initializable, Controller {
 			nameField.setDisable(true);
 			usernameField.setText(setting.getUsername());
 			passwordViewField.textProperty().set(setting.getPassword());
-			passwordField.textProperty().bind(passwordViewField.textProperty());
+			passwordField.textProperty().set(setting.getPassword());
 			tokenField.setText(setting.getToken());
 			environmentField.getItems().clear();
 			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
@@ -77,7 +77,6 @@ public class ConnectionSettingController implements Initializable, Controller {
 			apiVersionField.setText(setting.getApiVersion());
 			edit = true;
 		} else {
-			passwordField.textProperty().bind(passwordViewField.textProperty());
 			environmentField.getItems().clear();
 			environmentField.getItems().addAll(ConnectionSetting.ENV_TEST,ConnectionSetting.ENV_PROD);
 			environmentField.getSelectionModel().select(0);
@@ -94,11 +93,13 @@ public class ConnectionSettingController implements Initializable, Controller {
 
 	public void onChangePasswordVisible() {
 		if(passwordVisible.isSelected()) {
+			passwordViewField.setText(passwordField.getText());
 			passwordViewField.setVisible(true);
 			passwordField.setVisible(false);
 		} else {
-			passwordViewField.setVisible(false);
+			passwordField.setText(passwordViewField.getText());
 			passwordField.setVisible(true);
+			passwordViewField.setVisible(false);
 		}
 	}
 
@@ -130,7 +131,11 @@ public class ConnectionSettingController implements Initializable, Controller {
 		ConnectionSetting setting = new ConnectionSetting();
 		setting.setName(nameField.getText());
 		setting.setUsername(usernameField.getText());
-		setting.setPassword(passwordField.getText());
+		if(passwordVisible.isSelected()) {
+			setting.setPassword(passwordViewField.getText());
+		} else {
+			setting.setPassword(passwordField.getText());
+		}
 		setting.setToken(tokenField.getText());
 		setting.setEnvironment(environmentField.getSelectionModel().getSelectedItem());
 		setting.setApiVersion(apiVersionField.getText());

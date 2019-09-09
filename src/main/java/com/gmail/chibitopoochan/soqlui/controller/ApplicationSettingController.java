@@ -39,8 +39,10 @@ public class ApplicationSettingController implements Initializable, Controller {
 	@FXML private CheckBox debugMode;
 	@FXML private CheckBox base64;
 
-	// フォーマット
-	@FXML private ListView<String> formatColumns;
+	// SOQL
+	@FXML private Slider tabCount;
+	@FXML private Slider historySize;
+	@FXML private Slider recordSize;
 
 	// 接続
 	@FXML private TextField connectionURL;
@@ -53,10 +55,13 @@ public class ApplicationSettingController implements Initializable, Controller {
 	@FXML private TextField local;
 	@FXML private TextField restBlobURL;
 
-	// SOQL
-	@FXML private Slider tabCount;
-	@FXML private Slider historySize;
-	@FXML private Slider recordSize;
+	// フォーマット
+	@FXML private ListView<String> formatColumns;
+
+	// エクスポート
+	@FXML private TextField exportInvalidChar;
+	@FXML private TextField exportEscapeChar;
+	@FXML private TextField exportCharset;
 
 	private SceneManager manager;
 	private ApplicationSettingSet logic = ApplicationSettingSet.getInstance();
@@ -66,16 +71,20 @@ public class ApplicationSettingController implements Initializable, Controller {
 		this.manager = SceneManager.getInstance();
 		ApplicationSetting setting = logic.getSetting();
 
-		// 値を設定
+		/** 値を設定 */
+
+		// 全般
 		useDecorator.setSelected(setting.isUseDecorator());
 		useCSS.setSelected(setting.isUseCSS());
 		useEditor.setSelected(setting.isUseEditor());
 		advanceSOQL.setSelected(setting.isAdvanceQuery());
 		debugMode.setSelected(setting.isDebugMode());
 		base64.setSelected(setting.isUseBase64());
+		tabCount.setValue(setting.getTabCount());
+		historySize.setValue(setting.getHistorySize());
+		recordSize.setValue(setting.getRecordSize());
 
-		Stream.of(FieldMetaInfo.Type.values()).forEach(t -> formatColumns.getItems().add(t.name()));
-
+		// 接続
 		connectionURL.setText(setting.getConnectionURL());
 		loginURL.setText(setting.getLoginURL());
 		objectURL.setText(setting.getObjectURL());
@@ -86,13 +95,20 @@ public class ApplicationSettingController implements Initializable, Controller {
 		local.setText(setting.getLocal());
 		restBlobURL.setText(setting.getRestBlobURL());
 
-		tabCount.setValue(setting.getTabCount());
-		historySize.setValue(setting.getHistorySize());
-		recordSize.setValue(setting.getRecordSize());
+		// フォーマット
+		Stream.of(FieldMetaInfo.Type.values()).forEach(t -> formatColumns.getItems().add(t.name()));
+
+		// エクスポート
+		exportCharset.setText(setting.getExportCharset());
+		exportEscapeChar.setText(setting.getExportEscapeChar());
+		exportInvalidChar.setText(setting.getExportInvalidChar());
 
 	}
 
 	public void save() {
+		/** 値を取得 */
+
+		// 全般
 		ApplicationSetting setting = new ApplicationSetting();
 		setting.setUseDecorator(useDecorator.isSelected());
 		setting.setUseCSS(useCSS.isSelected());
@@ -100,7 +116,11 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setAdvanceQuery(advanceSOQL.isSelected());
 		setting.setDebugMode(debugMode.isSelected());
 		setting.setUseBase64(base64.isSelected());
+		setting.setTabCount((int) tabCount.getValue());
+		setting.setHistorySize((int) historySize.getValue());
+		setting.setRecordSize((int) recordSize.getValue());
 
+		// 接続
 		setting.setConnectionURL(connectionURL.getText());
 		setting.setLoginURL(loginURL.getText());
 		setting.setObjectURL(objectURL.getText());
@@ -111,9 +131,10 @@ public class ApplicationSettingController implements Initializable, Controller {
 		setting.setLocal(local.getText());
 		setting.setRestBlobURL(restBlobURL.getText());
 
-		setting.setTabCount((int) tabCount.getValue());
-		setting.setHistorySize((int) historySize.getValue());
-		setting.setRecordSize((int) recordSize.getValue());
+		// エクスポート
+		setting.setExportCharset(exportCharset.getText());
+		setting.setExportEscapeChar(exportEscapeChar.getText());
+		setting.setExportInvalidChar(exportInvalidChar.getText());
 
 		try {
 			logic.setSetting(setting);

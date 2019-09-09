@@ -21,6 +21,8 @@ public class ExtractFileLogic {
 	private static final Logger logger = LogUtils.getLogger(ExtractFileLogic.class);
 	private static final String REST_URL = ApplicationSettingSet.getInstance().getSetting().getRestBlobURL();
 	private static final boolean ADVANCE_QUERY = ApplicationSettingSet.getInstance().getSetting().isAdvanceQuery();
+	private static final String[] INVALID_CHARS = ApplicationSettingSet.getInstance().getSetting().getExportInvalidChar().split(",");
+	private static final String ESCAPE_CHAR = ApplicationSettingSet.getInstance().getSetting().getExportEscapeChar();
 
 	private Optional<Base64Object> targetObject;
 	private boolean canExtract;
@@ -118,13 +120,22 @@ public class ExtractFileLogic {
 		folder.mkdir();
 
 		// 出力先を構築
-		String name = record.get(fileName);
+		StringBuilder name = new StringBuilder(record.get(fileName));
 		if(record.containsKey(extentionName)){
-			name += "." + record.get(extentionName);
+			name.append(".").append(record.get(extentionName));
 		}
-		File file = new File(folder, name);
+
+		// 使用禁止文字の置き換え
+		String replacedName = name.toString();
+		for(String s : INVALID_CHARS) {
+			while(replacedName.contains(s) && !ESCAPE_CHAR.contains(s)) {
+				replacedName = replacedName.replace(s, ESCAPE_CHAR);
+			}
+		}
 
 		// ファイルを出力
+		File file = new File(folder, replacedName.toString());
+
 		if(targetObject.get().isUndecode()) {
 			URL url = new URL(String.format(REST_URL, instanceName, apiVersion,targetObject.get().objectName, record.get(idName), targetObject.get().bodyName));
 			ExtractFileUtils.export(file, url, sessionKey, proxy);

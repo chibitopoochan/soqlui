@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
+import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.logic.ConnectionLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ExtractFileLogic;
 import com.gmail.chibitopoochan.soqlui.logic.ProxySettingLogic;
@@ -29,6 +30,8 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ExportService extends Service<Void> {
+	private static final String EXPORT_CHARSET = ApplicationSettingSet.getInstance().getSetting().getExportCharset();
+
 	// クラス共通の参照
 	private static final Logger logger = LogUtils.getLogger(SOQLExecuteService.class);
 
@@ -204,7 +207,7 @@ public class ExportService extends Service<Void> {
 
 			@Override
 			protected Void call() throws Exception {
-				try(BufferedWriter out = Files.newBufferedWriter(exportPath, Charset.forName("UTF-8"))) {
+				try(BufferedWriter out = Files.newBufferedWriter(exportPath, Charset.forName(EXPORT_CHARSET))) {
 					List<List<String>> rowList = new LinkedList<>();
 
 					updateMessage("SOQL Executing...");

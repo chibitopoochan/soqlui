@@ -19,6 +19,9 @@ public class ApplicationSetting {
 	private boolean useDecorator;
 	private boolean debugMode;
 	private boolean useBase64;
+	private String exportCharset;
+	private String exportEscapeChar;
+	private String exportInvalidChar;
 
 	/**
 	 * @return tabCount
@@ -230,6 +233,42 @@ public class ApplicationSetting {
 	 */
 	public void setRestBlobURL(String restBlobURL) {
 		this.restBlobURL = restBlobURL;
+	}
+	/**
+	 * @return exportCharset
+	 */
+	public String getExportCharset() {
+		return exportCharset;
+	}
+	/**
+	 * @param exportCharset セットする exportCharset
+	 */
+	public void setExportCharset(String exportCharset) {
+		this.exportCharset = exportCharset;
+	}
+	/**
+	 * @return exportEscapeChar
+	 */
+	public String getExportEscapeChar() {
+		return exportEscapeChar;
+	}
+	/**
+	 * @param exportEscapeChar セットする exportEscapeChar
+	 */
+	public void setExportEscapeChar(String exportEscapeChar) {
+		this.exportEscapeChar = exportEscapeChar;
+	}
+	/**
+	 * @return exportInvalidChar
+	 */
+	public String getExportInvalidChar() {
+		return exportInvalidChar;
+	}
+	/**
+	 * @param exportInvalidChar セットする exportInvalidChar
+	 */
+	public void setExportInvalidChar(String exportInvalidChar) {
+		this.exportInvalidChar = exportInvalidChar;
 	}
 
 }

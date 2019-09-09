@@ -53,6 +53,10 @@ public class ApplicationSettingSet {
 	private static final String SETTINGS_LOCAL = "local";
 	private static final String SETTINGS_BASE64 = "base64";
 	private static final String SETTINGS_REST_URL = "restBlobURL";
+	private static final String SETTINGS_EXPORT = "export";
+	private static final String SETTINGS_CHARSET = "charset";
+	private static final String SETTINGS_INVALID = "invalid";
+	private static final String SETTINGS_ESCAPE = "escape";
 
 	// Singletonのインスタンス
 	private static ApplicationSettingSet instance;
@@ -166,6 +170,26 @@ public class ApplicationSettingSet {
 		// SOQL拡張
 		writer.writeStartElement("", SETTINGS_ADVANCE_QUERY, "");
 		writer.writeCharacters(String.valueOf(setting.isAdvanceQuery()));
+		writer.writeEndElement();
+
+		writer.writeEndElement();
+
+		/** エクスポート関連 */
+		writer.writeStartElement("", SETTINGS_EXPORT, "");
+
+		// 禁則文字
+		writer.writeStartElement("", SETTINGS_INVALID, "");
+		writer.writeCharacters(setting.getExportInvalidChar());
+		writer.writeEndElement();
+
+		// エスケープ文字
+		writer.writeStartElement("", SETTINGS_ESCAPE, "");
+		writer.writeCharacters(setting.getExportEscapeChar());
+		writer.writeEndElement();
+
+		// 文字コード
+		writer.writeStartElement("", SETTINGS_CHARSET, "");
+		writer.writeCharacters(setting.getExportCharset());
 		writer.writeEndElement();
 
 		writer.writeEndElement();
@@ -369,6 +393,18 @@ public class ApplicationSettingSet {
 
 			case SETTINGS_REST_URL:
 				setting.setRestBlobURL(reader.getElementText());
+				break;
+
+			case SETTINGS_INVALID:
+				setting.setExportInvalidChar(reader.getElementText());
+				break;
+
+			case SETTINGS_ESCAPE:
+				setting.setExportEscapeChar(reader.getElementText());
+				break;
+
+			case SETTINGS_CHARSET:
+				setting.setExportCharset(reader.getElementText());
 				break;
 
 			}

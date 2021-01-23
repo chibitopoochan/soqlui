@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.gmail.chibitopoochan.soqlexec.util.Constants;
+import com.gmail.chibitopoochan.soqlexec.soql.QueryAnalyzeUtils;
+import com.gmail.chibitopoochan.soqlexec.soql.QueryAnalyzeUtils.TokenException;
+import com.gmail.chibitopoochan.soqlexec.soql.SOQL;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
 import com.gmail.chibitopoochan.soqlui.initializer.service.FieldServiceInitializer;
 import com.gmail.chibitopoochan.soqlui.initializer.service.GenerateSOQLServiceInitializer;
@@ -22,7 +22,6 @@ import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.FieldProvideService;
 import com.gmail.chibitopoochan.soqlui.util.BrowsingUtils;
 import com.gmail.chibitopoochan.soqlui.util.CopyUtils;
-import com.gmail.chibitopoochan.soqlui.util.DialogUtils;
 import com.gmail.chibitopoochan.soqlui.util.ExcelExportUtils;
 import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.format.CSVFormatDecoration;
@@ -52,7 +51,6 @@ import javafx.scene.input.MouseEvent;
  */
 public class ContextPartInitializer implements PartsInitializer<MainController> {
 	private static final String RECORD_ID = "id";
-	private Pattern fromPattern = Pattern.compile(Constants.SOQL.Pattern.FROM_FIELD, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
 
 	private TableView<SObjectRecord> resultTable;
 	private TableView<DescribeSObject> sObjectList;
@@ -211,20 +209,25 @@ public class ContextPartInitializer implements PartsInitializer<MainController> 
 
 		MenuItem item = (MenuItem) source;
 		TableView<?> table = (TableView<?>) item.getParentPopup().getUserData();
-		if(table == sObjectList) {
-			service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
-		} else if(table == resultTable){
-			ResultSet resultSet = (ResultSet) resultTable.getUserData();
-			Matcher match = fromPattern.matcher(resultSet.getSOQL());
-			if(match.find()){
-				service.setSObject(match.group(1));
-			}
-		}
 
-		if(service.getSObject() == null) {
-			DialogUtils.showAlertDialog("オブジェクトが見つかりません。");
-		} else {
+		try {
+			if(table == sObjectList) {
+				service.setSObject(sObjectList.getSelectionModel().getSelectedItem().getName());
+			} else if(table == resultTable){
+				ResultSet resultSet = (ResultSet) resultTable.getUserData();
+				SOQL soql = QueryAnalyzeUtils.analyze(resultSet.getSOQL());
+				service.setSObject(soql.getFromObject());
+			}
+
+			if(service.getSObject() == null) {
+				throw new IllegalArgumentException("オブジェクトが見つかりません。");
+			}
+
 			service.start();
+
+		} catch (TokenException e) {
+			Alert confirm = new Alert(AlertType.ERROR, e.getMessage());
+			confirm.showAndWait();
 		}
 
 	}

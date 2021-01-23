@@ -3,7 +3,6 @@ package com.gmail.chibitopoochan.soqlui.initializer.parts;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +13,10 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
+import com.gmail.chibitopoochan.soqlexec.soql.QueryAnalyzeUtils;
+import com.gmail.chibitopoochan.soqlexec.soql.QueryAnalyzeUtils.TokenException;
+import com.gmail.chibitopoochan.soqlexec.soql.SOQL;
+import com.gmail.chibitopoochan.soqlexec.soql.SOQLField;
 import com.gmail.chibitopoochan.soqlui.SceneManager;
 import com.gmail.chibitopoochan.soqlui.config.ApplicationSettingSet;
 import com.gmail.chibitopoochan.soqlui.controller.MainController;
@@ -25,9 +28,7 @@ import com.gmail.chibitopoochan.soqlui.service.ConnectService;
 import com.gmail.chibitopoochan.soqlui.service.ExportService;
 import com.gmail.chibitopoochan.soqlui.service.SOQLExecuteService;
 import com.gmail.chibitopoochan.soqlui.util.DialogUtils;
-import com.gmail.chibitopoochan.soqlui.util.FormatUtils;
 import com.gmail.chibitopoochan.soqlui.util.LogUtils;
-import com.gmail.chibitopoochan.soqlui.util.format.QueryFormatDecoration;
 import com.sforce.ws.ConnectionException;
 
 import javafx.beans.property.StringProperty;
@@ -56,9 +57,6 @@ public class ButtonPartsInitializer implements PartsInitializer<MainController>{
 	private static final Logger logger = LogUtils.getLogger(ButtonPartsInitializer.class);
 
 	private static final Pattern BIND_PATTERN = Pattern.compile(":[a-zA-Z]+");
-	private static final Pattern WILDCARD_PATTERN = Pattern.compile("select\\s+\\*\\s+from\\s+([_a-zA-Z0-9]+).*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
-	private static final Pattern WILDCARD_WHILE_PATTERN = Pattern.compile(".*\\s+from\\s+[_a-zA-Z0-9]+\\s+(.*)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
-	private static final Pattern WILDCARD_IGNORE_PATTERN = Pattern.compile("select.*\\(.*\\).*from.*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.DOTALL);
 
 	private static final KeyCodeCombination ZOOM_IN = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.CONTROL_DOWN);
 	private static final KeyCodeCombination ZOOM_OUT = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
@@ -173,127 +171,90 @@ public class ButtonPartsInitializer implements PartsInitializer<MainController>{
 	private void convertToActualSOQL() {
 		String soql = soqlArea.getText();
 		if(USE_ADVANCE_SOQL) {
-			soql = convertByID(soql);
-			soql = convertByWildcard(soql);
-			Optional<String> workSOQL = bindVariable(soql);
-			if(workSOQL.isPresent()) {
-				actualSOQL.set(workSOQL.get());
-			} else {
-				actualSOQL.set(soql);
+			SOQL query;
+			try {
+				query = QueryAnalyzeUtils.analyze(soql);
+				convertByWildcard(query);
+				bindVariable(query);
+				soql = query.toString();
+			} catch (TokenException | ConnectionException e) {
+				soql = convertByID(soql);
 			}
-		} else {
-			actualSOQL.set(soql);
 		}
+		actualSOQL.set(soql);
 
 	}
 
-	private String convertByWildcard(String soql) {
-		Matcher wildcardMatch = WILDCARD_PATTERN.matcher(soql);
-		Matcher ignoreMatch = WILDCARD_IGNORE_PATTERN.matcher(soql);
-		if(!wildcardMatch.matches() || ignoreMatch.matches()) {
-			return soql;
-		}
+	private void convertByWildcard(SOQL soql) throws ConnectionException {
+		List<SOQLField> fields = soql.getSelectFields();
 
-		String objName = wildcardMatch.group(1);
-		String whileCondition = "";
+		// "*"1文字なら継続
+		if(fields.size() != 1) return;
+		if(!fields.get(0).getLabel().equals("*")) return;
 
-		Matcher whileMatch = WILDCARD_WHILE_PATTERN.matcher(soql);
-		if(whileMatch.matches()) {
-			whileCondition = whileMatch.group(1);
-		}
+		// "*"を削除し、オブジェクトの項目を追加
+		List<DescribeField> fieldList = logic.getFieldList(soql.getFromObject());
+		soql.getSelectFields().clear();
+		fieldList.stream().map(f -> new SOQLField(f.getName())).forEach(e -> soql.getSelectFields().add(e));
 
-		// SOQLを構築
-		try {
-			if(whileCondition.isEmpty()) {
-				soql = createSOQL(objName);
-			} else {
-				soql = String.format("%s %s",createSOQL(objName), whileCondition);
-			}
-		} catch (ConnectionException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-
-		return soql;
 	}
 
 	/**
 	 * IDからレコードを取得するSOQLを作成
 	 * @param soql ID
 	 * @return SOQL
+	 * @throws ConnectionException
 	 */
-	private String convertByID(String soql) {
+	private String convertByID(String soql){
 		// 対象とならない場合、処理を終了
-		if(soql.toLowerCase().contains("select") || soql.length() < 3) {
-			return soql;
-		}
+		if(soql.toLowerCase().contains("select") || soql.length() < 3) return soql;
 
 		// KeyPrefixからオブジェクトを特定
 		String keyPrefix = soql.substring(0,3);
 		Optional<DescribeSObject> result = objectList.stream().filter(o -> keyPrefix.equals(o.getKeyPrefix())).findFirst();
+		if(!result.isPresent()) return soql;
 
-		if(!result.isPresent()) {
+		// オブジェクトから項目を特定
+		DescribeSObject obj = result.get();
+		List<DescribeField> fieldList;
+		try {
+			fieldList = logic.getFieldList(obj.getName());
+		} catch (ConnectionException e) {
+			e.printStackTrace();
 			return soql;
 		}
 
 		// SOQLを構築
-		try {
-			DescribeSObject obj = result.get();
-			soql = String.format("%s where id = '%s'",createSOQL(obj.getName()), soql.trim());
-		} catch (ConnectionException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
+		SOQL query = new SOQL();
+		fieldList.forEach(f -> query.addSelectField(new SOQLField(f.getName())));
+		query.setWhere(String.format("id = '%s'",soql.trim()));
 
-		return soql;
-	}
-
-	/**
-	 * オブジェクト名から項目を取得し、SOQL形式に成形
-	 * @param objName オブジェクト名
-	 * @return SOQL
-	 * @throws ConnectionException 項目定義取得時のエラー
-	 */
-	private String createSOQL(String objName) throws ConnectionException {
-		QueryFormatDecoration decoration = new QueryFormatDecoration();
-		decoration.setTableAfter(objName);
-
-		List<DescribeField> fieldList = logic.getFieldList(objName);
-
-		return FormatUtils.format(decoration, () ->
-			fieldList.stream().map(f -> {
-				List<String> list = new ArrayList<>();
-				list.add(f.getName());
-				return list;
-			}).collect(Collectors.toList())
-		);
+		return query.toString();
 
 	}
 
-	private Optional<String> bindVariable(String soql) {
+	private void bindVariable(SOQL query) {
 		// SOQLからバインド変数を抽出
-		Matcher bindMatcher = BIND_PATTERN.matcher(soql);
+		Matcher bindMatcher = BIND_PATTERN.matcher(query.getWhere());
 
 		// SOQLを再構築
-		StringBuffer workSOQL = new StringBuffer();
+		StringBuffer whereCaluse = new StringBuffer();
 		while(bindMatcher.find()) {
 			// バインド変数の入力
 			Optional<String> result = DialogUtils.showMultiLineDialog(bindMatcher.group());
 
 			// SOQLの組み換え
-			if(result.isPresent()) {
-				List<String> varList = Arrays.asList(result.get().split("\n"));
+			result.ifPresent(r -> {
+				List<String> varList = Arrays.asList(r.split("\n"));
 				String replaceText = varList.stream().map(v -> String.format("'%s'",v )).collect(Collectors.joining(","));
 				replaceText = varList.size() > 1 ? String.format("(%s)", replaceText) : replaceText;
-				bindMatcher.appendReplacement(workSOQL, replaceText);
-			} else {
-				return Optional.empty();
-			}
+				bindMatcher.appendReplacement(whereCaluse, replaceText);
+			});
 
 		}
-		bindMatcher.appendTail(workSOQL);
+		bindMatcher.appendTail(whereCaluse);
+		query.setWhere(whereCaluse.toString());
 
-		return Optional.of(workSOQL.toString());
 	}
 
 	/**
